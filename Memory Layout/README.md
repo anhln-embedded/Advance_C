@@ -1,5 +1,6 @@
 # Memory layout
 là phân vùng bố trí vùng nhớ của dữ liệu 1 chương trình được lưu trữ trên RAM khi ta tải chương trình lên. Nó sẽ chia làm 5 phần.
+
 ![image](https://github.com/user-attachments/assets/349ecec2-7d50-4433-9a1c-4ffa38bc36c0)
 ## Code segment
 Đây là phần dùng để lưu trữ mã lệnh thực thi của chương trình cũng như các biến được khai báo với từ khóa const hay các chuỗi được trỏ tói bởi con trỏ.

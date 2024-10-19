@@ -65,8 +65,7 @@ size of info: 24
 ### 2.2. Padding byte
 + Đây là những byte được thêm vào sau địa chỉ của mỗi biến được khai báo để đảm bảo được quy tắc căn chỉnh vùng nhớ như đã đề cập trước đó. 
 + Dùng lại ví dụ trên ta hình dung được việc cấp phát vùng nhớ diễn ra như sau. 
-
-
+![image](https://github.com/user-attachments/assets/4bcff813-7821-4f77-8232-033dd5384a0e)
 Dựa vào bảng trên ta thấy:
 + 7 byte padding sau biến id: để đảm bảo biến name được cấp phát tại địa chỉ có giá trị chia hết cho kiểu dữ liệu của chính nó, và cũng là biến nó kiểu lớn nhất trong struct
 + 4 byte padding sau biến tuoi: giúp cho tổng số byte trong struct là 24 chia hết cho 8, là số byte mà biến có kiểu dữ liệu lớn nhất name được khai báo
@@ -80,11 +79,14 @@ typedef struct{
 }std;
 ```
 + biến b có kiểu dữ liệu lớn nhất double, vì vậy việc căn chỉnh dữ liệu sẽ phu thuộc vào biến này. Do đó struct sẽ cấp phát mỗi lần 8 byte để lưu trữ các biến.
-
-
-
-Do đó ta có kích thước của struct std sẽ là 56 byte 
-
++ Ta có thể hình dung được việc cấp phát memory diễn ra như sau
+![image](https://github.com/user-attachments/assets/5f956f48-61de-4cbd-a3fe-f0762130ed0a)
++ Mảng a[10] sẽ được cấp phát memory 2 lần để lưu trữ các phần tử, và thừa ra 6 padding byte. Tổng là 16 byte
+![image](https://github.com/user-attachments/assets/53278cea-0b60-4fa2-af4f-cd11158b8282)
++ Mảng b[2] sẽ được cấp phát memory 2 lần, và không có padding byte, do mỗi phần tử của nó đèu chiếm 8 byte, tồng là 16 byte
+![image](https://github.com/user-attachments/assets/89f7d369-80ec-4621-bb8d-4a92f7f713e7)
++ Mảng c[5] sẽ được cấp phát memory 3 lần, mỗi lần cấp phát sẽ lưu trữ được 2 phần tử kiểu int, vì vậy ở lần cấp phát thứ 3, sẽ thừa ra 4 padding byte
+Do đó dựa vào kích thước của mỗi thành phần ta có kích thước tổng của struct std sẽ là 56 byte 
 # union 
 union cũng có cách sử dụng như stuct, tuy nhiên 
 + các biến khai báo bên trong sẽ sử dụng chung 1 vùng nhớ
@@ -125,25 +127,3 @@ b:213
 c:213
 ```
 Lý do là vì việc sử dụng chung vùng nhớ của các biến, các biến sau khi gán giá trị sẽ ghi đè lên giá trị của biến trước. Chính vì khi thực hiện ra 3 giá trị, thì ta chỉ in ra được giá trị của biến cuối cùng được gán giá trị.
-## Installation
-
-Install my-project with npm
-
-```bash
-  npm install my-project
-  cd my-project
-```
-    ## Color Reference
-
-| Color             | Hex                                                                |
-| ----------------- | ------------------------------------------------------------------ |
-| Example Color | ![#0a192f](https://via.placeholder.com/10/0a192f?text=+) #0a192f |
-| Example Color | ![#f8f8f8](https://via.placeholder.com/10/f8f8f8?text=+) #f8f8f8 |
-| Example Color | ![#00b48a](https://via.placeholder.com/10/00b48a?text=+) #00b48a |
-| Example Color | ![#00d1a0](https://via.placeholder.com/10/00b48a?text=+) #00d1a0 |
-
-
-## Screenshots
-
-![App Screenshot](https://via.placeholder.com/468x300?text=App+Screenshot+Here)
-

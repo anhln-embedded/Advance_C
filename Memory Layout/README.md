@@ -1,10 +1,12 @@
 # Memory layout
 là phân vùng bố trí vùng nhớ của dữ liệu 1 chương trình được lưu trữ trên RAM khi ta tải chương trình lên. Nó sẽ chia làm 5 phần.
 
-![image](https://github.com/user-attachments/assets/349ecec2-7d50-4433-9a1c-4ffa38bc36c0)
 ## Code segment
-Đây là phần dùng để lưu trữ mã lệnh thực thi của chương trình cũng như các biến được khai báo với từ khóa const hay các chuỗi được trỏ tói bởi con trỏ.
-+ Phân vùng này chí có chức năng là read-only, và không cho phép thay đổi nội dung bên trong
+ Đây là phần vùng chỉ dọc mà không thể ghi dữ liệu, dùng để lưu:
+ + các biến khai báo const
+ + các chuỗi ký tự
+ + mã lệnh thực thi của chương trình
+
 ```bash
  const int a = 23;
  int main(){
@@ -21,11 +23,31 @@ ví dụ trên là 1 minh họa của 1 biến được khai báo const, khi ta 
  }
 ```
 Tương tự đối với trường hợp thay đổi nội dung của 1 chuỗi mà được trỏ tới bởi 1 con trỏ là không thể được
+## DATA 
+dùng để đọc/ghi data, lưu trữ các biến: 
++ khai báo (static/global) khác 0
++ vùng nhớ được thu hồi khi chương trình kết thúc
+```bash
+int a = 23;        // lưu ở data segment
+static int b = 21; // lưu ở data segment
+  int main(){
+     static int c = 12; // lưu ở data segment
+     return 0;
+  }
+```
+### Lưu ý với struct
+Khi ta khởi tạo 1 struct với các biến thành viên, khi chạy chương trình thì những biến này vẫn chưa được cấp phát vùng nhớ cho đến khi ta tạo ra biến struct 
+```bash
+typedef struct{
+  int a;  
+  int b;
+}data;
+static data dt = {23,12}; // 2 member a và b của struct data lúc này mới được cấp phát vùng nhớ ở data segment
+```
 ## BSS 
-Đây là nơi cấp phát vùng nhờ cho các biến mà chưa được khởi tạo giá trị , hoặc khởi tạo bằng 0 khi:
-+ khai báo global
-+ khai báo static (global + local)
-=> BSS có thể đọc/ghi data (vùng nhớ chỉchỉ giải phóng khi chương trình kết thúc)
+Vùng nhớ dùng để đọc/ghi data,lưu các biến
++ khai báo static/global được khởi tạo bằng 0, hoặc chưa gán giá trị (mặc định là 0)
++ vùng nhớ được thu hồi khi chương trình kết thúc
 Ta có ví dụ sau minh họa cho việc sử dụng BSS
 ```bash
  int a;        // global -> uninitialized  
@@ -41,22 +63,12 @@ Ta có ví dụ sau minh họa cho việc sử dụng BSS
  }
 ```
 Tất cả 4 biến trên khi in ra đều sẽ có giá trị bằng 0
-## DATA 
-Vùng nhớ này cũng tương tự như BSS, nhưng nó dùng để lưu những biến được khởi tạo khác 0
-=> DATA có thể đọc/ghi data (vùng nhớ chỉ giải phóng khi chương trình kết thúc)
-```bash
-int a = 23;        // lưu ở data segment
-static int b = 21; // lưu ở data segment
-  int main(){
-     static int c = 12; // lưu ở data segment
-     return 0;
-  }
-```
 ## STACK
 Đây là phân vùng dùng để lưu trữ: 
 + các biến khai báo cục bộ (local)
 + tham số hàm 
 + địa chỉ trả về của hàm 
++ Vùng nhớ được thu hồi khi hàm kết thúc theo LIFO
 Khi 1 hàm được gọi thì toàn bộ thông tin của hàm đó bao gồm các giá trị trên sẽ được push lên stack và cấp phát cho 1 vùng nhớ để lưu trữ và sẽ được giải phóng khi hàm thực thi xong. 
 => STACK có thể đọc/ghi data (tồn tại từ lúc cấp phát đến khi thoát khỏi hàm)
 + Ví dụ dưới đây sẽ mô tả cách mà stack được gọi:
@@ -104,11 +116,12 @@ khi ta khai báo 1 biến const ở phạm vi local, nó sẽ được lưu trê
 + Việc chỉnh sửa giá trị của 1 biến const cục bộ thông qua con trỏ sẽ khiến compiler đưa ra cảnh báo nhưng vẫn thực hiện được
 + Đối với biến const toàn cục, thì ta không thể thay đổi giá trị của nó như làm với biến local. 
 # HEAP
-Vùng nhớ được quản lý bởi người dùng thông qua 1 con trỏ. Không chịu sử quản lý bởi chương trình. Được cấp phát và giải phóng thông qua các từ khóa malloc, calloc, recalloc, free 
-+ các từ khóa trên được sử dụng thông qua thư viện #inlude <stdlib.h>
-## Dynamic memory allocation
-Đây là kỹ thuật dùng để cấp phát vùng nhớ trên heap, mục địch là thay đổi kích thước của vùng nhớ trong lúc chương trình đang chạy, giúp tối ưu được kích thước cần dùng mà không bị cấp phát dư như sử dụng stack 
-+ Ví dụ ta có chương trình sau để cấp phát vùng nhớ heap ở thời điểm chương trình đang chạy.
+Đây là vùng câp phát động dùng để 
++ cấp phát vùng nhớ thay đổi được trong quá trình chương trình chạy để phù hợp với những yêu cầu về thay đổi data trong chương trình
++ được quản lý bởi người dùng thông qua các từ khóa malloc, calloc,realloc, free (sử dụng thư viện stdlib.h)
++ vùng nhớ được giải phóng bằng cách sử dụng từ khóa free
+
+Ví dụ ta có chương trình sau để cấp phát vùng nhớ heap ở thời điểm chương trình đang chạy.
 ```bash
  #include <stdio.h>
  #include <stdlib.h>
@@ -143,7 +156,10 @@ int main(){
   return 0;
  }
 ```
-+ Khi ta chạy chương trình trên, sẽ yêu cầu ta nhập vào số lượng phần tử ví dụ size = 5, thì sau đó hàm sau đây sẽ cấp phát cho ta 1 vùng nhớ trên heap với tổng cộng là size * (kiểu dữ liệu của size) = 20 byte
+Khi ta chạy chương trình trên, sẽ yêu cầu ta nhập vào số lượng phần tử ví dụ size = 5, thì sau đó hàm sau đây sẽ cấp phát cho ta 1 vùng nhớ trên heap với 
++ tổng cộng là size * (kiểu dữ liệu của size) = 20 byte
++  malloc(mặc định là void*) được ép lại thành kiểu (int*) để nó biết phải lấy ra 4 byte đối với mỗi ô địa chỉ được cấp phát vùng nhớ 
++ con trỏ ptr (được khởi tạo trên stack) được trỏ tới heap để quản lý vùng nhớ vừa được khởi tạo
 ```bash
   int* ptr = (int*)malloc(size * sizeof(int));
 ```
@@ -170,6 +186,157 @@ int main(){
   //giải phóng vùng nhớ sau khi sử dụng để tránh lỗi memory leak
   free(ptr);
 ```
+## So sánh malloc, calloc,realloc
+CÚ PHÁP KHAI BÁO
+### malloc
+```bash
+(void*)malloc(size_t size)
+```
++ size: kích thước hoặc số lượng phần tử 
++ hàm trên sẽ trả về 1 con trỏ tới vùng nhớ vừa cáp phát trên heap có kiểu void*
+### calloc
+```bash
+(void*)malloc(size_t count,size_t size)
+```
++ count: kích thước hoặc số lượng phần tử 
++ size: kích thước của 1 phần tử
+### realloc 
+```bash
+(void*)realloc(void* ptr,size_t size) 
+```
+-	ptr: Con trỏ  tới vùng nhớ đã cấp phát trước đó
++ size: kích thước của 1 phần tử
+SỬ DỤNG
++ cả 2 hàm calloc và malloc đều có cách khởi tạo giá trị giống nhau
+```bash
+For(int i = 0 ; i < size ; i++){
+    ptr[i] = i + 3; //truy cập các ô địa chỉ trên heap thông qua chỉ số i và ghi vào dữ liệu 
+}
+```
++ Hàm realloc sẽ được sử dụng để điều chỉnh kính thước của vùng nhớ đã được cấp phát trước đó, và sẽ quyết định giữ lại data của vùng nhớ cũ hay không tùy thuộc vào nhu cầu
++ Ví dụ ta có chương trình sau để tăng kích thước của vùng nhớ heap đã được cấp phát trước đó như sau.
+```bash
+//khai báo 1 con trỏ để quản lý vùng nhớ heap được cấp phát 
+  int* ptr = (int*)calloc(size,sizeof(int));
+
+  //kiểm tra vùng nhớ được cấp phát thành công hay chưa
+  if(ptr == NULL){
+    printf("cap phat vung nho that bai");
+    return 0;
+  }
+  //gán giá trị cho mỗi phần tử của vùng nhớ
+  for(int i = 0 ; i < size ; i++){
+      ptr[i] = i + 3;
+  }
+  printf("\n");
+
+  //in ra giá trị vừa nhập
+  for(int i = 0 ; i < size ; i++){
+    printf("output %d:%d\n",i,ptr[i]);
+  }
+  //khởi tạo 1 biến lưu kích thước mới
+  int new_size = size + 3;
+  
+  printf("\n new heap\n");
+  ptr = (int*)realloc(ptr,new_size * sizeof(int));
+
+  //gán giá trị cho phần kích thước vừa được thêm vàovào
+  for(int i = size ; i < new_size ; i++){
+    ptr[i] = i + 3;
+  }
+   for(int i = 0 ; i < new_size ; i++){
+    printf("output %d:%d\n",i,ptr[i]);
+  }
+  //giải phóng vùng nhớ sau khi sử dụng
+  free(ptr);
+  return 0;
+```
++ Chạy chương trình trên ta được kết quả như sau
+```bash
+output 0:3
+output 1:4
+output 2:5
+output 3:6
+output 4:7
+
+ new heap
+output 0:3
+output 1:4
+output 2:5
+output 3:6
+output 4:7
+output 5:8
+output 6:9
+output 7:10
+```
+# Phân biệt STACK và HEAP
+![Capture](https://github.com/user-attachments/assets/b729ce20-051e-48f9-987c-e21d43eb7002)
+## Khai báo các biến trên STACK để đọc dữ liệu thông qua cảm biến dht11 và đưa ra cảnh báo
+
+```bash
+typedef struct{
+  float temp;
+  float humi;
+}dht11;
+void read_dht11(dht11* mydht){
+      //đọc về và lưu vào 2 thành viên của biến struct dht11
+}
+void control_Alarm(dht11* mydht){
+//khai báo 2 biến local để đọc giá trị từ struct
+    float read_temp = mydht->temp;
+    float read_humi = mydht->humi;
+    if(read_temp > 50 && read_humi < 60){
+      // bật còi cảnh báo
+    }
+    else if(read_temp > 20 && read_temo <= 50){
+      // do something
+    }
+}
+int main(){
+  dht11 mydht;
+  read_dht11(&mydht);
+  control_Alarm(&mydht);
+  return 0;
+}
+```
+## Sử dụng HEAP để đọc về 1 buffer trên server online nào đó và thực hiện hành đông cụ thể
+Ta sẽ có 1 hàm để thực hiện việc đọc 1 buffer nào đó và trả về con trỏ tới vùng nhớ được cấp phát trên heap để lưu trữ chuỗi đọc về
+
+```bash
+char* get_data_online(char* online_buffer){
+    uint8_t size = 0;
+//trỏ tới chuỗi cần đọc 
+    char* ptr = online_buffer;
+//xác định kích thước của chuỗi 
+    for(int i = 0 ; ptr[i] != '\0'; i++){
+        size += 1;
+    }
+//cấp phát động trên heap
+    char* read_buff = (char*)malloc((size + 1) * sizeof(char));
+//sao chép vào vùng nhớ heap
+    for(int i = 0 ; i < size ; i++){
+      read_buff[i] = ptr[i];
+    }
+    read_buff[size] = '\0';
+    return read_buff;
+}
+```
+sau đó ta sẽ gọi hàm trên và lưu vào 1 chuỗi và thực hiện so sánh nếu giống như cmd thì sẽ thực hiện 1 công việc nào đó 
+```bash
+int main(){
+  char* buff = "turn on led 1";
+  int num = 231;
+  char* read_buff = get_data_online(buff);
+  if (strcmp(read_buff,"turn on led 1") == 0){
+      //thực hiện bật led 
+      printf("led 1 has been turned on\n"); // in ra thông báo
+  }
+  else printf("other commands\n");
+  free(read_buff);
+  return 0;
+```
+
+
 
 
     

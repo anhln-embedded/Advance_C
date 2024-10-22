@@ -1,7 +1,7 @@
 
-# Struct 
+# 1. Struct 
 Đây là từ khóa để định nghĩa 1 kiểu dữ liệu người dùng, mục đích để tạo nên 1 kiểu dũ liệu để mô tả 1 đối tượng cụ thể nào đó khác với các kiểu dữ liệu nguyên thủy như int,float,double,...
-## 1.Khai báo
+## 1.1 Khai báo
 Ví dụ ta cần khai báo 1 struct để lưu trữ thông tin học sinh, thì ta sẽ làm như sau
 ```bash
   struct info{
@@ -31,9 +31,9 @@ int main(){
 }
 ```
 
-## 2.Kích thước
+## 1.2 Kích thước
 kích thước của struct sẽ phụ thuộc vào 2 yếu tố sau
-### 2.1. Data Alignment
+### a) Data Alignment
 căn chỉnh data trong struct là việc 1 biến khi được cấp phát vùng nhớ thì nó phải được lưu ở giá trị địa chỉ được quy định bởi hệ điều hành, để đảm bảo được việc truy cập chính xác và nhanh chóng.
 
 ```bash
@@ -62,7 +62,7 @@ size of info: 24
 ```
 * Như vậy tổng kích thước thực của struct là 24 byte. Mõi lần nó sẽ cấp phát 8 byte do yêu cầu của việc căn chỉnh vùng nhớ và dựa vào biến có kiểu dữ liệu lớn nhất là char*
 + Do đó tổng kích thước của struct sẽ luôn là con số chia hết cho kiểu dữ liệu lớn nhất được khai báo, địa chỉ bắt đầu của các thành phần trong struct cũng sẽ tuân theo quy luật này
-### 2.2. Padding byte
+### b) Padding byte
 + Đây là những byte được thêm vào sau địa chỉ của mỗi biến được khai báo để đảm bảo được quy tắc căn chỉnh vùng nhớ như đã đề cập trước đó. 
 + Dùng lại ví dụ trên ta hình dung được việc cấp phát vùng nhớ diễn ra như sau. 
 ![image](https://github.com/user-attachments/assets/4bcff813-7821-4f77-8232-033dd5384a0e)
@@ -87,7 +87,7 @@ typedef struct{
 ![image](https://github.com/user-attachments/assets/89f7d369-80ec-4621-bb8d-4a92f7f713e7)
 + Mảng c[5] sẽ được cấp phát memory 3 lần, mỗi lần cấp phát sẽ lưu trữ được 2 phần tử kiểu int, vì vậy ở lần cấp phát thứ 3, sẽ thừa ra 4 padding byte
 Do đó dựa vào kích thước của mỗi thành phần ta có kích thước tổng của struct std sẽ là 56 byte 
-# union 
+# 2. union 
 union cũng có cách sử dụng như stuct, tuy nhiên 
 + các biến khai báo bên trong sẽ sử dụng chung 1 vùng nhớ
 + kích thước của union sẽ phụ thuộc vào biến có số byte của chính nó và byte padding là lớn nhất
@@ -100,7 +100,7 @@ typedef union{
 ```
 dựa vào số byte được tính như trên thì kích thước của struct sẽ là 24 byte với biến int a[5] chiếm số byte lớn nhất
 
-### Gán giá trị cho các thành phần union
+## 2.1 Gán giá trị cho các thành phần union
 Khi ta gán giá trị cho từng biến và in ra sẽ có sự khác biệt so với khi dùng struct
 ```bash
 typedef union{

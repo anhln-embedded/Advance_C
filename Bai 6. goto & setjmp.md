@@ -1,6 +1,6 @@
-# Từ khóa goto
+# 1. Từ khóa goto
 goto có thể dùng để nhảy đến 1 vi trí bất kỳ trong chương trình phụ thuộc vào label (nhãn) mà ta định nghĩa, giúp ta có thể điều khiển được luồng chạy của chương trình
-## Trường hợp 1: điều kiện dừng 
+## 1.1 Trường hợp 1: điều kiện dừng 
 + Ta có thể dùng goto như 1 cách để dừng việc xử lý 1 công việc nào đó như chương trình dưới đây
 ```bash
 #include <stdio.h>
@@ -17,7 +17,7 @@ int main(){
     return 0;
 }
 ```
-## Trường hợp 2: Thoát khỏi nhiều vòng lặp
+## 1.2 Trường hợp 2: Thoát khỏi nhiều vòng lặp
 + Ta có 1 chương trình với 1 vòng for để kiểm tra 1 giá trị nào đó và ta muốn dừng vòng lặp tại 1 giá trị nào đó, thì ta có thể dùng break như sau
 ```bash
 for(int i = 0 ; i < 5 ; i++){
@@ -38,7 +38,7 @@ for(int i = 0 ; i < 5 ; i++){
     }
 ```
 + Chính vì vậy ta có thể sử dụng goto thay cho break ở đây để thoát khỏi toàn bộ vòng lặp
-# Thư viện setjmp.h
+# 2. Thư viện setjmp.h
 Đây là thư viện cung cấp các hàm như setjmp và longjmp để thiết kế những mã lỗi hay các thông báo mà ta muốn hiển thị tùy thuộc vào các điều kiện xử lý của chương trình
 + trong thư viện setjmp.h ta tìm đến phần định nghĩa sau 
 ```bash   

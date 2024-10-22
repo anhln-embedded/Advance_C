@@ -1,5 +1,5 @@
 
-# Từ khóa extern 
+# 1. Từ khóa extern 
 
 được sử dụng để thông báo cho compiler biết 1 biến được gọi và sử dụng trong file hiện tại đã được khai báo ở file khác và không cần phải định nghĩa lại
 + file lib.c
@@ -14,9 +14,9 @@
     return 0;
   }
 ```
-### Mục đích 
+## 1.1 Mục đích 
 sử dụng extern khi chúng ta chỉ muốn sử dụng 1 số biến nhất định ở trong 1 file khác mà không cần đến toàn bộ nội dung, tránh việc include toàn bộ file đó vào file main hiện tại có thể làm lãng phí tài nguyên và chậm quá trình biên dịch
-### Gọi 1 hàm trong file khác
+## 1.2 Gọi 1 hàm trong file khác
 Đối với việc gọi 1 hàm nào đó, từ 1 file khác thì ta không cần sử dụng từ khóa static mà sử dụng trực tiếp trong file main hiện tại
 + file output.c
 ```bash
@@ -36,8 +36,8 @@ sử dụng extern khi chúng ta chỉ muốn sử dụng 1 số biến nhất �
     return 0;
  }
 ```
-# Từ khóa static 
-## biến static được khai báo local
+# 2. Từ khóa static 
+## 2.1 biến static được khai báo local
 1 biến sẽ được cấp phát vùng nhớ tồn tại xuyên suốt thời gian chạy chương trình và có phạm vi sử dụng bên trong 1 hàm
 + Ta có thể sử dụng biến static để thực hiện cập nhật giá trị của 1 dữ liệu nào đó mỗi khi gọi hàm 
 ```bash
@@ -64,7 +64,7 @@ lan 3 = 27
 lan 4 = 28
 lan 5 = 29
 ```
-## biến hoặc hàm static được khai báo global
+## 2.2 biến hoặc hàm static được khai báo global
 điều này cho biết biến hoặc hàm đó chỉ có thể gọi và sử dụng trong file hiện tại mà không thể gọi thông qua các file khác nhằm giới hạn quyền truy cập và đảm bảo biến hoặc hàm đó không thể thay đổi ngoài phạm vi cho phép 
 . Ví dụ ta viết 1 chương trình tính toán 2 phân số như sau
 + file lib.h
@@ -108,7 +108,7 @@ int main(){
 }
 ```
 trong hàm trên ta đã khai báo 2 phân số và truyền vào hàm print để in ra kết quả nhưng không thể gọi tới hàm nhan2ps để xem được cụ thể bên trong
-# Từ khóa register
+# 3. Từ khóa register
 sử dụng khi ta muốn lưu trữ 1 biến nào đó trong thanh ghi thay vì trên RAM, mục đích là để tăng tốc độ tính toán xử lý.
 ```bash
 #include<stdio.h>
@@ -134,7 +134,7 @@ int main(){
 }
 ```
 hàm trên sẽ đo thời gian thực thi của vòng lặp đối với biến i khi khai báo là register. Nếu ta không khai báo biến i là register thì khi in ra kết quả sẽ có sự chênh lệch thời gian. Trong trường hợp khai báo là register thì khi ra kết quả thời gian sẽ nhỏ hơn khi không khai báo là register
-# Từ khóa volatile 
+# 4. Từ khóa volatile 
 được sử dụng trên những biến thay đổi ngẫu nhiên bởi mà không chịu sự chia phối bơi chương trình chính. Mục đích là để tránh việc compiler hiểu nhầm biến này không được sử dụng và xóa nó đi để tối ưu hóa chương trình. 
 
 

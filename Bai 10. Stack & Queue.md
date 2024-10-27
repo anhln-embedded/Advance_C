@@ -131,12 +131,12 @@ int main() {
     initialize(&stack1,size);
     printf("push process\n");
     for(size_t i = 0 ; i < size ; i++){
-        push(&stack1,i);
-        printf("element: %d -> add:%p\n",i,stack1.items[i],&stack1.items[i]);
+        push(&stack1,i + 2);
+        printf("element: %d -> add:%p\n",stack1.items[i],&stack1.items[i]);
     }
     printf("pop process\n");
     for(size_t i = 0; i < size ; i++){
-        printf("top element: %d -> add:%p\n",i,pop(&stack1),&stack1.items[i]);
+        printf("top element: %d -> add:%p\n",pop(&stack1),&stack1.items[i]);
     }
     printf("top element: %d",top(stack1));
     return 0;
@@ -146,17 +146,17 @@ int main() {
 Kết quả in ra màn hình
 ```bash
 push process
-element: 0 -> add:0000000000000000
-element: 1 -> add:0000000000000001
-element: 2 -> add:0000000000000002
-element: 3 -> add:0000000000000003
-element: 4 -> add:0000000000000004
+element: 2 -> add:000001C6D80CE830
+element: 3 -> add:000001C6D80CE834
+element: 4 -> add:000001C6D80CE838
+element: 5 -> add:000001C6D80CE83C
+element: 6 -> add:000001C6D80CE840
 pop process
-top element: 0 -> add:0000000000000004
-top element: 1 -> add:0000000000000003
-top element: 2 -> add:0000000000000002
-top element: 3 -> add:0000000000000001
-top element: 4 -> add:0000000000000000
+top element: 6 -> add:000001C6D80CE830
+top element: 5 -> add:000001C6D80CE834
+top element: 4 -> add:000001C6D80CE838
+top element: 3 -> add:000001C6D80CE83C
+top element: 2 -> add:000001C6D80CE840
 Stack is empty
 top element: -1
 ```

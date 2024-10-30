@@ -1,8 +1,8 @@
+
 # Kiểu dữ liệu Json
-## 1. Lý Thuyết
-### 1.1 Định nghĩa
+## 1.1 Định nghĩa
 Đây là 1 định dạng để truyền tải dữ liệu giữa các hệ thống với nhau ,và dữ liệu thường được chuẩn hóa về dạng chuỗi (__json string__) chứa nhiều loại dữ liệu khác bên trong. 
-### 1.2 Cấu trúc
+## 1.2 Cấu trúc
 Json là 1 chuỗi chứa các dữ liệu được chuẩn hóa như sau :
 
 __+ Object__ : tập hợp của các cặp key - value được ngăn cách bởi dấu phẩy, 
@@ -53,11 +53,11 @@ __+ array__: bên trong array có thể là bất kỳ dữ liệu nào
   }
 ]
 ```
-### 1.3 Ứng dụng trong lĩnh vực embedded
-__TRUYỀN NHẬN DỮ LIỆU CẢM BIẾN TRONG CÁC HỆ THỐNG IOT__
+## 1.3 Ứng dụng trong lĩnh vực embedded
+### a) Truyền nhận dữ liệu cảm biến trong lĩnh vực IoT
 + __Gửi dữ liệu__ : ta có thể sử dụng chuỗi json để lưu các thông tin về nhiệt độ và độ ẩm và gửi lên server để xử lý
 + __Cấu hình điều khiển__: chuỗi json có thể được gửi từ server về thiết bị chứa các thông tin về cấu hình cài đặt như nhiệt độ,thời gian tương ứng để bật tắt các thiết bị ngoại vi
-### So sánh với Struct 
+### b) So sánh với Struct 
 __Quản lý memory__ :
 + struct sẽ cấp phát vùng nhớ cho tất cả các thành viên được định nghĩa 1 khi khai báo. vì vậy sẽ có 1 số trường hợp người dùng không muốn 1 số thành viên của struct, điều này sẽ gây lãng phí memory
 + Json hiệu quả hơn so với struct do chỉ chứa các trường định nghĩa chung về loại dữ liệu mà người dùng muốn cấu hình,chính vì vậy người dùng có thể nhập các dữ liệu cấu hình mong muốn mà không gây dư thừa memory 
@@ -89,12 +89,12 @@ typedef struct JsonValue {
         double number;
         char *string;
         struct {
-            struct JsonValue *values;
+            struct JsonValue *json_array;
             size_t count;
         } array;
         struct {
             char **keys; 
-            struct JsonValue *values; 
+            struct JsonValue *json_object; 
             size_t count; 
         } object;
     } value;
@@ -112,15 +112,16 @@ __+ union value__ : với 3 thành viên __boolean, number, string__ được d�
 __array bên trong union__ : được dùng để tạo 1 array trong chuỗi json với __count__ dùng để xác định số phần tử của array, __values__ dùng để trỏ tới các phần tử của array
 
 ```bash
-   struct JsonValue *values; // con trỏ values sẽ được gọi liên tục để xử lý các thành phần bên trong mãng
+// mảng values sẽ được đệ quy liên tục để trỏ tới chính struct JsonValue gán giá trị cho biến thành viên cũng là thành phần của mảng
+   struct JsonValue *json_array; 
 ```
 
 __object bên trong union__ : được dùng để tạo ra 1 object trong chuỗi json, với __keys__ dùng để lưu trữ các chuỗi con, __values__ trỏ tới từng value tương ứng với key để cài đặt giá trị, __count__ dùng để xác định số cặp __key-value__
 
 ```bash
-   struct JsonValue *values; // con trỏ values sẽ được gọi liên tục để xử lý các value tương ứng với mỗi key bên trong object 
+   struct JsonValue *json_object; // cách xử lý tương tự array 
 ```
-### 2.2 Gán giá trị cho json
+### 2.2 Gán giá trị thủ công cho json
 Ví dụ: ta sẽ cấu hình các giá trị của định dạng dữ liệu sau
 
 __[43.23 , "duy pham" , true , [35 , "tuoi"]]__ 
@@ -157,9 +158,146 @@ info_list->value.array.values[3].value.array.values[0].type = JSON_NUMBER;
 info_list->value.array.values[3].value.array.values[0].value.number = 35;
 info_list->value.array.values[3].value.array.values[1].value.string = "Tuoi"; 
 ```
+### 2.3 Gán giá trị tự động bằng cách truyền chuỗi json trực tiếp vào các hàm xử lý
 
+#### 2.3.1 Ứng dụng của con trỏ 2 cấp trong xữ lý chuỗi json
+
+
+#### 2.3.2 Các hàm để xử lý chuỗi Json
+__a) Hàm xử lý chính__ 
++ Hàm để phân tích các chuỗi con bên trong json tương ứng với các kiểu dữ liệu được thể hiện dưới dạng chuỗi
++ Ta sẽ sử dụng cơ chế switch-case để kiểm tra và nhảy vào các hàm tách chuỗi tương ứng và trả về kết quả là giá trị tương ứng với chính xác kiểu dữ liệu của nó
+```bash
+JsonValue *parse_json(const char **json) { 
+    skip_whitespace(json); // bỏ qua các khoảng trắng bên trong chuỗi
+    switch (**json) {
+        case 'n':
+            return parse_null(json); string is existed
+        case 't':
+        case 'f':
+            return parse_boolean(json);
+        case '\"':
+            return parse_string(json);
+        case '[':
+            return parse_array(json);
+        case '{':
+            return parse_object(json);
+        default:
+            if (isdigit(**json) || **json == '-') {
+                return parse_number(json);
+            } else {
+                // Lỗi phân tích cú pháp
+                return NULL;
+            }
+    }
+}
+```
+__b) Các Hàm con phụ thuộc để xử lý từng loại dữ liệu__ 
   
+__1. Hàm tách chuỗi con json thuộc kiểu STRING__
 
++ Sau khi hàm __parse_json__ được gọi thì nếu chuỗi hiện tại là kiểu string với ký tự xác định là ' \\" ', thì nó sẽ nhảy vào hàm sau đây để xử lý 
+
+```bash
+JsonValue *parse_string(const char **json) {
+	(*json)++;									 //dịch tới địa chỉ tiếp theo để bắt đầu xử lý từ ký tự đầu tiên 
+	const char *start = *json;					 //lưu địa chỉ bắt đầu của chuỗi 
+	const char *end = start                      //biến để kiểm tra độ dài chuỗi
+  while (**json != '\"' && **json != '\0') {
+		(*json)++; 							     //kiểm tra độ dài chuỗi
+	}
+	if (**json == '\"') {
+		size_t length = *json - start;           //cập nhật kích thước chuỗichuỗi 
+
+    //cấp phát vùng nhớ và lưu tạm thời chuỗi vừa tách được 
+		char *str = (char *) malloc((length + 1) * sizeof(char)); 
+		strncpy(str, start, length);
+		str[length] = '\0';
+
+    //cấp phát vùng nhớ để lưu chuỗi trả về thực sự
+		JsonValue *value = (JsonValue *) malloc(sizeof(JsonValue));
+		value->type = JSON_STRING; //xác định kiểu dữ liệu 
+		value->value.string = str; //gán vào biến tương ứng
+		*json = ++end;             //cập nhật lại địa chỉ chuỗi json để xử lý chuỗi kế tiếp
+		return value;
+	}
+    return NULL;
+}
+```
++ Nếu chuỗi hiện tại có kiểu là các con số thì hàm sau sẽ được gọi với  hàm __strtod(const char* string , char** endptr)__ được dùng để chuyển đổi từ 1 chuỗi char* sang số double
+ ```bash
+JsonValue *parse_number(const char **json) {
+    char *end;                        //biến dùng để trỏ tới địa chỉ của ký tự trong chuỗi
+    double num = strtod(*json, &end); //hàm để chuyển đổi chuỗi sang kiểu số double 
+  
+  //nếu địa chỉ lưu trong con trỏ end khác *json thì tiến hành cấp phát vùng nhớ và gán giá trị trả về
+    if (end != *json) {
+        JsonValue *value = (JsonValue *) malloc(sizeof(JsonValue));
+        value->type = JSON_NUMBER;
+        value->value.number = num;
+        *json = end; //cập nhật địa chỉ của chuỗi json -> nhảy đến cuối chuỗi để chuẩn bị xử lý chuỗi tiếp theo
+        return value;
+    }
+    return NULL;
+}
+```
+
+
++ Nếu chuỗi hiện tại có ký tự xác định là '[', thì hàm sau sẽ được gọi
+
+ ```bash
+JsonValue *parse_array(const char **json) {
+    (*json)++;                      //dịch sang ký tự tiếp theo để bắt đầu xử lý
+    skipwhitespace(json);           //nếu phát hiện khoảng trắng đầu chuỗi thì bỏ qua
+
+//cấp phát vùng nhớ ban đầu cho mảng và khởi tạo các giá trị ban đầu
+    JsonValue *array_value = (JsonValue *)malloc(sizeof(JsonValue));
+    array_value->type = JSON_ARRAY;
+    array_value->value.array.count = 0;
+    array_value->value.array.values = NULL;
+
+//kiểm tra chuỗi hiện tại có hợp lệ không thì tiếp tục xử lý
+    while (**json != ']' && **json != '\0') {
+//tạo 1 con trỏ để luu giá trị trả về -> lý do phải gọi ra hàm parse_json là ta muốn tiếp tục kiểm tra thành phần của mảng là thuộc kiểu gì và trả về kiểu tương ứng
+        JsonValue *element = parse_json(json);  
+
+//nếu giá trị trả về hợp lệ ta tiến hành mở rộng kích thước vùng nhớ đã cấp phát trước đó và gán giá trị tương ứng
+        if (element) {
+            array_value->value.array.count++;
+          
+            array_value->value.array.values = 
+            (JsonValue *)realloc(array_value->value.array.values, array_value->value.array.count * sizeof(JsonValue));
+       
+            array_value->value.array.values[array_value->value.array.count - 1] = *element;
+            
+            free(element); //giải phóng vùng nhớ tạm trước đó dùng đẻ lưu giá trị trả về
+
+        }
+// 
+        else { 
+            break; //nếu không còn thành phần trong mảng nữa thì thoát khỏi while
+        }
+        skip_whitespace(json); //nếu có khoảng tráng sau mỗi thành phần trong chuỗi thì bỏ qua
+
+        //nếu phát hiện ký tự phân tách thành phần thì tăng địa chỉ sang ký tự tiếp theo
+        if (**json == ',') {
+            (*json)++;
+        }
+    }
+
+    //nếu phát hiện ký tự kết thúc mảng thì dịch sang địa chỉ của chuỗi con json kế tiếp và trả về toàn bộ giá trị trong mảng
+    if (**json == ']') {
+        (*json)++; 
+        return array_value;
+    } 
+    //nếu ký tự kết thúc mảng không hợp lệ thì sẽ giải phóng vùng nhớ và trả về NULL
+    else {
+        free_json_value(array_value);
+        return NULL;
+    }
+    return NULL;
+}
+```
     
 
 

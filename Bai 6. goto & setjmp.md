@@ -56,7 +56,7 @@ jmp_buf state_pointer;
 ```bash
 int state = setjump(state_pointer);
 ```
-+ Ta gọi hàm longjmp ở vị trí nào đó trong chương trình mà ta muốn nhảy ngược trỏ lại vị trí định nghĩa state_pointer với 2 đối số cần truyền vào như sau
++ Ta gọi hàm longjmp ở vị trí nào đó trong chương trình mà ta muốn nhảy ngược trỏ lại vị trí ta gọi hàm setjmp.
 ```bash
   longjmp(jmp_buf,value of state);
 ``` 

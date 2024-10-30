@@ -1,7 +1,7 @@
 # Memory layout
 là phân vùng bố trí vùng nhớ của dữ liệu 1 chương trình được lưu trữ trên RAM khi ta tải chương trình lên. Nó sẽ chia làm 5 phần.
 
-## Code segment
+## 1. Code segment
  Đây là phần vùng chỉ dọc mà không thể ghi dữ liệu, dùng để lưu:
  + các biến khai báo const
  + các chuỗi ký tự
@@ -23,7 +23,7 @@ ví dụ trên là 1 minh họa của 1 biến được khai báo const, khi ta 
  }
 ```
 Tương tự đối với trường hợp thay đổi nội dung của 1 chuỗi mà được trỏ tới bởi 1 con trỏ là không thể được
-## DATA 
+## 2. DATA 
 dùng để đọc/ghi data, lưu trữ các biến: 
 + khai báo (static/global) khác 0
 + vùng nhớ được thu hồi khi chương trình kết thúc
@@ -44,7 +44,7 @@ typedef struct{
 }data;
 static data dt = {23,12}; // 2 member a và b của struct data lúc này mới được cấp phát vùng nhớ ở data segment
 ```
-## BSS 
+## 3. BSS 
 Vùng nhớ dùng để đọc/ghi data,lưu các biến
 + khai báo static/global được khởi tạo bằng 0, hoặc chưa gán giá trị (mặc định là 0)
 + vùng nhớ được thu hồi khi chương trình kết thúc
@@ -63,7 +63,7 @@ Ta có ví dụ sau minh họa cho việc sử dụng BSS
  }
 ```
 Tất cả 4 biến trên khi in ra đều sẽ có giá trị bằng 0
-## STACK
+## 4. STACK
 Đây là phân vùng dùng để lưu trữ: 
 + các biến khai báo cục bộ (local)
 + tham số hàm 
@@ -99,7 +99,8 @@ Khi ta khai báo như sau
 ```
 + con trỏ str sẽ được lưu trên stack
 + chuỗi "hello world" mà str trỏ đến sẽ được lưu ở code segment
-## So sánh 1 biến const khi khai báo local vs global
+### So sánh 1 biến const khi khai báo local vs global
+
 khi ta khai báo 1 biến const ở phạm vi local, nó sẽ được lưu trên stack và không thể thay đổi được giá trị. Tuy nhiên dùng 1 con trỏ để truy cập vào địa chỉ của nó thì vẫn thay đổi được
 
 ```bash
@@ -115,7 +116,7 @@ khi ta khai báo 1 biến const ở phạm vi local, nó sẽ được lưu trê
 ```
 + Việc chỉnh sửa giá trị của 1 biến const cục bộ thông qua con trỏ sẽ khiến compiler đưa ra cảnh báo nhưng vẫn thực hiện được
 + Đối với biến const toàn cục, thì ta không thể thay đổi giá trị của nó như làm với biến local. 
-# HEAP
+## 5. HEAP
 Đây là vùng câp phát động dùng để 
 + cấp phát vùng nhớ thay đổi được trong quá trình chương trình chạy để phù hợp với những yêu cầu về thay đổi data trong chương trình
 + được quản lý bởi người dùng thông qua các từ khóa malloc, calloc,realloc, free (sử dụng thư viện stdlib.h)
@@ -186,7 +187,7 @@ Khi ta chạy chương trình trên, sẽ yêu cầu ta nhập vào số lượn
   //giải phóng vùng nhớ sau khi sử dụng để tránh lỗi memory leak
   free(ptr);
 ```
-## So sánh malloc, calloc,realloc
+### So sánh malloc, calloc, realloc
 CÚ PHÁP KHAI BÁO
 ### malloc
 ```bash
@@ -269,9 +270,9 @@ output 5:8
 output 6:9
 output 7:10
 ```
-# Phân biệt STACK và HEAP
+### Phân biệt STACK và HEAP
 ![Capture](https://github.com/user-attachments/assets/b729ce20-051e-48f9-987c-e21d43eb7002)
-## Khai báo các biến trên STACK để đọc dữ liệu thông qua cảm biến dht11 và đưa ra cảnh báo
+### a) Khai báo các biến trên STACK để đọc dữ liệu thông qua cảm biến dht11 và đưa ra cảnh báo
 
 ```bash
 typedef struct{
@@ -279,7 +280,13 @@ typedef struct{
   float humi;
 }dht11;
 void read_dht11(dht11* mydht){
-      //đọc về và lưu vào 2 thành viên của biến struct dht11
+	float temp,humi; // khai báo 2 biến để lưu kết quả xủ lý
+      /*
+	 	 giả sử khung truyền data của dht11 được xử lý ở đây
+	  */
+	//lưu data đọc về vào struct
+	mydht->temp = temp;
+	mydht->humi = humi;
 }
 void control_Alarm(dht11* mydht){
 //khai báo 2 biến local để đọc giá trị từ struct
@@ -299,25 +306,26 @@ int main(){
   return 0;
 }
 ```
-## Sử dụng HEAP để đọc về 1 buffer trên server online nào đó và thực hiện hành đông cụ thể
+### b) Sử dụng HEAP để đọc về 1 buffer trên server online nào đó và thực hiện hành đông cụ thể
 Ta sẽ có 1 hàm để thực hiện việc đọc 1 buffer nào đó và trả về con trỏ tới vùng nhớ được cấp phát trên heap để lưu trữ chuỗi đọc về
 
 ```bash
 char* get_data_online(char* online_buffer){
     uint8_t size = 0;
-//trỏ tới chuỗi cần đọc 
-    char* ptr = online_buffer;
-//xác định kích thước của chuỗi 
+    char* ptr = online_buffer; //trỏ tới chuỗi cần đọc 
     for(int i = 0 ; ptr[i] != '\0'; i++){
-        size += 1;
+        size += 1; //tính toán kích thước chuỗi
     }
-//cấp phát động trên heap
+	
+	//cấp phát động trên heap
     char* read_buff = (char*)malloc((size + 1) * sizeof(char));
-//sao chép vào vùng nhớ heap
+
+	//sao chép vào vùng nhớ heap
     for(int i = 0 ; i < size ; i++){
       read_buff[i] = ptr[i];
     }
-    read_buff[size] = '\0';
+    
+	read_buff[size] = '\0'; 	//thêm ký tự kết thúc chuỗi
     return read_buff;
 }
 ```

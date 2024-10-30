@@ -1,4 +1,3 @@
-
 # 1. Struct 
 Đây là từ khóa để định nghĩa 1 kiểu dữ liệu người dùng, mục đích để tạo nên 1 kiểu dũ liệu để mô tả 1 đối tượng cụ thể nào đó khác với các kiểu dữ liệu nguyên thủy như int,float,double,...
 ## 1.1 Khai báo

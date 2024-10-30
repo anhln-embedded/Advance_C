@@ -1,4 +1,3 @@
-
 # CON TRỎ
 Định nghĩa: lưu trữ địa chỉ của đối tượng (variable,function,array,struct..) 
 

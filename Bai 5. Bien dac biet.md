@@ -109,7 +109,7 @@ int main(){
 ```
 trong hàm trên ta đã khai báo 2 phân số và truyền vào hàm print để in ra kết quả nhưng không thể gọi tới hàm nhan2ps để xem được cụ thể bên trong
 # 3. Từ khóa register
-sử dụng khi ta muốn lưu trữ 1 biến nào đó trong thanh ghi thay vì trên RAM, mục đích là để tăng tốc độ tính toán xử lý.
+sử dụng khi ta muốn lưu trữ 1 biến nào đó trong thanh ghi thay vì trên RAM, mục đích là để tăng tốc độ tính toán xử lý. 
 ```bash
 #include<stdio.h>
 #include<time.h>

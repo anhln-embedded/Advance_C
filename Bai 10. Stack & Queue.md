@@ -141,7 +141,7 @@ int main() {
     printf("top element: %d",top(stack1));
     return 0;
 }
-```
+```   
 
 Kết quả in ra màn hình
 ```bash

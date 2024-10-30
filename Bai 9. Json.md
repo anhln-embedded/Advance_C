@@ -7,7 +7,7 @@ Json là 1 chuỗi chứa các dữ liệu được chuẩn hóa như sau :
 
 __+ Object__ : tập hợp của các cặp key - value được ngăn cách bởi dấu phẩy, 
 
-+ key: có kiểu char*
++ key: có kiểu char* 
 + value: bất kỳ loại dữ liệu nàonào 
 + Định dạng: thường được đặt trong 2 dấu ngoặc { }
 

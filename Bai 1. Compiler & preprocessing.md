@@ -34,7 +34,7 @@ Muc tiêu của bước này sẽ là xuất ra file main.i
 + xóa bỏ các comment trong file main.c 
 __Ví dụ__
 
-### Bước 2: biên dịch (compiler)
+### Bước 2: biên dịch (compiler) 
 Lúc này từ file main.s sẽ được biên dịch sang file main.s bằng câu lệnh sau
 ```bash
  gcc -S main.i -o main.s
@@ -58,9 +58,6 @@ Cuối cùng ta sẽ thực hiện chạy chương trình với file exe vừa s
 ```bash
  ./main
  ```
-
-
-
 ## Installation
 
 Install my-project with npm

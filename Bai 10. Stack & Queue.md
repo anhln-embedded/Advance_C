@@ -1,5 +1,3 @@
-
-# STACK & QUEUE
 # 1. STACK 
 ## 1.1. Đặc điểm
 + Vùng nhớ lưu trữ biến cục bô,tham số hàm, địa chỉ trả về của hàm
@@ -66,7 +64,7 @@ main() -> return giaithua(6) // 0x01
 ```
 + Như vậy kết quả sẽ là: 6 * 5 * 4 * 3 * 2 * 1 = 720
 
-1.3.2 Mô phỏng code cấp phát trên stack
+### 1.3.2 Mô phỏng code cấp phát trên stack
 
 + đầu tiên ta sẽ tạo ra 1 struct để khai báo những thuộc tính của stack
 ```bash
@@ -95,9 +93,12 @@ bool is_full( Stack stack) {
 ```
 + Cuối cùng ta sẽ có 3 hàm để thao tác với stack 
 ```bash
+#define STACK_EMPTY -1
+
 void push(Stack *stack, int value) {
     if (is_full(*stack) == false) {
-        stack->items[++stack->top] = value; //gán giá trị trước khi dịch đến địa chỉ tiếp theo
+//gán giá trị trước khi dịch đến địa chỉ tiếp theo vì mặc định ban đầu stack có chỉ số là -1
+        stack->items[++stack->top] = value; 
     } else {
         printf("Stack overflow\n"); //nếu stack đầy thì in ra thông báo
     }
@@ -123,42 +124,251 @@ int top(Stack stack) {
 }
 ```
 
-+ Ta sẽ kết hợp các hàm đã tạo ở trên để gọi trong hàm main 
++ Ta sẽ kết hợp các hàm đã tạo ở trên để thao tác với stack 
 ```bash
-int main() {
+int main()
+{
     Stack stack1;
-    size_t size = 5;
-    initialize(&stack1,size);
-    printf("push process\n");
-    for(size_t i = 0 ; i < size ; i++){
-        push(&stack1,i + 2);
-        printf("element: %d -> add:%p\n",stack1.items[i],&stack1.items[i]);
+    int8_t size = 5;           //kích thước của stack
+    initialize(&stack1, size); //khởi tạo giá trị ban đầu cho stack
+
+    //in và Lưu giá trị vào stack 
+    for (int8_t i = 0; i < size; i++)
+    {
+        push(&stack1, i + 2);
+        printf("element: %d -> add:%p\n", stack1.items[i], &stack1.items[i]);
     }
-    printf("pop process\n");
-    for(size_t i = 0; i < size ; i++){
-        printf("top element: %d -> add:%p\n",pop(&stack1),&stack1.items[i]);
+
+    //xảy ra lỗi stack overflow nếu cố gắng push thêm data vượt quá size đã khởi tạo ban đầu
+    push(&stack1,1111);
+    
+    //In và lấy từng phần tử ra khỏi stack    
+    for (int8_t i = size - 1 ; i >= -1; i--)
+    {
+        printf("top element: %d -> add:%p\n", pop(&stack1), &stack1.items[i]);
     }
-    printf("top element: %d",top(stack1));
+
     return 0;
 }
 ```   
 
 Kết quả in ra màn hình
 ```bash
-push process
-element: 2 -> add:000001C6D80CE830
-element: 3 -> add:000001C6D80CE834
-element: 4 -> add:000001C6D80CE838
-element: 5 -> add:000001C6D80CE83C
-element: 6 -> add:000001C6D80CE840
-pop process
-top element: 6 -> add:000001C6D80CE830
-top element: 5 -> add:000001C6D80CE834
-top element: 4 -> add:000001C6D80CE838
-top element: 3 -> add:000001C6D80CE83C
-top element: 2 -> add:000001C6D80CE840
-Stack is empty
-top element: -1
+element: 2 -> add:000002E41321E9D0
+element: 3 -> add:000002E41321E9D4
+element: 4 -> add:000002E41321E9D8
+element: 5 -> add:000002E41321E9DC
+element: 6 -> add:000002E41321E9E0
+Stack overflow
+top element: 6 -> add:000002E41321E9E0
+top element: 5 -> add:000002E41321E9DC
+top element: 4 -> add:000002E41321E9D8
+top element: 3 -> add:000002E41321E9D4
+top element: 2 -> add:000002E41321E9D0
+Stack underflow
+top element: -1 -> add:000002E41321E9CC
+```   
+# 2. QUEUE
+
+<p align = "center">
+<img src = "https://github.com/user-attachments/assets/cf831539-70c2-4bdc-8e43-e7ec84ac99ae" width = "400" height = "300">
+
+Đây là 1 kiểu cấp phát bộ nhớ theo cơ chế __FIFO__, có nghĩa là phần tử nào vào hàng đợi trước sẽ được lấy ra đầu tiên
+
+__Các phần tử được thêm lần lượt__ 
+
+<p align = "center">
+<img src = "https://github.com/user-attachments/assets/b3b41d9d-0ff5-4e60-880f-f7d2196e4d15" width = "400" height = "150">
+
+
+__Lấy ra theo thứ tự cái nào vào trước__ 
+
+<p align = "center">
+<img src = "https://github.com/user-attachments/assets/0ffca03c-95c0-424a-8827-3cda964f8d61" width = "400" height = "150">
+
+## 2.1 Các thành phần của QUEUE
+
+<p align = "center">
+<img src = "https://github.com/user-attachments/assets/b0885609-b47a-4c21-84ca-136bd4eed15f" width = "500" height = "250">
+
+__enqueue__ : thêm 1 phần tử vào cuối hàng đợi
+
+__dequeue__ : lấy 1 phần tử ở đầu hàng đợi
+
+__front__ : chỉ số truy cập giá trị ở đàu hàng đợi (tăng khi dequeue)
+
+__rear__ : chỉ số truy cập giá trị ở cuối hàng đợi (tăng khi enqueue)
+
+__Empty queue__ : 1 queue được xem là rỗng khi giá trị front và rear là -1 
+
+__full queue__ : khi kích thước của queue size = rear - 1
+
+## 2.2 Linear và Circular queue
+
+### a) linear queue
++ Trong hàng đợi linear, khi ta dequeue trong trường hợp full queue __(size = rear - 1)__ , thì lúc này ta sẽ không thể enqueue phần tử mới được dù cho có vùng nhớ trống ở đầu vừa được dequeue Cơ ché này được giải thích như sau.
++ Khi chưa có giá tri, lúc này hàng đợi rỗng và giá trị của front và rear mặc định là -1
+
+<p align = "center">
+<img src = "https://github.com/user-attachments/assets/62f24d68-44eb-4064-b9cf-501c8867f1af" widht = "250" height = "100">
+
+
++ Tiếp theo ta sẽ tiến hành enqueue, lúc này chỉ số front và rear sẽ tăng lên 0 trước khi giá trị được enqueue vào
+
++ Tuy nhiên khi ta tiếp tục enqueue, thì front sẽ luôn chỉ tới giá trị ở đầu hàng đợi, trong khi rear sẽ tăng để trỏ tới các vùng nhớ tiếp theo về phía cuối hàng đợi.
+
++ Sau khi hàng đợi đầy, ta tiến hành dequeue thì lúc này do chỉ số rear đã trỏ đến cuối hàng đợi nên nó sẽ không cho phép ta enqueue nữa, mặc dù vùng nhớ ở đầu hàng đợi mà ta vừa dequeue giá trị, đang trống. Chính vì vậy nó sẽ gây lãng phí memory và có thể được coi là 1 nhược điểm của linear queue
+
+<p align = "center">
+<img src = "https://github.com/user-attachments/assets/df3db37c-321d-4489-b4ef-cde304b6d6e7" widht = "450" height = "250">
+
+=> Khi ta dequeue hết tất cả phần tử trong queue, lúc này chỉ số front bằng với rear, khi đó chúng sẽ được reset về -1. Quá trình enqueue mới được cho phép
+
+### b) Circular queue
+
++ Cơ chế của circular cũng tương tự như linear, tuy nhiên nó tối ưu hơn do giải quyết được vấn đề của linear. Nó cho phép ta tiếp tục enqueue au khi dequeue 1 full queue
+
+# 2.3 Mô phỏng cơ chế cấp phát kiểu queue
++ đầu tiên ta tạo ra 1 struct lưu trữ các thuộc tính của queue
+
+```bash
+typedef struct queue
+{
+    int *queue_item; //mảng để lưu các thành phần 
+    int size;        //kích thước mảng queue
+    int front;       //chỉ số truy cập vào phần tử đầu hàng đợi
+    int rear;        //chỉ số truy cập vào phần tử cuối hàng đợi
+} Queue;
 ```
++ Tiếp theo ta tạo ra 1 hàm để khởi tạo 1 queue 
+
+```bash
+Queue* initialize(int size)
+{
+    Queue *queue = (Queue *)malloc(size * sizeof(Queue));   // cấp phát vùng nhớ cho queue
+    queue->queue_item = (int *)malloc(size * sizeof(int)); // cấp phát vùng nhớ cho mảng chứa các phần tử sẽ đẩy vào queue
+    queue->size = size; 
+    queue->front = queue->rear = -1; //giá trị mặc định khi queue rỗng
+    return queue;   // trả về địa chỉ của vùng nhớ vừa được khởi tạo
+}
+```  
++ Ta sẽ có 2 hàm để kiểm tra queue đầy hay rỗng
+
+```bash
+bool IsQueue_Empty(Queue queue)
+{
+    return ((queue.front == -1) ? true : false); 
+}
+bool IsQueue_Full(Queue queue)
+{
+    /* circular */
+    return (queue.rear + 1) % queue.size == queue.front; //khi front = 0 và rear = size - 1
+    /* linear */
+    //return ((queue.rear == queue.size - 1) ? true : false); 
+}
+
+```  
++ Tiếp theo ta viết hàm để enqueue phần tử vào queue 
++ Để enqueue thì trước hết ta phải đảm bảo queue không đầy
++ Tiếp theo ta sẽ kiểm tra nếu queue rỗng thì sẽ cập nhật chỉ số front và rear đều bằng 0 
++ Nếu queue không rỗng thì ta chỉ tăng giá trị rear để enqueue phần tử vào, còn chỉ số front thì luôn luôn trỏ tới phần tử đầu tiên của hàng đợi
+ ```bash
+void enqueue(Queue *queue, int value)
+{
+    if (!IsQueue_Full(*queue))
+    {
+        if (IsQueue_Empty(*queue))
+        {
+            queue->front = queue->rear = 0;
+        }
+        else
+        {
+         /* linear */
+            //queue->rear++;
+        /* circular */
+            queue->rear = (queue->rear + 1) % queue->size;
+
+        }
+        queue->queue_item[queue->rear] = value;
+        printf("enqueue %d -> %p\n", queue->queue_item[queue->rear], &queue->queue_item[queue->rear]);
+    }
+    else
+        printf("queue overflow, can't add more item\n");
+}
+```  
++ Ta viết hàm dequeue để lấy phần tử đầu tiên của hàng đợi ra
++ Trước khi dequeue ta cũng kiểm tra liệu có phần tử nào trong queue không
++ Nếu queue không rỗng ta sẽ in giá trị hiện tại ra và kiểm tra liệu chỉ số front có nhỏ hơn rear không
++ nếu front chưa bằng rear, có nghĩa là vẫn còn phần tử phía sau, lúc này ta tiếp tục tăng chỉ số front để dequeue phần tử tiếp theo
++ Nếu front bằng rear, nghĩa là không còn phần tử nào phía sau cã, lúc này ta sẽ reset giá trị front và rear để chuẩn bị cho lần enqueue tiếp theo
+
+```bash
+
+void dequeue(Queue *queue)
+{
+    if (!IsQueue_Empty(*queue))
+    {
+        printf("dequeue %d -> %p\n", queue->queue_item[queue->front], &queue->queue_item[queue->front]);
+        if (queue->front == queue->rear)
+        {
+            queue->front = queue->rear = -1;
+        }
+        else{
+        /* linear */
+            //queue->front++;
+        /* circular */
+            queue->front = (queue->front + 1) % queue->size;
+        }
+
+    }
+    else printf("queue underflow\n");
+}
+```  
++ Ta sẽ thực hiện việc enqueue và dequeue trong hàm main như sau 
+
+
+```bash
+
+int main(){
+    int size = 5;
+    Queue* queue = initialize(size);
+    for(int i = 0 ; i < size ; i++){
+        enqueue(queue,i + 1);
+    }
+    enqueue(queue,23); // báo lỗi do lúc này queue đã đầy
+    printf("\n");
+    for(int i = queue->front ; i <= queue->rear ; i++){
+        dequeue(queue);
+    }
+    dequeue(queue); //báo lỗi do lúc này queue đã rỗng
+    return 0;
+}
+```  
++ kết quả in ra ta thấy các phần tử được enqueue và dequeue hoàn toàn theo cơ chế __FIFO__  
+
+```bash
+enqueue 1 -> 00000217ACBFE910      
+enqueue 2 -> 00000217ACBFE914      
+enqueue 3 -> 00000217ACBFE918      
+enqueue 4 -> 00000217ACBFE91C      
+enqueue 5 -> 00000217ACBFE920      
+queue overflow, can't add more item
+
+dequeue 1 -> 00000217ACBFE910      
+dequeue 2 -> 00000217ACBFE914      
+dequeue 3 -> 00000217ACBFE918      
+dequeue 4 -> 00000217ACBFE91C      
+dequeue 5 -> 00000217ACBFE920      
+queue underflow
+```  
++ Ta biết rằng 1 linear queue sẽ chỉ được enqueue sau khi queue đã đày bằng cách dequeue toàn bộ phần tử bên trong nó. Vậy nếu ta chỉ dequeue 1 phần tử thôi thì cũng sẽ không thể enqueue được như đã đề cập ở trên. Chính vì vậy ta sẽ sử dụng co chế __circular queue__ để giải quyết được vấn đề này
+
+
+
+
+
+
+
+
 
 

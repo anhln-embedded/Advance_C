@@ -193,8 +193,6 @@ JsonValue *parse_json(const char **json) {
 }
 ```
 __b) Các Hàm con phụ thuộc để xử lý từng loại dữ liệu__ 
-  
-__1. Hàm tách chuỗi con json thuộc kiểu STRING__
 
 + Sau khi hàm __parse_json__ được gọi thì nếu chuỗi hiện tại là kiểu string với ký tự xác định là ' \\" ', thì nó sẽ nhảy vào hàm sau đây để xử lý 
 
@@ -298,6 +296,72 @@ JsonValue *parse_array(const char **json) {
     return NULL;
 }
 ```
+
+__c) Hàm in và giải phóng memory__ 
++ Ta có hàm in ra các phần tử bên trong chuỗi json như sau
++ Đối với kiểu dữ liệu json là array thì ta sẽ thực hiện gọi lại chính hàm test để kiểm tra kiểu dữ liệu của các phần tử bên trong và thực hiện nhảy vào các câu lệnh if tương ứng và in ra
++ Nếu kiểu json khác array, thì ta tiến hành in trực tiếp ra giá trị tương ứng với kiểu dữ liệu của chúng
+```bash
+void test(JsonValue* json_value){
+    if(json_value->type == JSON_STRING){
+        printf("%s ", json_value->value.string);
+    }
+
+    else if(json_value->type == JSON_NUMBER){
+        printf("%f ", json_value->value.number);
+    }
+
+    else if(json_value->type == JSON_BOOLEAN){
+        printf("%s ", json_value->value.boolean ? "True":"False");
+    }
+    else if(json_value->type == JSON_ARRAY){
+        for (int i = 0; i < json_value->value.array.count; i++)
+        {
+            test(json_value->value.array.values + i);
+        } 
+        printf("\n");
+    }
+    else if (json_value->type ==JSON_NULL) printf("null");
+}
+```
     
 
++ Ta sẽ có hàm sau để giải phóng memory của biến kiểu json sau khi đã lưu các trường dữ liệu được xử lý phân tách chuỗi vào các biến thuộc các kiẻu dữ liệu tương ứng 
++ đầu tiên thì ta sẽ kiểm tra kiểu dữ liệu của chuỗi json là gì, thông qua switch-case
++ đối với chuỗi json kiểu __array__ và __object__: ta gọi lại chính hàm đó để kiểm tra kiểu dữ liệu của phần tử bên trong là gì, và tiến hành giải phóng vùng nhớ 
++ Đối với chuỗi json kiểu __string__: ta thực hiện giải phóng vùng nhớ trực tiếp
 
+```bash
+void free_json_value(JsonValue *json_value) {
+
+    if (json_value == NULL) {
+        return 0`; //Nếu con trỏ json_value trỏ tới vùng nhớ không chứa dữ liệu 
+    }
+
+    // nếu con trỏ json_value chứa dữ liệu thì sẽ so sánh đó là loại dữ liệu gì để tiến hành giải phóng memory tương ứng với kiẻu dữ liệu đó
+    switch (json_value->type) {
+        case JSON_STRING:
+            free(json_value->value.string);
+            break;
+        case JSON_ARRAY:
+            for (size_t i = 0; i < json_value->value.array.count; i++) {
+                free_json_value(&json_value->value.array.values[i]);
+            }
+            free(json_value->value.array.values);
+            break;
+        case JSON_OBJECT:
+            for (size_t i = 0; i < json_value->value.object.count; i++) {
+                free(json_value->value.object.keys[i]);
+                free_json_value(&json_value->value.object.values[i]);
+            }
+            free(json_value->value.object.keys);
+            free(json_value->value.object.values);
+            break;
+        default:
+            break;
+    }
+}
+```
+    
+
+    

@@ -228,7 +228,8 @@ __full queue__ : khi kích thước của queue size = rear - 1
 
 + Cơ chế của circular cũng tương tự như linear, tuy nhiên nó tối ưu hơn do giải quyết được vấn đề của linear. Nó cho phép ta tiếp tục enqueue au khi dequeue 1 full queue
 
-# 2.3 Mô phỏng cơ chế cấp phát kiểu queue
+# 2.3 Mô phỏng cấp phát cơ chế queue
+
 + đầu tiên ta tạo ra 1 struct lưu trữ các thuộc tính của queue
 
 ```bash
@@ -259,6 +260,10 @@ bool IsQueue_Empty(Queue queue)
 {
     return ((queue.front == -1) ? true : false); 
 }
+```  
+## a) Linear queue
++ Đối với linear queue thì điều kiện để 1 queue đầy sẽ khác circular queue
+```  
 bool IsQueue_Full(Queue queue)
 {
     /* circular */
@@ -283,11 +288,7 @@ void enqueue(Queue *queue, int value)
         }
         else
         {
-         /* linear */
-            //queue->rear++;
-        /* circular */
-            queue->rear = (queue->rear + 1) % queue->size;
-
+            queue->rear++;
         }
         queue->queue_item[queue->rear] = value;
         printf("enqueue %d -> %p\n", queue->queue_item[queue->rear], &queue->queue_item[queue->rear]);
@@ -314,10 +315,7 @@ void dequeue(Queue *queue)
             queue->front = queue->rear = -1;
         }
         else{
-        /* linear */
-            //queue->front++;
-        /* circular */
-            queue->front = (queue->front + 1) % queue->size;
+            queue->front++;
         }
 
     }
@@ -361,7 +359,150 @@ dequeue 4 -> 00000217ACBFE91C
 dequeue 5 -> 00000217ACBFE920      
 queue underflow
 ```  
-+ Ta biết rằng 1 linear queue sẽ chỉ được enqueue sau khi queue đã đày bằng cách dequeue toàn bộ phần tử bên trong nó. Vậy nếu ta chỉ dequeue 1 phần tử thôi thì cũng sẽ không thể enqueue được như đã đề cập ở trên. Chính vì vậy ta sẽ sử dụng co chế __circular queue__ để giải quyết được vấn đề này
+
+## b) Circular queue 
+
++ Ta biết rằng 1 linear queue sẽ chỉ được enqueue sau khi queue đã đày bằng cách dequeue toàn bộ phần tử bên trong nó. vậy nên ta sẽ không thể enqueue phần tử mới khi bắt đầu dequeue. Chính vì vậy ta sẽ sử dụng co chế __circular queue__ để giải quyết được vấn đề này 
+
+<p align = "center">
+<img src = "https://github.com/user-attachments/assets/1aace635-b65c-482f-88e9-5560ee928196" width = "300" height = "250">
+
++ Hình trên mô tả 1 queue được dequeue 3 phần tử và chỉ số front lúc này bằng 33 đang trỏ tới phần tử thứ 4. Trong khi đó chỉ số read = size - 1. Lúc này cơ chế circular sẽ cho phép rear trỏ đến đầu hàng đợi để enqueue tiếp 
+
+<p align = "center">
+<img src = "https://github.com/user-attachments/assets/c9fc6a35-624b-4b51-b4e1-d2dfd1fccb16" width = "300" height = "150">
+
++ Lúc này ta sẽ có thể tiếp tục enqueue cho đến khi các ô trống được lắp đầy. Và miễn là, ta không thực hiện dequeue tại vị trí front hiện tại, thì lúc này circular queue sẽ ở trạng thái đầy. 
+
+<p align = "center">
+<img src = "https://github.com/user-attachments/assets/2b1ec340-0185-4801-bac5-3f8d008e58d8" width = "300" height = "150">
+
+Vì vậy ta kết luận được. điều kiện để 1 circular queue full là:
+
+__trường hợp rear = size - 1__ : thì front = 0
+
+__trường hợp rear khác size - 1__: thì rear = front - 1
+
++ Ta sẽ có hàm sau với công thức tổng quát trả về 1 full queue như sau 
+
+
+```bash
+bool IsQueue_Full(Queue queue)
+{
+    return (queue.rear + 1) % queue.size == queue.front; 
+}
+```
++ Lúc này trong hàm enqueue ta cũng sửa lại điều kiện cập nhật chỉ số  rear như sau, toàn bộ những phần còn lại thì giữ nguyên như linear queue
+
+```bash
+void enqueue(Queue *queue, int value)
+{...
+        else
+        {
+           queue->rear = (queue->rear + 1) % queue->size; 
+        }
+ ...
+}
+```
++ Ta cũng làm tương tự vói hàm dequeue, để cập nhật chỉ số front
+
+```bash
+void dequeue(Queue *queue)
+{
+    ...
+        else{
+            queue->front = (queue->front + 1) % queue->size;
+        }
+    ...
+}
+```
+
++ Ta viết hàm dùng để enqueue 1 mảng các phần tử 
+```bash
+void implement_enqeue(Queue *queue, int *ptr)
+{
+    printf("***enqueue process***\n");
+    for (int8_t i = 0; i < queue->size; i++)
+    {
+        enqueue(queue, ptr[i]);
+    }
+}
++ Ta sẽ có 1 hàm để hiện thị các phần tử trước và sau khi sử dụng circular queue
+```
+``` bash
+void display(Queue* queue){
+printf("\nelements in queue\n");
+   //khi chỉ số rear chưa trỏ về đầu hàng đợi để enqueue 
+    if (queue->rear > queue->front) 
+    {
+        for (int8_t i = queue->front; i <= queue->rear; i++)
+        {
+            printf("queue %d\n", queue->queue_item[i]);
+        }
+    }
+//khi cơ chế circular queue được kích hoạt -> rear trỏ về đầu hàng đợi
+    else if (queue->rear < queue->front)
+    {
+        for (int8_t i = 0; i < queue->size; i++)
+        {
+            printf("queue %d\n", queue->queue_item[i]);
+        }
+    }
+}
+```
+
++ Trong chương trình chính ta sẽ test như sau
+```bash
+int main(){
+    int arr[] = {1, 2, 3, 4, 5};
+    int size = sizeof(arr) / sizeof(arr[0]);
+    Queue *queue = initialize(size);
+    implement_enqeue_dequeue(queue, arr);
+    printf("***dequeue 2 element***\n");
+    printf("dequeue: %d\n", dequeue(queue));
+    printf("dequeue: %d\n", dequeue(queue));
+    display(queue);
+    printf("\nenqueue more\n");
+    enqueue(queue, 6);
+    enqueue(queue, 7);
+    display(queue);
+    return 0;
+}
+```
++ In ra kết quả ta được
+
+```bash
+***enqueue process***
+enqueue 1 -> 000001F5D4169690
+enqueue 2 -> 000001F5D4169694
+enqueue 3 -> 000001F5D4169698
+enqueue 4 -> 000001F5D416969C
+enqueue 5 -> 000001F5D41696A0
+***dequeue 2 element***
+dequeue: 1
+dequeue: 2
+
+elements in queue
+queue 3
+queue 4
+queue 5
+
+enqueue more
+enqueue 6 -> 000001F5D4169690
+enqueue 7 -> 000001F5D4169694
+
+elements in queue
+queue 6
+queue 7
+queue 3
+queue 4
+queue 5
+```
+    
+
+
+
+
 
 
 

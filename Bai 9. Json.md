@@ -158,13 +158,82 @@ info_list->value.array.values[3].value.array.values[0].type = JSON_NUMBER;
 info_list->value.array.values[3].value.array.values[0].value.number = 35;
 info_list->value.array.values[3].value.array.values[1].value.string = "Tuoi"; 
 ```
-### 2.3 Gán giá trị tự động bằng cách truyền chuỗi json trực tiếp vào các hàm xử lý
-
+### 2.3 Các hàm phân tách chuỗi json
 #### 2.3.1 Ứng dụng của con trỏ 2 cấp trong xữ lý chuỗi json
+Để xử lý 1 chuỗi json, thông thường ta phải tách ra các chuỗi con bên trong và lưu vào 1 vùng nhớ. Chính vì vậy trước hết ta sẽ phải sử dụng con trỏ để dịch qua từng địa chỉ của ký tự trong chuỗi để đọc ra từng ký tự bên trong.
 
++ __Trường hợp sử dụng con trỏ cấp 1__
+
+Ta sẽ viết 1 hàm để thay đổi địa chỉ con trỏ như sau
+```bash
+
+void single_ptr(const char *ptr)
+{
+    ptr += 4;
+    printf("inside: %s\n", ptr);
+}
+int main()
+{
+    const char *str = "hello world";
+    printf("outside: %s\n", str);
+    single_ptr(str);
+    printf("outside: %s\n", str);
+    return 0;
+}
+```
++ Kết quả 
+
+```bash
+    
+outside: hello world
+inside: o world
+outside: hello world
+```
++ Ta có thẻ thấy trong đoạn code trên, thực chất ta chỉ đang truyền giá trị của str hay nói cách khác là địa chỉ của chuỗi "hello world" vào bên trong 1 hàm 
++ Và ở bên trong hàm này sẽ tạo ra 1 bản sao của giá trị str truyền vào, có nghĩa là nó sẽ tạo ra 1 địa chỉ mới sử dụng con trỏ __ptr__ cùng trỏ đến chuỗi "hello world" giống như __string__
++ Hình minh họa sau đây sẽ mô tả cách mà __str__ và __ptr__ nó hoản toàn được lưu ở 2 địa chỉ khác nhau. Dẫn đến việc ta thay đổi địa chỉ của __ptr__ sẽ không ảnh hưởng đến __str__
+
+<p align = "center">
+<img src = "https://github.com/user-attachments/assets/459101c3-ae3b-4eff-908b-8bc4eb5fdfcd" width = "600" height = "300">
+
+
++ __Trường hợp sử dụng con trỏ cấp 2__
+Ta cũng sẽ thay đổi địa chỉ con trỏ đến chuỗi "hello world", nhưng bằng double pointer
+
+```bash
+void double_ptr(const char **ptr)
+{
+    // ptr -> address of ptr
+    //*ptr -> dereference to string "hello world" pointed by ptr
+    //**ptr -> derefernce to the first character in string "hello world"
+    (*ptr) += 4;
+    printf("inside: %c -> %s -> %p\n", **ptr, *ptr, ptr);
+}
+
+int main()
+{
+    const char *str = "hello world";
+    printf("outside: %s -> %p\n",str,&str);
+    double_ptr(&str);
+    printf("outside: %s\n", str);
+    return 0;
+}
+```
+```bash
+outside: hello world -> 00000031373FF718
+inside: o -> o world -> 00000031373FF718
+outside: o world
+```
+
++ Ta có thể thấy trước và sau khi thay đổi địa chỉ con trỏ trong hàm double_ptr thì ở bên ngoài địa chỉ của str cũng thay đổi theo.
++ Điều này là do ta đã truyền địa chỉ của str vào trong hàm, và sử dụng 1 con trỏ cấp 2 để trỏ đến địa chỉ của 1 con trỏ cấp 1. 
++ Tiếp theo ta sẽ thực hiện thay đỗi địa chỉ mà con trỏ __str__ trỏ đến bằng cách truy xuất __ptr__ bằng __*ptr__, bằng cách này ta sẽ có thể thay đổi được địa chỉ của __str__
+
+<p align = "center">
+<img src = "https://github.com/user-attachments/assets/f85f9025-0bb7-4472-bc18-4a3bf9c4cd75" width = "600" height = "300">
 
 #### 2.3.2 Các hàm để xử lý chuỗi Json
-__a) Hàm xử lý chính__ 
+__a) Hàm phân loại kiểu dữ liệu để xử lý__ 
 + Hàm để phân tích các chuỗi con bên trong json tương ứng với các kiểu dữ liệu được thể hiện dưới dạng chuỗi
 + Ta sẽ sử dụng cơ chế switch-case để kiểm tra và nhảy vào các hàm tách chuỗi tương ứng và trả về kết quả là giá trị tương ứng với chính xác kiểu dữ liệu của nó
 ```bash

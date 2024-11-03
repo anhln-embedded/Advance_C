@@ -11,8 +11,11 @@ ví dụ ta muốn __xóa__ 1 phần tử thì phải trải qua các bước sa
 <img src = "https://github.com/user-attachments/assets/fc1bec82-fd38-4579-824d-5494cdaeff81" width = "400" height = "200">
 
 __+ Bước 1:__ Xóa phần tử tại ví trí chỉ dịnh bằng cách ghi ký tự null
+
 __+ Bước 2:__ dịch các phần tử phía sau vị trí xóa qua bên trái(số lượng phần tử trong mảng càng nhiều thì thời gian xử lý sẽ càng lâu)
+
 __+ Bước 3:__ Gán vị trí cuối mảng là null
+
 __+ Bước 4:__ điều chỉnh lại kích thước mảng 
 
 <p align = "center">

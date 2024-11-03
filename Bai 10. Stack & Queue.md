@@ -233,13 +233,13 @@ __full queue__ : khi kích thước của queue size = rear - 1
 + đầu tiên ta tạo ra 1 struct lưu trữ các thuộc tính của queue
 
 ```bash
-typedef struct queue
+typedef struct Queue
 {
     int *queue_item; //mảng để lưu các thành phần 
     int size;        //kích thước mảng queue
     int front;       //chỉ số truy cập vào phần tử đầu hàng đợi
     int rear;        //chỉ số truy cập vào phần tử cuối hàng đợi
-} Queue;
+}Queue;
 ```
 + Tiếp theo ta tạo ra 1 hàm để khởi tạo 1 queue 
 

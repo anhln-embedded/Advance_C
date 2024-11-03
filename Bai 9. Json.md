@@ -1,5 +1,4 @@
-
-# Kiểu dữ liệu Json
+# KIỂU DỮ LIỆU CẤU TRÚC JSON
 ## 1.1 Định nghĩa
 Đây là 1 định dạng để truyền tải dữ liệu giữa các hệ thống với nhau ,và dữ liệu thường được chuẩn hóa về dạng chuỗi (__json string__) chứa nhiều loại dữ liệu khác bên trong. 
 ## 1.2 Cấu trúc

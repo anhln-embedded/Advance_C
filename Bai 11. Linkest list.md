@@ -1,4 +1,5 @@
-# Tổng quan về Linkest list
+
+# 1 Tổng quan
 ## 1.1 Khái niệm
 Đây là cấu trúc dữ liệu danh sách được dùng để lưu trữ nhiều phần tử tương tự như mảng, tuy nhiên khác với mảng có các địa chỉ của các phần tử liền kề nhau và cố định. Linkest list lưu trữ các phần tử với địa chỉ có thể thay đổi 1 cách linh hoạt, do chúng có tính liên kết với nhau.
 
@@ -11,7 +12,7 @@ ví dụ ta muốn __xóa__ 1 phần tử thì phải trải qua các bước sa
 
 __+ Bước 1:__ Xóa phần tử tại ví trí chỉ dịnh bằng cách ghi ký tự null
 
-__+ Bước 2:__ dịch các phần tử phía sau vị trí xóa qua bên trái(số lượng phần tử trong mảng càng nhiều thì thời gian xử lý sẽ càng lâu)
+__+ Bước 2:__ dịch các phần tử phía sau vị trí xóa qua bên trái (số    lượng phần tử trong mảng càng nhiều thì thời gian xử lý sẽ càng lâu)
 
 __+ Bước 3:__ Gán vị trí cuối mảng là null
 
@@ -73,14 +74,17 @@ bool empty(Node *head)
 }
 ```
 
-### a) Thêm vào đầu list
+### a) Thêm node vào đầu list
 <p align = "center">
 <img src = "https://github.com/user-attachments/assets/6515b7a4-8051-48aa-b43f-e90f9545d411" width = "500" height = "200">
 
-+ Tạo ra 1 node 
-+ Kiểm tra linkest list có node nào không, nếu không thì gán địa chỉ của node mới cho địa chỉ dầu tiên của linkest list
-+ Nếu list đã có node rồi thì gán địa ban đầu trong list cho địa chỉ next của node mới tạo
-+ Cuối cùng ta cập nhật địa chỉ của node mới tạo thành địa chỉ ban đầu của list
++ Tạo node mới 
+
++ Kiểm tra linkest list có node nào không, nếu không thì gán địa chỉ của node mới cho địa chỉ dầu __head__ của linkest list
+
++ Nếu list đã có node rồi thì gán địa ban đầu có sẵn trong list cho địa chỉ next của node mới tạo ra
+
++ Cuối cùng ta cập nhật địa chỉ của node mới tạo thành địa chỉ ban đầu của list __(tương tự trường hợp nếu list không có node nào)__
 
 ```bash
 void push_front(Node **head, int value)
@@ -177,84 +181,110 @@ void push_back(Node **head, int value)
 }
 ```
 ## 2.3 Xóa node khỏi linkest list
+Ta sẽ có 1 macro để kiểm tra 1 linkest list có rỗng không trước khi thực hiện xóa như sau 
+```bash
+#define CHECK_EMPTY_LIST(head)                  \
+    do                                          \
+    {                                           \
+        if (empty(head))                        \
+        {                                       \
+            printf("no node in linked list\n"); \
+            return;                             \
+        }                                       \
+    } while (0)
+
+```
 ### a) Xóa node đầu của list
 
 <p align = "center">
-<img src = "https://github.com/user-attachments/assets/236e6ab0-52ab-473d-a023-27975382acf8" width = "600" height = "250">
+<img src ="https://github.com/user-attachments/assets/82ae9b33-f014-4e32-a6ef-567a19ba04d9" width = "500" height = "250">
 
-+ Đầu tiên ta phải kiểm tra có node trong list không mới tiến hành xóa node
-+ Nếu trong list có node thì ta sẽ dùng 1 con trỏ __current__ để lưu địa chỉ của node hiện tại 
-+ Ta cũng tạo ra 1 con trỏ __temp__ trỏ tới __current__ , hay nói cách khác nó sẽ trỏ đến địa chỉ đầu tiên trong list
-+ ta trỏ __current__ đó tới con trỏ thứ hai trong list
-+ Ta sẽ ngắt liên kết giữa node đầu và node thứ hai thông qua __temp__
-+ ta giải phóng __temp__, cũng là node đầu tiên
-+ Cuói cùng ta cập nhật địa chỉ node thứ hai thành node đầu tiên của list
+__Bước 1:__ Đầu tiên ta kiểm tra có node nào không nếu có thì lưu địa chỉ của node đầu tiên
+
+__Bước 2:__ Ta cập nhật địa chỉ node đầu là node tiếp theo
+
+__Bước 3:__ Ta giải phóng node đầu đã lưu vào con trỏ tạm trước đó
+
 ```bash
  void pop_front(Node **head)
 {
-    // check wheter the list is empty
-    if (empty(*head))
-    {
-        printf("no node in linkest list\n");
-    }
-    else
-    {
-        printf("***pop front***\n");
-        // use current to loop through each node
-        Node *current = *head;
-        // use temp to store first node
-        Node *temp = current;
-        // move to address of second node
-        current = current->next;
-        // break the link between first node and second
-        temp->next = NULL;
-        // free the meomory of first node
-        free(temp);
-        // update address of head -> point to next Node
-        *head = current;
-    }
+    CHECK_EMPTY_LIST(*head);
+    // use temp to store first node
+    Node *first_node = *head;
+    // move to address of second node
+    *head = (*head)->next;
+    free(first_node);
 }
 ```
 ### b) Xóa node cuối cùng của list
 
 <p align = "center">
-<img src = "https://github.com/user-attachments/assets/f75416cd-507f-45e0-93fa-d2e1f1232caa" width = "600" height = "250">
+<img src ="https://github.com/user-attachments/assets/b90e11bd-0fbc-40ad-9939-2715acea3e45" width = "500" height = "250">
 
-+ Ta kiểm tra nếu list không chứa node thì sẽ không làm gì cả
-+ Nếu có node trong list, ta cũng kiểm tra nếu trong list chỉ có 1 node thì sẽ tiến hành xóa như cách đã đề cập bên trên
-+ Nếu có nhiều hơn 1 node ta cũng tiến hành cùng 1 con trỏ để lặp qua các node 
-+ Nếu node ở vị trí sau đó nữa trỏ đến null thì sẽ tiến hành gán địa chỉ kế tiếp của node hiện tại là null
-+ Sau đó dịch đến địa chỉ tiếp theo và lưu nó vào 1 con trò mới
-+ tiến hành giải phóng node cuối thông qua con trỏ mới tạo này.
+__Bước 1:__ Ta kiểm tra có node nào trong list không thì dừng xử lý
++ Nếu chỉ có 1 node: gọi ra hàm xóa node đầu 
++ Nếu có nhiều node: lặp qua từng node đến node kế cuối
+
+__Bước 2:__ lưu địa chỉ next (node tiếp theo) vào 1 con trỏ
+
+__Bước 3:__ giải phóng con trỏ lưu node này (cũng là node cuối)
+
+__Bước 4:__ cập nhật địa chỉ next là null 
 
 ```bash
- void pop_back(Node **head)
+void pop_back(Node **head)
 {
-    if (empty(*head))
-    {
-        printf("no node in linkest list\n");
-    }
+    CHECK_EMPTY_LIST(*head);
+    Node *current = *head;
+    if (current->next == NULL)
+        pop_front(head);
     else
     {
-        printf("***pop back***\n");
-        Node *current = *head;
-        if (current->next == NULL)
-            pop_front(head);
-        else
+        while (current->next->next != NULL)
         {
-            while (current->next->next != NULL)
-            {
-                current = current->next;
-            }
-            current->next = NULL; //break the link between current and next node
-            current = current->next; //move to final node
-            Node *temp = current; //save final node in temp
-            free(temp);
+            current = current->next;
         }
+        Node *final_node = current->next; // save final node
+        free(final_node);
+        current->next = NULL; // update next address is null
     }
 }
 ```
-### c) Xóa node ở vị trí cho trước 
+### c) Xóa toàn bộ node 
+
+<p align = "center">
+<img src ="https://github.com/user-attachments/assets/64692987-9ac3-4f94-939d-b8b8c556d66d" width = "550" height = "300">
+
+__+ Bước 1:__ ta kiểm tra list có node nào không nếu có thì tiếp tục bước 2
+
+__+ Buóc 2:__ ta lưu node tiếp theo sang 1 con trỏ khác
+
+__+ Bước 3:__ ta giải phóng node hiện tại
+
+__+ Bước 4:__ ta lấy lại node đã lưu trước đó 
+
+__+ Bước 5:__ ta lặp lại bước 2 cho đến khi lặp qua hết tất cả các node
+
+__+ Bước 6:__ ta gán con trỏ đến node đầu là NULL
+
+```bash
+void free_list(Node **head)
+{
+    CHECK_EMPTY_LIST(*head);
+    Node *current = *head;
+    Node *next;
+    while (current != NULL)
+    {
+        next = current->next;
+        free(current);
+        current = next;
+    }
+    *head = NULL;
+}
+
+```
+
+### d) Xóa node ở vị trí cho trước 
 
 <p align = "center">
 <img src = "https://github.com/user-attachments/assets/23cc5bb5-7ac0-4fdd-bc6d-a38dbf32e740" width = "600" height = "250">
@@ -264,6 +294,7 @@ void push_back(Node **head, int value)
 + Dùng 1 con trỏ __temp__ đế lưu địa chỉ node hiện tại
 + liên kết địa chỉ next của node trước đó với node sau vị trí cần xóa
 + tiến hành xóa __temp__
+
 ```bash
  void delete_list(Node **head, int position)
 {
@@ -292,6 +323,7 @@ void push_back(Node **head, int value)
     }
 }
 ```
+
 ## 2.4 Đọc giá trị các node
 
 ### a) Lấy ra node đầu và cuối list
@@ -323,10 +355,10 @@ int back(Node *head)
     }
 }
 ```
+
 ### b) Đọc giá trị của node ở vị trí bất kỳ
-+ Đầu tiên ta cũng kiểm tra nếu có node trong list thì mới đọc ra
-+ Ta kiểm tra nếu vị trí là 0 hay lớn hơn số lượng phần tử truyền vào trong list thì dừng xử lý
-+ Ta sẽ lặp qua các node cho đến khi đến vị trí muốn đọc ra và trả về kết quả
++ Đầu tiên ta cũng kiểm tra list có rỗng không hay vị trí muốn lấy ra giá trị có hợp lệ hay không thì mới xử lý tiếp
++ Nếu thỏa điều kiện Ta sẽ lặp qua các node cho đến khi đến vị trí muốn đọc ra và trả về kết quả
 ```bash
 int size(Node *head)
 {
@@ -343,23 +375,17 @@ int size(Node *head)
 }
 int get_postion(Node *head, int position)
 {
-    if (empty(head))
-        printf("no node in linkest list");
-    else
+    if (empty(head) || position == 0 || position > size(head))
+        return 0;
+    Node *current = head;
+    int index = 0;
+    while (index < position - 1)
     {
-
-        if (position == 0 || position > size(head))
-            return 0;
-        Node *current = head;
-        int index = 0;
-        while (current != NULL && index < position - 1)
-        {
-            current = current->next;
-            index++;
-        }
-        int val = current->val;
-        return val;
+        current = current->next;
+        index++;
     }
+    int val = current->val;
+    return val;
 }
 ```
 

@@ -89,7 +89,6 @@ bool empty(Node *head)
 ```bash
 void push_front(Node **head, int value)
 {
-    Node *current = *head;
     Node *node = CreateNode(value);
     if (empty(*head))
     {
@@ -129,6 +128,7 @@ void push_back(Node **head, int value)
             current = current->next; // move to next node
         } 
         current->next = node; //update final node
+	node->next = NULL;
     }
 }
 ```

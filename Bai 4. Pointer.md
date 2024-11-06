@@ -1,7 +1,8 @@
-# CON TRỎ
-Định nghĩa: lưu trữ địa chỉ của đối tượng (variable,function,array,struct..) 
+# 1. Tổng quan 
+## 1.1 Khái niệm
+Con trỏ là 1 biến dùng để lưu trữ địa chỉ của 1 biến khác hoặc 1 đối tượng như hàm, mảng, struct
 
-## Cách dùng thông thường 
+## 1.2 Cách dùng thông thường 
 con trỏ p sẽ trỏ tới biến a ngay khi nó được khởi tạo
 ```bash
   int a = 34;
@@ -12,7 +13,7 @@ giá trị của con trỏ p chính là địa chỉ của biến a, trong khi s
   printf("address of a:%p\n",p);
   printf("value of a:%d",*p);
 ```
-### Kích thước:
+## 1.3 Kích thước:
 phụ thuộc vào hệ điều hành. 8 byte(64bit) và 4 byte (32bit)
 - kích thước của con trỏ p được in bằng cách sử dụng hàm sizeof()
 - Con trỏ p được khai báo là NULL khi chưa được gán địa chỉ cụ thể, để không trỏ tới địa chỉ rác gây ra lỗi không xác định
@@ -21,8 +22,8 @@ phụ thuộc vào hệ điều hành. 8 byte(64bit) và 4 byte (32bit)
   int* p = NULL;
   printf("size of a:%d\n",sizeof(p));
 ```
-### Kiểu dữ liệu: 
-cho biết số byte mà nó truy xuất trong 1 lần 
+## 1.4 Kiểu dữ liệu của con trỏ: 
+kiểu dữ liệu mà con trỏ được khai báo cho biết số byte mà nó truy xuất hay đọc ra trong 1 lần. Ta có ví dụ sau đây để minh họa về kiểu dữ liệu của 1 con trỏ 
 
 ```bash
 #include<stdio.h>
@@ -40,12 +41,12 @@ int main(){
 }
 ```
 chương trình trên sử dụng con trỏ để tách 1 biến 2 byte và lưu vào 2 biến 1 byte với cách làm như sau
-+ con trỏ px sẽ trỏ tớtới địa chỉ của sum, và truy xuất 1 lần 1 byte do có kiểu dữ liệu uint8_t, và lưu giá trị mà nó truy xuất vào biến bit_low
++ con trỏ px sẽ trỏ tới địa chỉ của sum, và truy xuất 1 lần 1 byte do nó được khai báo là uint8_t, và lưu giá trị mà nó truy xuất vào biến bit_low
 ```bash
   uint8_t* px = (uint8_t*)&sum; 
   uint8_t bit_low = *px;
 ```
-+ con trỏ px sẽ di chuyển đến byte tiếp theo của sum bằng cách sử dụng toán tử + , và lưu giá trị mà nó truy xuất vào bit_high
++ con trỏ px sẽ di chuyển đến byte tiếp theo của sum, và lưu giá trị mà nó truy xuất vào bit_high
 ```bash
    uint8_t bit_high = *(px + 1);
 ```
@@ -54,8 +55,9 @@ kết quả
 2 bit cao: 0xab 
 2 bit thap: 0xcd
 ```
-## CON TRỎ VÀ MẢNG 
-con trỏ khi trỏ tới 1 mảng sẽ lưu trữ địa chỉ của mảng đó hay nói cách khác là địa chỉ của phần tử đầu tiên của mảng
+# 2. Ứng Dụng của con trỏ 
+## 2.1 CON TRỎ VÀ MẢNG 
+con trỏ có thể được dùng để thao tác với các phần tử trong mảng bằng cách trỏ đến địa chỉ của mảng hay nói cách khác là địa chỉ đầu tiên trong mảng đó. 
 ```bash
 int arr[] = {2,4,6,8,10};
 int* px = &arr; //hoặc arr
@@ -74,8 +76,9 @@ kết quả
  index 3: 8
  index 4: 10
 ```
-## CON TRỎ HẰNG (POINTER TO CONSTANT)
-con trỏ chỉ có chức năng read-only mà không thay đổi được giá trị của vùng nhớ mà nó trỏ tới, nhưng vẫn trỏ được tới vùng nhớ khác 
+__Ứng dụng:__ Khi ta cần truyền 1 mảng vào trong hàm để xử lý thì ta chỉ cần truyền địa chỉ của nó và dùng 1 con trỏ như là tham số của hàm, lúc này con trỏ sẽ trỏ tới địa chỉ của mảng ta muốn xử lý chứ không phải truyền toàn bộ mảng vào hàm làm tốn tài nguyên của chương trình 
+## 2.2 CON TRỎ HẰNG (POINTER TO CONSTANT)
+con trỏ tới vùng nhớ chỉ có chức năng read-only mà không thể thay đổi giá trị tại địa chỉ đó, tuy nhiên nó có thể trỏ tới địa chỉ khác
 ```bash
 int a = 23, b = 78;
 const int* p = &a;
@@ -89,8 +92,9 @@ ket qua
 truoc: 23
 sau: 78
 ```
-## HẰNG CON TRỎ (CONSTANT POINTER)
-con trỏ có thể thay đổi giá trị của vùng nhớ mà nó trỏ đến nhưng không thể trỏ tới vùng nhớ khác một khi đã gán địa chỉ ban đầu
+__Ứng dụng:__ ta có thể sử dụng con trỏ hằng để bảo vệ những dữ liệu quan trọng mà ta không muốn bị tác động  thay đổi trong quá trình thực thi chương trình 
+## 2.3 HẰNG CON TRỎ (CONSTANT POINTER)
+con trỏ có thể thay đổi giá trị của vùng nhớ mà nó trỏ đến nhưng không thể trỏ tới vùng nhớ khác
 ```bash
 int a = 23, b = 78;
 int* const p = &a;
@@ -104,9 +108,10 @@ kết quả
 truoc: 23
 sau: 45
 ```
-## CON TRỎ VÔ ĐỊNH (VOID POINTER)
-có thể trỏ tới bất kỳ kiểu dữ liệu nào
-+  con trỏ p dưới đây sau khi trỏ tới biến a sẽ được ép lại theo kiểu dữ liệu mà nó trỏ tới và dùng toán tử truy xuất * để lấy ra giá trị tại địa chỉ đó
+__Ứng dụng:__ Hằng con trỏ có thể được dùng để lưu trữ địa chỉ cúa 1 thanh ghi và chỉ thao tác với các giá trị trên thanh ghi đó, giúp tách biệt và xử lý chính xác trên thanh ghi mà ta mong muốn 
+## 2.4 CON TRỎ VÔ ĐỊNH (VOID POINTER)
+con trỏ có thể trỏ tới bất kỳ kiểu dữ liệu nào
++ con trỏ p dưới đây sau khi trỏ tới biến a sẽ được ép lại theo kiểu dữ liệu mà nó trỏ tới và dùng toán tử truy xuất * để lấy ra giá trị tại địa chỉ đó
 ```bash
 int a = 43;
 void* p = &a;
@@ -131,10 +136,11 @@ d = 23.54
 e = 21
 f = e
 ```
-## CON TRỎ HÀM (FUNCTION POINTER)
+__Ứng dụng:__ Con trỏ void có thể được dùng để truyền nhiều loại dữ liệu khác nhau mà không cần phải viết lại hàm cho mỗi loại riêng biệt, giúp tối ưu và rút gọn chương trình 
+## 2. CON TRỎ HÀM (FUNCTION POINTER)
 con trỏ lưu địa chỉ của 1 hàm, có cấu trúc khai báo như sau
 ```bash
-data type (*pointer_name)(input parameter)
+cách khai báo: (*pointer_name)(input parameter)
 ```
 + Ta có thể gọi 1 hàm thông qua con trỏ như sau 
 ```bash
@@ -216,7 +222,6 @@ int main(){
 + Ta cũng có thể tạo ra 1 mảng con trỏ hàm để trỏ tới từng địa chỉ của các hàm và sử dụng chúng như sau
 ```bash
 int main(){
- void (*operator)(int,int);
  void (*opeArr[])(int,int) = {Tong,Hieu,Tich,Thuong};
     for(int n = 0 ; n < 4 ; n++){
         opeArr[n](a,b);
@@ -224,4 +229,6 @@ int main(){
 return 0;
 }
 ```
-+ ta truy cập và gọi ra các hàm thông qua việc sử dụng chỉ số và tăng giá trị của nó mỗi khi di chuyển đến địa chỉ của hàm tiếp theo 
++ ta truy cập và gọi ra các hàm thông qua việc sử dụng chỉ số và tăng giá trị của nó mỗi khi di chuyển đến địa chỉ của hàm tiếp theo
+
+__Ứng dụng:__ Ta có thể dùng con trỏ hàm ứng dụng trong việc chọn hàm mà ta muốn xử lý ở những thời điểm khác nhau trong chương trình thông qua 1 con trỏ duy nhất, giúp tăng tốc và tiết kiệm thời gian gọi mỗi hàm thông qua việc truy cập chúng bằng con trỏ

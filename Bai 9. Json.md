@@ -101,7 +101,7 @@ typedef struct JsonValue {
 ```
 __JsonValue__: đây là 1 kiểu dữ liệu để định nghĩa 1 chuỗi json gôm 2 thành viên
 
-__+ JsonTyoe type__ : xác đinh kiểu của giá trị json dựa vào enum đã khai báo trước đó
+__+ JsonType type__ : xác đinh kiểu của giá trị json dựa vào enum đã khai báo trước đó
 
 __+ union value__ : với 3 thành viên __boolean, number, string__ được dùng để gán giá trị cho dữ liệu json mà ta muốn và ở mỗi thời điểm sẽ chỉ có 1 thành viên được dùng và được xác định thông qua JsonType. 
 ```bash

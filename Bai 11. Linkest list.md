@@ -1,9 +1,9 @@
 
-# 1 Tổng quan
+# 1 Tổng quan về Linkest List
 ## 1.1 Khái niệm
-Đây là cấu trúc dữ liệu danh sách được dùng để lưu trữ nhiều phần tử tương tự như mảng, tuy nhiên khác với mảng có các địa chỉ của các phần tử liền kề nhau và cố định. Linkest list lưu trữ các phần tử với địa chỉ có thể thay đổi 1 cách linh hoạt, do chúng có tính liên kết với nhau.
+Đây là cấu trúc dữ liệu danh sách liên kết được dùng để lưu trữ nhiều phần tử tương tự như mảng, tuy nhiên khác với mảng có các địa chỉ của các phần tử liền kề nhau và cố định. Linkest list lưu trữ các phần tử với địa chỉ có thể thay đổi 1 cách linh hoạt, do chúng có tính liên kết với nhau.
 
-=> Chính vì vậy việc ta có thể thực hiện các thao tác như __thêm__, __sửa__, __xóa__ với các phần tử bên trong nó 1 cách dễ dàng so với mảng
+=> Chính vì vậy ta có thể thực hiện các thao tác như __thêm__, __sửa__, __xóa__ , __chèn__ các phần tử bên dễ dàng và nhanh chóng hơn so với mảng
 ## 1.2 So sánh với mảng
 ### a) Trường hợp mảng nhỏ
 ví dụ ta muốn __xóa__ 1 phần tử thì phải trải qua các bước sau

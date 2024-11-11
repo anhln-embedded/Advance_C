@@ -92,3 +92,19 @@ tim thay  gia tri 21
 ```
 # 2. Makefile
 # 3. File Operation
++ WRITE file
+Tạo ra database sử dụng định dạng csv
+Bước 1: mở file (đường dần đến file,chế độ làm việc)
+Bước 2: kiểm tra file có mở dc ?
+Bước 3: ghi data vào file
+Bước 4: Đóng file
++ READ file
+Bước 1: mở file kèm đường dẫn và chọn chế độ 
+Bước 2: kiểm tra file hợp lệ
+Bước 3: tạo ra bộ đệm lưu từng dòng trong file
+Bước 4: đọc file và lưu vào bộ đệm ứng với từng dòng (bỏ qua phần tiêu đề)
+Bước 5: In ra dòng tiêu đề  
+Bước 6: lặp lại bước 4 nhưng sẽ tách chuỗi lấy data bên trong 
+Bước 7: Thực hiện tách chuỗi lưu vào trong 1 con trỏ tạm, 
+Buóc 8: Lưu chuỗi trỏ tới vào 1 vùng nhớ cấp heap, ứng với kiểu thành viên ta khai báo trong struct
+Bước 9: thực hiện ra thông tin đã tách và giải phóng vùng nhớ

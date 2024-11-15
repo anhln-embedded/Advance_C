@@ -282,26 +282,164 @@ Tim thay 86
 __Ưu điểm:__ 
 
 + Tìm kiếm nhanh chóng với mảng có số lượng phần tử lớn
+
 __Nhược điểm:__
 
 + Phải tốn bộ nhở cấp phát cho nỗi 1 nhánh tạo ra trong binary tree
 + Tăng độ phức tạp khi phải quản lý cùng lúc 2 kiểu dữ liệu __(struct)__ là linkest list và binary tree
 
 # 3. File Operation
+# 3.1 Khái niệm
+Là quy trình thao tác với 1 file định dạng .txt hoặc .csv, là các file được dùng để lưu trữ 1 cơ sở dữ liệu mà ta sẽ sử dụng để trích xuất những thông tin cần thiết để thực hiện 1 công việc nào đó.
 
-+ WRITE file
-Tạo ra database sử dụng định dạng csv
-Bước 1: mở file (đường dần đến file,chế độ làm việc)
-Bước 2: kiểm tra file có mở dc ?
-Bước 3: ghi data vào file
-Bước 4: Đóng file
-+ READ file
-Bước 1: mở file kèm đường dẫn và chọn chế độ 
-Bước 2: kiểm tra file hợp lệ
-Bước 3: tạo ra bộ đệm lưu từng dòng trong file
-Bước 4: đọc file và lưu vào bộ đệm ứng với từng dòng (bỏ qua phần tiêu đề)
-Bước 5: In ra dòng tiêu đề  
-Bước 6: lặp lại bước 4 nhưng sẽ tách chuỗi lấy data bên trong 
-Bước 7: Thực hiện tách chuỗi lưu vào trong 1 con trỏ tạm, 
-Buóc 8: Lưu chuỗi trỏ tới vào 1 vùng nhớ cấp heap, ứng với kiểu thành viên ta khai báo trong struct
-Bước 9: thực hiện ra thông tin đã tách và giải phóng vùng nhớ
+<p align = "center">
+<img src = "https://github.com/user-attachments/assets/456ab4fe-19d8-4d59-9922-948ad62c68af" width = "500" height = "250">
+
+## 3.2 Các hàm thao tác file
+### a) Hàm mở file 
+
+<p align = "center">
+<img src = "https://github.com/user-attachments/assets/1a435226-c955-434b-ace2-8db0b2d45dbb" width = "400" height = "100">
+
+__file__: con trỏ lưu trữ file trả về
+
+__file_name:__ đường dẫn đến file 
+
+__access_mode:__ chế độ thao tác với file
+
+__+ Các chế độ thao tác phổ biến__
+
++ __"r"__: Mở file với chế độ đọc. Nếu mở thành công trả về địa chỉ của phần tử đầu tiên trong file, nếu không không trả về NULL
++ __"r+__:  Mở file với chế độ đọc và ghi file. Nếu mở thành công trả về địa chỉ của phần tử đầu tiên trong file, nếu không trả về NULL
++ __"w"__: Mỡ file với chế độ ghi. Nếu file chưa có thì tạo file mới, nếu đã tồn tại thì ghi đè nội dung. Nếu mở thất bại trả về NULL
++ __"w+"__: Mở file với chế độ ghi và đọc. Nếu file tồn tại trả về địa chỉ của phần tử đầu. Nếu file chưa tồn tại tạo một file mới
++ __"a"__: Mở file với chế độ nối. Nếu mở thành công trả về địa chỉ của phần tử cuối cùng trong file. Nếu file chưa tồn tại thì sẽ tạo mới. Nếu không mở được file trả về NULL.
++ __"a+"__:  Mở file với chế độ nối và đọc. Nếu file đã tồn tại trả về địa chỉ của phần tử cuối cùng của file. Nếu file chưa tồn tại tạo một file mới
+
+### b) Hàm ghi file 
+
+<p align = "center">
+<img src = "https://github.com/user-attachments/assets/9b1f07f3-d287-4ff1-bd51-c55c538acfc9" width = "500" height = "200">
+
+### c) Hàm đọc file
+
+<p align = "center">
+<img src = "https://github.com/user-attachments/assets/a5b8eb8e-8fd5-4bd8-84c1-bf3567785e99" width = "500" height = "200">
+
+## 3.3 Quy trình đọc và ghi file
+
+### a) Quy trình tạo và Ghi file
+
++ Đầu tiên ta sẽ tạo ra 1 file database để lưu trữ dũ liệu sẽ ghi/đọc bằng cách tạo folder đặt tên database nằm trong thư mục dự án, bên trong database ta tạo ra 1 file csv như sau
+
+<p align = "center">
+<img src = "https://github.com/user-attachments/assets/fcd98dda-04a9-4e9d-a862-250cd119587d" width = "600" height = "300">
+
++ Tiếp theo ta viết 1 hàm để ghi file như sau 
+
+```bash
+#define FAIL_CREATED_FILE    0
+#define SUCCESS_CREATED_FILE 1
+bool writeCSV(char* path){
+    FILE* file = fopen(path,"w");
+    if(file == NULL){
+        printf("cannot open file\n");
+        return FAIL_CREATED_FILE;
+    }
+    fprintf(file,"ten,tuoi,so dien thoai,dia chi\n");
+    fprintf(file,"Nguyen Ho Duy,17,0906733209,22/5 Binh Thuan\n");
+    fprintf(file,"Nguyen Thanh Tai,20,0376572231,18 Nguyen Thi Minh Khai Q1 TPHCM\n");
+    fprintf(file,"Nguyen Thi Thanh Thuy,27,038764987,21 Nguyen Thien Thuat P12 QTan Phu\n");
+    fclose(file); 
+    return SUCCESS_CREATED_FILE;
+}
+```
++ trong chương trình chính ta sẽ thực hiện việc ghi file như sau
+
+
+```bash
+#define PATH_FILE   ".\\database\\thongtin.csv" // định nghĩa đường dẫn đến file
+const char* str[] = {"File has been written\n","Failed to open file\n"};
+int main(){
+    if(writeCSV(PATH_FILE) == SUCCESS_CREATED_FILE)
+        log_status(str[0]);
+    else
+        log_status(str[1]);
+    return 0;
+}
+```
+### b) Quy trình Đọc file và xử lý dữ liệu
++ Đầu tiên ta cần tạo ra 1 struct để lưu trữ thông tin đọc về từ file như sau
+    
+```bash
+typedef struct{
+    char* name;
+    int age;
+    char* phone;
+    char* address;
+}Info;
+```
++ Ta sẽ sử dụng hàm sau để đọc ra hàm đầu tiên trong file cũng là hàm để in ra tiêu đề chứa các trường thông tin mà ta sẽ xử lý và lưu các thành viên trong struct trên
+```bash
+void readCSV(char *path)
+{
+//mảng tạm để luu trữ thông tin đọc về ở dòng hiện tại
+    char line[100];
+//mở file và đọc
+    FILE *file = fopen(path, "r");
+    if (file == NULL)
+    {
+        printf("can't read file\n");
+        return NULL;
+    }
+//đọc dòng đầu của file
+    fgets(line, sizeof(line), file);
+    printf("%s", line);
+    /*
+        xử lý dọc và tách các thông tin ứng với các trường 
+    */
+}
+```
++ Tiếp theo ta sẽ có đoạn code sau để đọc lần lượt từng dòng và phân tích chuỗi lưu vào các biến struct 
+
+
+```bash
+//cấp phát vùng nhớ cho biến con trỏ kiểu struct Info
+Info* info = (Info*)malloc(sizeof(Info));
+//đọc và kiểm tra đến khi không còn ký tự nào ttrong file
+while (fgets(line, sizeof(line), file) != NULL){
+    char* tokken = NULL;
+    //duyệt qua từng ký tự cho đến khi gặp ',' trả về địa chỉ của chuỗi vừa phân tách được 
+    token = strtok(line, ",");    
+    
+    //cấp phát vùng nhớ cho thành viên bên trong struct
+    info->name = (char *)malloc(strlen(token) + 1);
+
+    //copy chuỗi trỏ đến bởi token vào vùng nhớ vừa được cấp phát
+    strcpy(info->name, token); // copy token into heap memory
+
+    //ở lần gọi hàm strtok thứ hai trở đi những phần tử đã duyệt qua đều được coi là NULL
+    token = strtok(NULL, ",");
+    info->age = (uint8_t)atoi(token);
+
+    // Parse phone
+    token = strtok(NULL, ",");
+    info->phone = (char *)malloc(strlen(token) + 1);
+    strcpy(info->phone, token);
+
+    // Parse address
+    token = strtok(NULL, ",");
+    info->address = (char *)malloc(strlen(token) + 1);
+    strcpy(info->address, token);
+
+    //in ra thông tin từng dòng và giải phóng vùng nhớ
+    printf("%s %d %s %s\n",info->name,info->age,info->phone,info->address);
+    free(info->name);
+    free(info->phone);
+    free(info->address);
+}
+```
++ Kết quả chạy chương trình ta được 
+
+<p align = "center">
+<img src = "https://github.com/user-attachments/assets/12dc404b-72e5-44e4-a4ad-d24e4e4c177e" width = "700" height = "400">

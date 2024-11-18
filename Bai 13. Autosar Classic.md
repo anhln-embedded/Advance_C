@@ -1,4 +1,3 @@
-
 # AUTOSAR CLASSIC (AUTomotive Open System ARchitecture)
 # 1. Khái niệm
 Đây là 1 kiến trúc phân lớp cung cấp  các APIs tiêu chuẩn được sử dụng để phát triển phần mềm trong lĩnh vực ô tô. Với mục tiêu là để đơn giản hóa và thống nhất về 1 quy tắc chung để phát triển phần mềm có thể áp dụng cho bất kỳ hệ thống điện tử __(ECU)__, cũng như là tăng khả năng tái sử dụng mã nguồn,tối ưu chi phí, thời gian phát triển. 

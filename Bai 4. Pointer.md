@@ -1,4 +1,4 @@
-# 1. Tổng quan 
+# 1. Tổng quan về Pointer
 ## 1.1 Khái niệm
 Con trỏ là 1 biến dùng để lưu trữ địa chỉ của 1 biến khác hoặc 1 đối tượng như hàm, mảng, struct
 

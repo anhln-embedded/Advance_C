@@ -1,4 +1,3 @@
-
 # 1 Tổng quan về Linkest List
 ## 1.1 Khái niệm
 Đây là cấu trúc dữ liệu danh sách liên kết được dùng để lưu trữ nhiều phần tử tương tự như mảng, tuy nhiên khác với mảng có các địa chỉ của các phần tử liền kề nhau và cố định. Linkest list lưu trữ các phần tử với địa chỉ có thể thay đổi 1 cách linh hoạt, do chúng có tính liên kết với nhau.

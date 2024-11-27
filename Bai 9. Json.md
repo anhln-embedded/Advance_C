@@ -392,7 +392,6 @@ void test(JsonValue* json_value){
     else if (json_value->type ==JSON_NULL) printf("null");
 }
 ```
-    
 
 + Ta sẽ có hàm sau để giải phóng memory của biến kiểu json sau khi đã lưu các trường dữ liệu được xử lý phân tách chuỗi vào các biến thuộc các kiẻu dữ liệu tương ứng 
 + đầu tiên thì ta sẽ kiểm tra kiểu dữ liệu của chuỗi json là gì, thông qua switch-case

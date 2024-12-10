@@ -1,12 +1,15 @@
 # 1. template
-
 ## 1.1 Định Nghĩa 
-
-+ cho phép viết 1 hàm tổng quát với nhiều tham số truyền vào với các kiểu dữ liệu khác nhau,
-+ Cho phép định nghĩa 1 class với kiểu thuộc tính khai báo chưa xác định kiểu dũ liệu
++ cho phép viết 1 hàm và lớp tổng quát với nhiều kiểu dữ liệu khác nhau mà không phải viết lại code cho mỗi kiểu
 + ứng dụng trong thiết kế thư viện 
-## 1.2 Sử dụng template  với hàm
++ Có 2 loại template: 
 
+__function template:__ tạo ra các hàm tổng quát
+
+__class template:__ tạo ra các lớp tổng quát
+
++__Cách template hoạt động:__ Khi 1 template được sử dụng với 1 kiểu dữ liệu mà ta truyền vào thì compiler sẽ tự động tạo ra 1 phiên bản của template với kiểu dữ liệu đó
+## 1.2 Sử dụng template  với hàm
 + ví dụ ta có 1 hàm tính tổng 2 số nguyên như sau 
 ```bash
 int sum(int a,int b){
@@ -144,7 +147,6 @@ int main(){
 ```bash
 2 3 4 5 6
 ```
-    
 ## 1.5 Sử dụng template với variadic
 + Ta có thể tạo ra 1 hàm tính tổng với số lượng tham số không xác định với nhiều kiểu dữ liệu 
 ```bash
@@ -172,9 +174,91 @@ sum of int: 15
 sum of float: 28.12
 sum of int and float: 16.2
 ```
-    
 
+# 2. NAMESPACE
++ Cho phép nhóm các đối tượng (biến/hàm/class cùng tên) thành các không gian riêng biệt để tránh xung đột tên (khi ta muốn khai báo các đối tượng trùng tên)
++ Từ khóa __using__ cho phép truy cập trực tiếp các thành viên của namespace mà không cần sử dụng toán tử phạm vi ::
+
+## 2.1 Khai báo và sử dụng namespace
+### a) Sử dụng các biến và hàm thông qua namespace
+```bash
+#include <iostream>     
+using namespace std; // cho phép ta truy cập vào các hàm tiêu chuẩn của C++ như cout cin 
+
+namespace A{
+  string name = "Pham Cao Duy";
+    void display()
+    {
+        cout << "name: " << name;
+    }
+    namespace B 
+    {
+        string name = "Pham Bang Bang";
+        void display()
+        {
+            cout << "name: " << name;
+        }
+    }
+}
+namespace C
+{
+    string name = "Trinh Le Hoang";
+    void display()
+    {
+        cout << "name: " << name;
+    }
+}
+using namespace A :: B; // access directly to namespace B via A
+int main(){
+    cout << "name: " << name << endl;    // name from namespace B
+    cout << "name: " << A::name << endl;
+    cout << "name: " << C::name << endl;
+    return 0;
+}
+```
+### b) Sử dụng struct thông qua namespace
     
+```bash
+namespace user
+{
+    class Point
+    {
+    private:
+        int x;
+        int y;
+
+    public:
+        Point() = default;
+        void display()
+        {
+            cout << "x = " << x << endl;
+            cout << "y = " << y << endl;
+        }
+        void setpoint(int x, int y)
+        {
+            this->x = x;
+            this->y = y;
+        }
+        int get_pointX()
+        {
+            return this->x;
+        }
+        int get_pointY()
+        {
+            return this->y;
+        }
+    };
+    Point point1;
+}
+using namepsace user;
+int main(){
+    point1.display();
+    point1.setpoint(12, 22);
+    cout << "x: " << point1.get_pointX() << endl
+         << "y: " << point1.get_pointY() << endl;
+    return 0;
+}
+```
 
 
     

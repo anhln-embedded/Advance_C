@@ -1,21 +1,29 @@
-# 1. Khái niệm
+# 1. Tổng quan về Class
+## 1.1 Khái niệm
 + Class là kiểu dữ liệu tự định nghĩa bỡi người dùng để quản lý và mô phỏng các đặc điểm của 1 đối tượng cụ thể nào đó chứa các biến và hàm bên trong. Có thể nói nó là 1 phiên bản nâng cấp của struct và union.
-# 2. Đặc điểm
+
+<p align = "center">
+<img src ="https://github.com/user-attachments/assets/bbb0c5c5-5b7e-4088-aa44-7cca28804df8"width = "650" height = "300">
+
+## 1.2 Đặc điểm
 + Trong class các biến và hàm được định nghĩa là
 
-__property(thuộc tính) và method(phương thức)__
+__a) property(thuộc tính) và method(phương thức)__
 
 + Class được quản lý dựa trên 3 phạm vi là 
 
-__Public, private, protected__
+__b) Public, private, protected__
 
 + Khi khai báo 1 class các thành phần của nó sẽ luôn mặc định là private (không thể truy cập từ bên ngoài class thông qua object)
 
-# 3. Các Thao tác với class
+## 1.3 Các Thao tác với class
 Khi khai báo 1 class ta cần chú ý
-__+ Khai báo private:__ đối với các properties khi ta muốn đảm bảo an toàn dữ liệu  
+
+__+ Khai báo private:__ đối với các properties khi ta muốn đảm bảo an toàn dữ 
+liệu  
+
 __+ Khai báo public:__ đối với các method, được gọi và sử dũng bên ngoài class
-## 3.1 Tạo 1 object class và truy cập vào các properties và method
+### a) Sử dụng properties và method
 + Ta sẽ tạo 1 class dùng để định nghĩa 1 Person, cũng như khai báo và in ra thông tin của người đó như sau
 
 ```bash
@@ -49,8 +57,10 @@ int main(){
     return 0;
 }
 ```
-## 3.3 Constructor và DeConstructor 
-### a) Construct (hàm tạo)
+### b) Constructor và Destructor 
+
+__Construct (hàm tạo)__
+
 + Được sử dụng để khởi tạo tự động các thuộc tính cũng như phương thức, Constructor sẽ được khởi tạo có cùng tên với class,và chứa các tham số mà ta muốn khởi tạo ban đầu.
     
 ```bash
@@ -80,8 +90,11 @@ int main(){
     person1.printInfo();
 }
 ```
-### b) DeConstructor (hàm hủy)
-+ Được sử dụng để hủy 1 constructor. Destructor có cùng tên với constructor và được thêm vào dấu ~ phía trước. Khi khai báo destructor trong class, khi chương trình kết thức chúng sẽ được gọi tự động và giải phóng các constructor theo cơ chế LIFO
+__Destructor (hàm hủy)__
+
++ Được sử dụng để hủy 1 constructor, hay nói cách khác là giải phóng các properties
++ Destructor có cùng tên với constructor và được thêm vào dấu ~ phía trước
++ Khi chương trình kết thức chúng sẽ được gọi tự động và giải phóng các constructor theo cơ chế LIFO
 
 ```bash
 class Person{
@@ -110,10 +123,10 @@ constructor: Trinh Le Hoang has been released
 constructor: Dinh Anh Tuan has been released
 constructor: Pham Cao Duy has been released
 ```
-## 3.4 method và property static 
+### c) method và property static 
 các method trong class khi được khai báo là static
 + có thể truy cập trực tiếp thông qua tên class
-+ được cấp phát vùng nhớ khi ta gọi nó thông qua tên class ở ngoài class (lúc này ta mới sử dụng được property này)
++ được cấp phát vùng nhớ khi ta gọi nó thông qua tên class ở ngoài class __(lúc này ta mới sử dụng được property này)__
 + chỉ được truy cập thông qua static method
     
 ```bash
@@ -142,7 +155,7 @@ int main(){
 ```
 + Kết quả in ra ta được __total of objects: 3__
 
-## 3.5 Con trỏ this và toán tữ phạm vi ::
+### d) Con trỏ this và toán tữ phạm vi ::
 Con trỏ this và toán tử phạm vi :: đều được sử dụng để truy cập đến 1 đối tương được khai báo cục bộ 
 
 Đối với Con trỏ this sẽ có các đặc điểm sau:
@@ -180,70 +193,8 @@ int main(){
   person1.PrintAddress();
 }
 ```
-## 3.6 Function Overloading và OverOperator (xử lý ở quá trình compile time)
-### a) Function Overloading 
-Đây là định nghĩa liên quan đến nạp chồng hàm, Được sử dụng khi ta muốn định nghĩa nhiều hàm cùng tên có cách xử lý giống nhau nhưng khác nhau về:
-+ Số lương tham số 
-+ Kiểu dữ liệu trả về
-+ Kiểu dữ liệu tham số
-```bash
-class tinh_toan{
-    public:
-    /*Overloading method*/
-        int tong(int a , int b){ 
-            return a + b;
-        }
-        double tong(double a , double b){
-            return a + b;
-        }
-        int tong(double a,double b,double c, double d){
-            return (int)a + b + c+ d;
-        }
-};
-int main(){
-    tinh_toan tinh;
-    cout << "tong 2 so integer: << tinh.tong(12,14) << endl;
-    cout << "tong 2 so double: << tinh.tong(12.12,14.42) << endl;
-    cout << "tong 4 so double: << tinh.tong(9.23,14.12,17.21,89.23) << endl; 
-    return 0;
-}
-```
-### b) Operator Overloading
-Đây là định nghĩa liên quan đến nạp chồng toán tử, được sử dụng khi ta muốn định nghĩa lại những phép toán logic thành các kiểu tiêu chuẩn hơn để thực hiện quá trình tính toán, so sánh giữa các kiểu dữ liệu không phải nguyên thủy ví dụ như nhân 2 phân số
-```bash
-class Phanso{
-    private:
-        int mauso;
-        int tuso;
-    public:
-    //khởi tạo giá trị mặc định ban đầu 
-        Phanso(int mauso = 0,int tuso = 0){
-            this->mauso = mauso;
-            this->tuso = tuso;
-        }
-        Phanso operator + (Phanso other){
-            Phanso ketqua;
-            ketqua.mauso = this->mauso * other.tuso + this->tuso * other.mauso;
-            ketqua.tuso = this->tuso * other.tuso;   
-            return ketqua;
 
-        }  
-        void display(Phanso a, Phanso b,Phanso ketqua){
-            cout << a.mauso << "/" << a.tuso << " + " << b.mauso << "/" << b.tuso << " = " << ketqua.mauso << "/" << ketqua.tuso << endl;
-        }
-};
-
-int Person :: total = 0;
-int main(){
-   Phanso ps1(12,42);
-   Phanso ps2(14,11);
-   Phanso ps3 = ps1 + ps2;
-   ps3.display(ps1,ps2,ps3);
-   return 0;   
-}
-```
-
-## 3.7 Pass by value(tham trị) và Pass by reference(tham chiếu)
+### e) Pass by value(tham trị) và Pass by reference(tham chiếu)
 
 <p align = "center">
 <img src = "https://github.com/user-attachments/assets/3b918061-fa8f-4214-827e-37f74821e47b" width = "500" height = "150">
@@ -283,9 +234,13 @@ int main()
 + biến compare_value được truyền vào theo kiểu là 1 tham chiếu const cho biết nó chỉ được dùng để đọc ra chứ không cho phép thay đổi giá trị
 
 + biến write_value được truyền vào như là 1 tham chiếu để cập nhật giá trị dựa trên giá trị của compare_value
-# 4. Các thao tác với OOP trong class
-## 4.1 Inheritance (Tính kế thừa)
+# 2. Các thao tác với OOP trong class
+## 2.1 Inheritance (Tính kế thừa)
 + Đây là khả năng tái xử dụng lại các method và properties từ class gốc từ các class con kề thừa từ nó, giúp ta tối ưu và rót gọn chương trình
+
+<p align = "center">
+<img src ="https://github.com/user-attachments/assets/9409ad5c-7d3a-49a0-87df-fc4c71e8ff27"width = "600" height = "250">
+
 ```bash
 class person
 {
@@ -349,8 +304,11 @@ int main()
 + 2 thuộc tính ten,tuoi ở class person được để ở quyền truy cập protected cho phép nó có thể sử dụng ở class kết thừa
 + hàm printInfo ở class person sẽ được ghi đè nội dung ở class kế thừa
 
-## 4.2 Encapsulation (tính đóng gói)
+## 2.2 Encapsulation (tính đóng gói)
 + Đây là khả năng giới hạn việc truy cập vào các thuộc tính được định nghĩa trong class bằng việc cài đặt chế độ private cho chúng, nhằm đảm bảo an toàn về những dữ liệu mà ta không muốn bị thay đổi trực tiếp ngoài phạm vi class
+
+<p align = "center">
+<img src ="https://github.com/user-attachments/assets/8121ac09-0410-4f7b-86b9-f98e37c88732"width = "600" height = "250">
 
 ```bash
 class sinhvien
@@ -396,10 +354,111 @@ int main()
 ```
 + Ta định nghĩa 1 class sinhvien chứa các method để tính điểm trung bình và xếp hạng dựa vào các giá trị sẽ được truyền vào khi tạo ra 1 object class
 + 2 giá trị stb, rank không thể trực tiếp thay đổi vì chúng cần dựa vào các giá trị dtoan,dvan để tính toán xử lý thông qua cac method mà ta gọi ra.
-## 4.3 polymorphism(tính đa hình)
+## 2.3 Abstract (Tính trừu tượng) 
+
++ Đây là khả năng ẩn đi những phần triển khai cụ thể của chương trình, chỉ cung cấp các interface để tương tác với các user.
+
+<p align = "center">
+<img src ="https://github.com/user-attachments/assets/477e32ab-173c-493a-b8ff-44402aaebcdf"width = "600" height = "250">
+
+```bash
+class Car{
+    virtual void Airbar_Control() = 0;
+    virtual void Torque_Control() = 0;
+    virtual void Throttle_Control() = 0;
+};
+class Airbar : public Car{
+    void void Airbar_Control(){
+        /*detail implementation*/
+    }
+};
+class Torque : public Car{
+     void Torque_Control(){
+        /*detail implementation*/
+     }
+}
+class Throttle : public Car{
+     void Throttle_Control(){
+        /*detail implementation*/
+     }
+}
+```
++ Trong lớp Car ta sẽ được cung cấp 1 số interface với tính năng cụ thể để người dùng có thể tương tác nhưng phần triển khai cụ thể của nó sẽ được ẩn đi và chỉ được xử lý ở các lớp con bên dưới. 
+
+## 2.4 polymorphism(tính đa hình) 
 + Là khả năng truy cập vào cùng 1 method nhưng sẽ chứa các cách triển khai khác nhau tùy vào từng object mà ta định nghĩa
 
-### a) Virtual function (Hàm ảo)
+<p align = "center">
+<img src ="https://github.com/user-attachments/assets/bc5431ca-6b88-46e0-8389-a071b855c951"width = "600" height = "250">
+
++ Các loại đa hình trong OOP 
+
+<p align = "center">
+<img src ="https://github.com/user-attachments/assets/28bbca14-8944-4eb0-85bd-ef10a2c5ef55"width = "400" height = "200">
+
+### a) Function Overloading 
+Đây là định nghĩa liên quan đến nạp chồng hàm, Được sử dụng khi ta muốn định nghĩa nhiều hàm cùng tên có cách xử lý giống nhau nhưng khác nhau về:
++ Số lương tham số 
++ Kiểu dữ liệu trả về
++ Kiểu dữ liệu tham số
+```bash
+class tinh_toan{
+    public:
+    /*Overloading method*/
+        int tong(int a , int b){ 
+            return a + b;
+        }
+        double tong(double a , double b){
+            return a + b;
+        }
+        int tong(double a,double b,double c, double d){
+            return (int)a + b + c+ d;
+        }
+};
+int main(){
+    tinh_toan tinh;
+    cout << "tong 2 so integer: << tinh.tong(12,14) << endl;
+    cout << "tong 2 so double: << tinh.tong(12.12,14.42) << endl;
+    cout << "tong 4 so double: << tinh.tong(9.23,14.12,17.21,89.23) << endl; 
+    return 0;
+}
+```
+### b) Operator Overloading
+Đây là định nghĩa liên quan đến nạp chồng toán tử, được sử dụng khi ta muốn định nghĩa lại những phép toán logic thành các kiểu tiêu chuẩn hơn để thực hiện quá trình tính toán, so sánh giữa các kiểu dữ liệu không phải nguyên thủy ví dụ như nhân 2 phân số
+```bash
+class Phanso{
+    private:
+        int mauso;
+        int tuso;
+    public:
+    //khởi tạo giá trị mặc định ban đầu 
+        Phanso(int mauso = 0,int tuso = 0){
+            this->mauso = mauso;
+            this->tuso = tuso;
+        }
+        Phanso operator + (Phanso other){
+            Phanso ketqua;
+            ketqua.mauso = this->mauso * other.tuso + this->tuso * other.mauso;
+            ketqua.tuso = this->tuso * other.tuso;   
+            return ketqua;
+
+        }  
+        void display(Phanso a, Phanso b,Phanso ketqua){
+            cout << a.mauso << "/" << a.tuso << " + " << b.mauso << "/" << b.tuso << " = " << ketqua.mauso << "/" << ketqua.tuso << endl;
+        }
+};
+
+int Person :: total = 0;
+int main(){
+   Phanso ps1(12,42);
+   Phanso ps2(14,11);
+   Phanso ps3 = ps1 + ps2;
+   ps3.display(ps1,ps2,ps3);
+   return 0;   
+}
+```
+
+### c) Virtual function (Hàm ảo)
 + khi 1 hàm được định nghĩa là virtual nó có thể được ghi đè (override) trong class con, để cung cấp cách triển khai cụ thể
 + Khi gọi 1 hàm ảo thông qua 1 con trỏ/tham chiếu đến các lớp con. Hàm ảo tương ứng sẽ được gọi ra dựa trên object mà nó trỏ tới, chứ không dựa vào kiểu dữ liệu mà nó được định nghĩa
 + Nếu lớp con không cung cấp cách triển khai cụ thể thì nội dung trong hàm ảo được định nghĩa ở class gốc sẽ được dùng nếu ta gọi
@@ -443,7 +502,7 @@ int main(){
     }
 }
 ```
-### b) Pure virtual function (hàm ảo thuần túy)
+### d) Pure virtual function (hàm ảo thuần túy)
 + Lúc này hàm ảo mà ta định nghĩa sẽ được gán giá trị bằng 0, và bắt buộc lớp con kế thừa phải cung cấp cách triển khai cụ thể 
 + Khi 1 class chứa ít nhất 1 pure virtual function nó sẽ trở thành abstract class, nghĩa là ta sẽ không thể tạo ra 1 object từ class này
 ```bash
@@ -457,37 +516,6 @@ int main(){
     return 0;
 }
 ```
-## 4.4 Abstract (Tính trừu tượng) 
-+ Đây là khả năng ẩn đi những phần triển khai cụ thể của chương trình, chỉ cung cấp các interface để tương tác với các user.
-```bash
-class Car{
-    virtual void Airbar_Control() = 0;
-    virtual void Torque_Control() = 0;
-    virtual void Throttle_Control() = 0;
-};
-class Airbar : public Car{
-    void void Airbar_Control(){
-        /*detail implementation*/
-    }
-};
-class Torque : public Car{
-     void Torque_Control(){
-        /*detail implementation*/
-     }
-}
-class Throttle : public Car{
-     void Throttle_Control(){
-        /*detail implementation*/
-     }
-}
-```
-+ Trong lớp Car ta sẽ được cung cấp 1 số interface với tính năng cụ thể để người dùng có thể tương tác nhưng phần triển khai cụ thể của nó sẽ được ẩn đi và chỉ được xử lý ở các lớp con bên dưới. 
-
-    
-
-
-
-
 
 
 

@@ -2,6 +2,10 @@
 ## 1.1 Định Nghĩa 
 + cho phép viết 1 hàm và lớp tổng quát với nhiều kiểu dữ liệu khác nhau mà không phải viết lại code cho mỗi kiểu
 + ứng dụng trong thiết kế thư viện 
+
+<p align = "center">
+<img src = "https://github.com/user-attachments/assets/cbc0785d-0a7a-42d1-92cf-1400e9a2431c" width = "450" height = "250">
+
 + Có 2 loại template: 
 
 __function template:__ tạo ra các hàm tổng quát
@@ -178,6 +182,9 @@ sum of int and float: 16.2
 # 2. NAMESPACE
 + Cho phép nhóm các đối tượng (biến/hàm/class cùng tên) thành các không gian riêng biệt để tránh xung đột tên (khi ta muốn khai báo các đối tượng trùng tên)
 + Từ khóa __using__ cho phép truy cập trực tiếp các thành viên của namespace mà không cần sử dụng toán tử phạm vi ::
+
+<p align = "center">
+<img src = "https://github.com/user-attachments/assets/fbfc4535-3203-4035-881f-9f044d80c650" width = "500" height = "280">
 
 ## 2.1 Khai báo và sử dụng namespace
 ### a) Sử dụng các biến và hàm thông qua namespace

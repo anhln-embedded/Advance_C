@@ -7,6 +7,9 @@
 # 2. Quá trình Compiler
 Để 1 chương trình được viết bằng các ngôn ngữ bậc cao như C/C++ chạy được thì sẽ phải trải qua các bước sau. 
 
+<p align = "center">
+<img src = "https://github.com/user-attachments/assets/e561b014-00d4-49fb-a92c-39fc23e49412" width = "500" height = "350">
+
 ### Bước 1: Tiền xử lý (Preprocessing)
 Ở giai đoạn này file main.c sẽ được dịch sang file main.i bằng câu lệnh sau
 

@@ -58,8 +58,6 @@ __#include<memory>__
 
 ### b) Sử dụng 
 
-+ Cách khai báo object và thao tác với vùng nhớ được cấp phát
-
 __Đầu tiên ta tạo ra 1 class như sau__
 ```bash
 class Sensor
@@ -94,70 +92,103 @@ public:
     }
 };
 ```
-
-__trong hàm main ta khai báo 1 object và khởi tạo vùng nhớ cho nó với kiểu dữ liệu chính là class mà ta đã định nghĩa trước đó__
+### Khai báo 1 object smart pointer
 
 ```bash
 #include <iostream>
 #include <memory>
 using namespace std;
 int main()
-    unique_ptr<Sensor> uptr = make_unique<Sensor>(10); 
+    unique_ptr<Sensor> uptr = make_unique<Sensor>(1); 
 
-    //truy cập và đọc giá trị
+    //truy cập và đọc giá trị mặc định ban đầu
     uptr->display(); // cach 2 : (*uptr).display(); 
+```
 
-    // get data -> trả về raw nhưng vẫn còn quyền sở hữu
-    cout << "get data" << endl;
+### Sử dụng hàm get 
+
+__+ Chức năng:__ trả về raw pointer được quản lý bởi smart pointer để truy cập vào vùng nhớ mà nó quản lý (không thay đổi quyền sở hữu)
+
+__Lưu ý:__ raw pointer trả về từ get sẽ tự động thu hồi bởi smart pointer , nếu chủ động __delete__ có thể gây lỗi
+
+```bash
+int main(){
+    unique_ptr<Sensor> uptr = make_unique<Sensor>(1);
     Sensor *rawptr = uptr.get();
     rawptr->setValue1(100.21);
     rawptr->display();
-
-    //giải phóng raw pointer và object
-    cout << "release" << endl;
-    Sensor *rawptr = uptr.release();
-    rawptr->setValue1(89.23);
-    rawptr->display(); 
-    delete rawptr; //tự giải phóng do unique_ptr đã được thu hồi 
-
-    //thu hồi object và cho phép quản lý đối tượng mới
-    cout << "reset" << endl;
-    uptr.reset(new Sensor(20));
-    uptr->display();
-
-    //chuyển quyền sở hữu
-    cout << "move" << endl;
-    unique_ptr<Sensor> uptr2 = move(uptr); 
-    uptr2->display();
+    return 0;
+}
 ```
-+ Kết quả chạy chương trình
+
+
+### Sử dụng hàm release
+
+__+ Chức năng:__ giải phóng quyền sở hữu của smart pointer đói với đối tượng mà nó quản lý, trả về raw pointer đến đối tượng mà nó quản lý
+
+__Lưu ý:__ raw pointer trả về lúc này sẽ không còn được quản lý bởi smart pointer, phải chủ động giải phóng bằng __delete__
 
 ```bash
-sensor1 value: 10
-sensor2 value: 12.21
-get data
-sensor1 value: 100.21
-sensor2 value: 12.21
-release
-sensor1 value: 89.23
-sensor2 value: 12.21
-call destructor
-reset
-sensor1 value: 20
-sensor2 value: 12.21
-move
-sensor1 value: 20
-sensor2 value: 12.21
-call destructor
+int main(){
+    unique_ptr<Sensor> uptr = make_unique<Sensor>(1);
+    rawptr->setValue1(89.23);
+    Sensor *rawptr = uptr.release();
+    rawptr->display(); 
+    delete rawptr; //tự giải phóng do unique_ptr đã được thu hồi 
+    return 0;
+}
 ```
+
+### sử dụng hàm reset 
+
+__+ Chức năng:__ giải phóng đối tượng hiện tại nếu có, trước khi quản lý đối tượng mới
+
+__void reset();__ Giái phóng đối tượng hiện tại và đặt thành null
+
+__void reset(T* ptr);__ giải phóng đối đối tượng hiện tại và bắt đầu quản lý đối tượng mới được chỉ định bởi ptr
+
+```bash
+int main(){
+  unique_ptr<Sensor> uptr = make_shared<Sensor>(1);
+  uptr->setValue1(98.23);
+  uptr->display();
+
+  //giải phóng và thay đổi đối tượng mới
+  uptr.reset(new Sensor(20));
+  uptr->display();
+
+  //giải phóng vùng nhớ
+  uptr.reset();
+
+  return 0;
+
+}
+```
+
+### sử dụng hàm move
+
+__+ Chức năng:__ chuyển giao quyền sở hữu đối tượng hiện tại, hay nói cách khác raw pointer của smart pointer mà quản lý vùng nhớ này sẽ được chuyển sang cho smart pointer khác. 
+
+
+```bash
+int main(){
+    unique_ptr<Sensor> uptr = make_shared<Sensor>(1);
+    uptr->setValue1(98.23);
+    uptr->display();
+    
+    //chuyển giao quyền sỏ hữu
+    unique_ptr<Sensor> uptr2 = move(uptr); 
+    uptr2->display();
+
+    return 0;
+```
+
 ## 2.2 Share pointer
 ### a) Đặc điểm
 + Cho phép nhiều con trỏ thô của smart pointer cùng quản lý 1 tài nguyên cấp phát
-+ Có tích hợp method để đếm số lượng con trỏ thô đang trỏ đến đối đối tượng
++ Có tích hợp method để đếm số lượng con trỏ thô đang trỏ đến đối tượng
 + Được giải phóng tự động khi không còn con trỏ thô nào quản lý
 ### b) Sử dụng
-
-+ Ta sẽ khai báo và thao tác với share pointer như sau
 
 ```bash
 int main(){
@@ -187,23 +218,37 @@ int main(){
          << "b: " << *b << endl;
 }
 ```
-+ Kết quả chạy chương trình
 
-```bash
-count:4
-count:3
-raw: 20
-a: 50  
-b: 40  
-```
 ## 2.3 Weak pointer
 ### a) Đặc điểm
-+ Được sử dụng để giám sát và theo dõi các share pointer
-+ Không thực hiện đếm raw pointer
-+ Sử dụng kết hợp với share pointer để tránh tham chiếu vòng
++ Được sử dụng để giám sát các share pointer thông qua việc sử dụng 1 tham chiếu yếu đến 1 đối tượng quản lý bởi share pointer
++ Cung cấp 1 cơ chế theo dõi an toàn mà không làm tăng bộ đếm tham chiếu của share pointer
 
-### b) Sử dụng
+### b) Sử dụng hàm lock()
 
+__+ Chức năng:__ trả về 1 share_ptr hợp lệ được dùng để truy cập vào đối tượng bằng việc theo dõi nó thông qua weak_ptr
+
+```bash
+
+int main()
+{
+
+    shared_ptr<HinhChuNhat> ptr1(new HinhChuNhat(40, 10));
+    shared_ptr<HinhChuNhat> ptr3 = ptr1; 
+    weak_ptr<HinhChuNhat> ptr2 = ptr1;
+
+    if (auto ptr_lock = ptr2.lock())
+    {
+        ptr_lock->tinhDienTich();
+    }
+    else
+    {
+        cout << "Object has been deallocated" << endl;
+    }
+    cout <<"counts: " << ptr2.use_count() << endl; // trả về số lượng share pointer không tính weak pointer
+    return 0;
+}
+```
 # 3. Ứng dụng của smart pointer trong embedded system
 
 __+ Quản lý bộ nhớ heap__ : việc sử dụng heap memory thích cho hệ thống nhúng vì yêu cầu hạn chế về tài nguyên. Do đó việc sử dụng smart pointer có thể tối ưu hóa việc quản lý bộ nhớ

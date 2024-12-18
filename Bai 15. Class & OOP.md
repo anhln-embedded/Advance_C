@@ -1,6 +1,7 @@
 # 1. Tổng quan về Class
 ## 1.1 Khái niệm
-+ Class là kiểu dữ liệu tự định nghĩa bỡi người dùng để quản lý và mô phỏng các đặc điểm của 1 đối tượng cụ thể nào đó chứa các biến và hàm bên trong. Có thể nói nó là 1 phiên bản nâng cấp của struct và union.
+
+Class là kiểu dữ liệu tự định nghĩa bỡi người dùng để quản lý và mô phỏng các đặc điểm của 1 đối tượng cụ thể nào đó chứa các biến và hàm bên trong. Có thể nói nó là 1 phiên bản nâng cấp của struct và union.
 
 <p align = "center">
 <img src ="https://github.com/user-attachments/assets/bbb0c5c5-5b7e-4088-aa44-7cca28804df8"width = "650" height = "300">
@@ -424,7 +425,22 @@ int main(){
 }
 ```
 ### b) Operator Overloading
-Đây là định nghĩa liên quan đến nạp chồng toán tử, được sử dụng khi ta muốn định nghĩa lại những phép toán logic thành các kiểu tiêu chuẩn hơn để thực hiện quá trình tính toán, so sánh giữa các kiểu dữ liệu không phải nguyên thủy ví dụ như nhân 2 phân số
+
+__Định nghĩa:__ Cơ chế cho phép ta định nghĩa lại các toán tử cơ bản như +,-,*,/ thành các kiểu đặc biệt để thao tác được trên các kiểu dữ liệu không phải nguyên thủy ví dụ như struct hay class
+__Ứng dụng:__ Khi ta cần trực quan và đơn giản hóa trong việc đọc hiểu code ví dụ thay vì viết v3 = v1.add(V2) ta có thể viết v3 = v1 + v2, thông quan việc định nghĩa lại toán tử + để trình biên dịch có thể hiểu được  
+
+__Cú pháp:__ 
+```bash
+<return type> operator symbol (param){
+    //logic toán 
+}
+```
+__operator:__ từ khóa để nạp chồng toán tử
+
+__symbol:__ toán tử muốn nạp chồng, phải là nằm trong phạm vi các toán tử nguyên thủy như +,-*,/
+
+__Ví dụ:__ Nạp chồng toán tử + để cộng 2 phân số 
+
 ```bash
 class Phanso{
     private:
@@ -441,7 +457,6 @@ class Phanso{
             ketqua.mauso = this->mauso * other.tuso + this->tuso * other.mauso;
             ketqua.tuso = this->tuso * other.tuso;   
             return ketqua;
-
         }  
         void display(Phanso a, Phanso b,Phanso ketqua){
             cout << a.mauso << "/" << a.tuso << " + " << b.mauso << "/" << b.tuso << " = " << ketqua.mauso << "/" << ketqua.tuso << endl;

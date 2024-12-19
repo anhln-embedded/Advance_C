@@ -7,7 +7,7 @@ Class là kiểu dữ liệu tự định nghĩa bỡi người dùng để qu�
 <img src ="https://github.com/user-attachments/assets/bbb0c5c5-5b7e-4088-aa44-7cca28804df8"width = "650" height = "300">
 
 ## 1.2 Đặc điểm
-+ Trong class các biến và hàm được định nghĩa là
+Trong class các biến và hàm được định nghĩa là
 
 __a) property(thuộc tính) và method(phương thức)__
 
@@ -20,17 +20,18 @@ __b) Public, private, protected__
 ## 1.3 Các Thao tác với class
 Khi khai báo 1 class ta cần chú ý
 
-__+ Khai báo private:__ đối với các properties khi ta muốn đảm bảo an toàn dữ 
-liệu  
+__+ Khai báo private:__ đối với các properties khi ta muốn đảm bảo an toàn dữ liệu  
 
 __+ Khai báo public:__ đối với các method, được gọi và sử dũng bên ngoài class
-### a) Sử dụng properties và method
-+ Ta sẽ tạo 1 class dùng để định nghĩa 1 Person, cũng như khai báo và in ra thông tin của người đó như sau
 
+__+ Khai báo :__ Đối với các thành viên mà ta muốn nó được phép truy cập thông qua các lớp con kế thừa từ lớp gốc
+
+### a) Sử dụng properties và method
 ```bash
 #include <iostream>  //thư viên C++
 using namespace std; // cú pháp cho phép những hàm tiêu chuẩn như cout, cin 
 class Person{
+  //giới hạn quyền truy cập bên ngoài class
   private:
     string name;
     int age;
@@ -49,7 +50,8 @@ class Person{
     }
 };
 int main(){
-    Person person1;
+    Person person1; //tạo ra 1 object từ class 
+    //truy cập gián tiếp các property trong qua method 
     person1.setName("Pham Cao duy");
     person1.setAge(17);
     //in ra thong tin
@@ -125,28 +127,33 @@ constructor: Dinh Anh Tuan has been released
 constructor: Pham Cao Duy has been released
 ```
 ### c) method và property static 
+
+__Định nghĩa__
+
 các method trong class khi được khai báo là static
 + có thể truy cập trực tiếp thông qua tên class
 + được cấp phát vùng nhớ khi ta gọi nó thông qua tên class ở ngoài class __(lúc này ta mới sử dụng được property này)__
 + chỉ được truy cập thông qua static method
-    
+
+__Ví dụ:__ Ta sẽ dùng static property để lưu giá trị đếm, và truy cập nó thông qua static method. 
+
 ```bash
 class Person{
   private:
     string name;
     int age;
-    static int total;
+    static int total; //chỉ có thể truy cập thông qua static method
   public:
     Person(string _name , int _age){
         name = _name;
         age = _age;
-        total += 1; //đếm só lượng object
+        total += 1; //đếm só lượng object mỗi lần khởi tạo 
     }
     static void print_total(){
         cout << "total of objects: << total << endl;
     }
 };
-int Person :: total = 0//cấp phát địa chỉ lưu ở data segment
+int Person :: total = 0 //cấp phát địa chỉ và khởi tạo giá trị lưu ở data segment
 int main(){
     Person person1("Duy Pham",30);
     Person person2("Hoang Le",38);
@@ -155,6 +162,70 @@ int main(){
 }
 ```
 + Kết quả in ra ta được __total of objects: 3__
+
+__Ừng dụng thực tế:__
+
++ Khi ta cần chia sẻ cấu hình cài đặt giống nhau giữa các ngoại vi trong 1 hệ thống nhúng. Ví dụ như cài đặt thông số baudrate giống nhau cho nhiều bộ UART
+
+```bash
+#include <iostream>
+
+class UART {
+private:
+    static int baudRate; // Shared property for baud rate
+    int instanceId;      // Each UART has a unique ID
+
+public:
+    UART(int id) : instanceId(id) {}
+
+    // Static method to set baud rate
+    static void setBaudRate(int rate) {
+        baudRate = rate;
+    }
+
+    // Static method to get baud rate
+    static int getBaudRate() {
+        return baudRate;
+    }
+
+    // Non-static method to display UART details
+    void displayDetails() {
+        std::cout << "UART Instance ID: " << instanceId
+                  << ", Baud Rate: " << baudRate << std::endl;
+    }
+};
+
+// Define static member outside the class
+int UART::baudRate = 9600; // Default baud rate
+
+int main() {
+    UART uart1(1); // UART instance 1
+    UART uart2(2); // UART instance 2
+
+    // Set shared baud rate using static method
+    UART::setBaudRate(115200);
+
+    // Each instance will use the same baud rate
+    uart1.displayDetails();
+    uart2.displayDetails();
+
+    // Retrieve shared baud rate
+    std::cout << "Shared Baud Rate: " << UART::getBaudRate() << std::endl;
+
+    return 0;
+}
+```
+__Giải thích chương trình__
+
++ biến static baudRate được sử dụng để lưu giá trị cài đặt chung. Thay đổi giá trị này sẽ tự động cập nhật cho tất cả bộ UART
++ Biến non-static instanceId được dùng để phân biệt giữa 2 bộ UART với nhau. Mỗi bộ UART sẽ có 1 ID riêng
++ method getBaudRate được sử dụng để đọc ra giá trị baud thông qua tên class mà không cần phải sử dụng object cụ thể
+
+__Lợi ích sử dụng static member__
+
+__+ Chia sẻ Tài nguyên chung__ : đối với đặc trưng của 1 hệ thống nhúng với tài nguyên giới hạn, thì sử dụng static member sẽ tối ưu và tránh lãnh phí memory không cần thiết
+
+__+ Truy cập global:__ Cho phép ta truy cập static member trực tiép thông qua tên class 
 
 ### d) Con trỏ this và toán tữ phạm vi ::
 Con trỏ this và toán tử phạm vi :: đều được sử dụng để truy cập đến 1 đối tương được khai báo cục bộ 
@@ -228,6 +299,8 @@ int main()
     return 0;
 }
 ```
+__Giải thích chương trình__
+
 + Đối với hàm calculate khi ta truyền trực tiếp giá trị cùa biến write (pass by value) thì để cập nhật giá trị thay đổi trong hàm này ta cần phải sử dụng từ khóa return và sửa đổi kiểu trả về của hàm. Viêc pass by value cũng gây phát sinh vùng nhớ, lãng phí tài nguyên trên RAM
 
 + ở hàm write_and_read, 2 đối số truyền vào hàm chính là địa chỉ của chúng để xử lý, vì vậy không gây phát sinh thêm bất kỳ vùng nhớ nào
@@ -237,10 +310,20 @@ int main()
 + biến write_value được truyền vào như là 1 tham chiếu để cập nhật giá trị dựa trên giá trị của compare_value
 # 2. Các thao tác với OOP trong class
 ## 2.1 Inheritance (Tính kế thừa)
+
+__Định nghĩa__
+
 + Đây là khả năng tái xử dụng lại các method và properties từ class gốc từ các class con kề thừa từ nó, giúp ta tối ưu và rót gọn chương trình
 
+__Lợi ích:__
+
++ Cho phép ta tái sử dụng mã nguồn, giúp giảm thời gian và công sức viết lại code
++ Dễ dàng mở rộng các tính năng mới bằng cách kế thừa dựa trên lớp gốc
++ Cung cấp 1 tính nhất quán khi các lớp con phải tuân theo cấu trúc và hành vi của lớp gốc
 <p align = "center">
 <img src ="https://github.com/user-attachments/assets/9409ad5c-7d3a-49a0-87df-fc4c71e8ff27"width = "600" height = "250">
+
+__Ví dụ:__ 
 
 ```bash
 class person
@@ -294,19 +377,30 @@ public:
 };
 int main()
 {
-    hocsinh hs1("Trinh Le Hoang",22,"12A1");
-    sinhvien sv1("Pham Cao Duy",29,"Mechatronics Engineer");
+    hocsinh hs1("Trinh Le Hoang",26,"12A1");
+    sinhvien sv1("Pham Cao Duy",17,"Mechatronics Engineer");
 
     hs1.printInfo();
     sv1.printInfo();
 }
 ```
+__Giải thích chương trình__
+
 + class hocsinh và sinhvien sẽ kế thừa các thông tin cơ bãn từ class person và bổ sung thêm các thuộc tính đặc trưng 
 + 2 thuộc tính ten,tuoi ở class person được để ở quyền truy cập protected cho phép nó có thể sử dụng ở class kết thừa
 + hàm printInfo ở class person sẽ được ghi đè nội dung ở class kế thừa
 
 ## 2.2 Encapsulation (tính đóng gói)
-+ Đây là khả năng giới hạn việc truy cập vào các thuộc tính được định nghĩa trong class bằng việc cài đặt chế độ private cho chúng, nhằm đảm bảo an toàn về những dữ liệu mà ta không muốn bị thay đổi trực tiếp ngoài phạm vi class
+
+__Định nghĩa:__
+
++ Đây là khả năng ẩn đi những thông tin và chi tiết cách triển khai của 1 đối tượng. Chỉ cung cấp các method trung gian để tương tác với chúng
+
+__Lợi ích:__
+
++ Giúp bảo vệ được dữ liệu, nhằm ngăn chặn việc truy cập trực tiếp bên ngoài. Qua đó giảm được nguy cơ lỗi và các vấn để bảo mật
+
+__Ví du:__
 
 <p align = "center">
 <img src ="https://github.com/user-attachments/assets/8121ac09-0410-4f7b-86b9-f98e37c88732"width = "600" height = "250">
@@ -322,7 +416,7 @@ public:
     float dtoan;
     float dvan;
     string name;
-    sinhvien(string name, float dtoan, float dvan)
+    sinhvien(string name , float dtoan, float dvan)
     {
         this->name = name;
         this->dtoan = dtoan;
@@ -353,11 +447,20 @@ int main()
     cout << "xep hang: " << sv1.xep_hang();
 }
 ```
+__Giải thích chương trình__
+
 + Ta định nghĩa 1 class sinhvien chứa các method để tính điểm trung bình và xếp hạng dựa vào các giá trị sẽ được truyền vào khi tạo ra 1 object class
 + 2 giá trị stb, rank không thể trực tiếp thay đổi vì chúng cần dựa vào các giá trị dtoan,dvan để tính toán xử lý thông qua cac method mà ta gọi ra.
 ## 2.3 Abstract (Tính trừu tượng) 
 
-+ Đây là khả năng ẩn đi những phần triển khai cụ thể của chương trình, chỉ cung cấp các interface để tương tác với các user.
+__Định nghĩa:__
+
++ Đây là khả năng cho phép ẩn đi những phần phức tạp và cách triển khai chi tiết của 1 đối tượng thông qua việc cung cấp các API để thao tác với chúng
+
+ __Lợi ích:__
+
+ + Giảm đi sự phức tạp thông qua việc cung cấp các interface cần thiết và ẩn đi những phần cụ thể
+ + Dễ dàng sử dụng và thân thiện vói người dùng, vì không cần biết phải hiểu rõ cách thức hoạt động bên trong đối tượng
 
 <p align = "center">
 <img src ="https://github.com/user-attachments/assets/477e32ab-173c-493a-b8ff-44402aaebcdf"width = "600" height = "250">
@@ -384,11 +487,19 @@ class Throttle : public Car{
      }
 }
 ```
+__Giải thích chương trình__
+
 + Trong lớp Car ta sẽ được cung cấp 1 số interface với tính năng cụ thể để người dùng có thể tương tác nhưng phần triển khai cụ thể của nó sẽ được ẩn đi và chỉ được xử lý ở các lớp con bên dưới. 
 
 ## 2.4 polymorphism(tính đa hình) 
-+ Là khả năng truy cập vào cùng 1 method nhưng sẽ chứa các cách triển khai khác nhau tùy vào từng object mà ta định nghĩa
+__Định nghĩa:__ 
++ Là khả năng cho phép các phương thức có các cách triển khai khác nhau tùy thuộc vào từng đối tượng của nhiều lớp con kế thừa từ lớp gốc
 
+__Lợi ích:__
+
++ Cung cấp 1 cơ chế linh hoạt để xử lý các đối tượng mà không cần biết rõ lớp của chúng
++ Tăng khả năng mở rộng nhiều chức năng mà không làm thay đổi lớp hiện có
+   
 <p align = "center">
 <img src ="https://github.com/user-attachments/assets/bc5431ca-6b88-46e0-8389-a071b855c951"width = "600" height = "250">
 

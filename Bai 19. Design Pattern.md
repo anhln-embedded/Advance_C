@@ -33,9 +33,9 @@ __+ Không tái sử dụng lại mã nguồn:__
 <p align = "center">
 <img src = "https://github.com/user-attachments/assets/c85222a3-628b-4d5e-905d-b3ad9c6342fa" width = "500" height = "300">
 
-### a) Single pattern
+### a) Singleton
 
-__Mục đích:__ Đảm bảo 1 lớp chỉ có thể tạo ra 1 đối tượng duy nhất 
+__Định nghĩa:__ Đảm bảo 1 lớp chỉ có thể tạo ra 1 đối tượng duy nhất, có nghĩa là địa chỉ sẽ được khởi tạo 1 lần duy nhất. Khi khởi tạo các đối tượng mới thì nò sẽ trả về địa chỉ của đối tượng tạo ra đầu tiên 
 
 __Ứng dụng:__ Khi ta cần cài đặt cho 2 MCU sử dụng chung 1 cấu hình ngoại vi, tránh phải lặp lại việc tạo cấu hình riêng gây lãng phí vùng nhớ không cần thiết
 
@@ -53,6 +53,7 @@ __Các thành phần chính__
 + __static method:__ phương thức để truy cập đến đối tương duy nhất đó ở bất kỳ đâu trong chương trình
 
 __Triển khai cụ thể__
+
 Ta có ví dụ sau đây dùng để cấu hình chung 1 bộ thông số của ngoại vi uart cho nhiều port GPIO như sau
 
 ```bash
@@ -61,23 +62,23 @@ class GPIO
 private:
     GPIO()
     {
-        uartInit(); // cach 1
+        uartInit(); // Khởi tạo thông số ngay khi 1 đối tượng được tạo ra
     }
     void uartInit()
     {
         cout << "UART is initialized" << endl;
+        /*
+            details implementation
+        */
     }
-    static GPIO *instance; // trỏ đến object duy nhất
+    static GPIO *instance; // biến static trỏ đến object duy nhất
 public:
-    void uartinit()
-    {
-    }
     static GPIO *getInstance()
     { // method để khởi tạo object
         if (instance == nullptr)
         {
-            instance = new GPIO(); // tạo ra 1 object duy nhất
-            //instance->uartinit();  // cach 2
+            instance = new GPIO(); // khởi tạo constructor và gọi hàm cấu hình uartInit
+            //instance->uartinit();  // nếu hàm uartInit được định nghĩa bên ngoài constructor
         }
         return instance;
     }
@@ -91,15 +92,113 @@ int main()
     return 0;
 }
 ```
+
+### b) Factory pattern
+
+__Đặt vấn đề:__ Giả sử ta có nhiều loại cảm biến với cách khởi tạo và đọc dữ liệu khác nhau. Như vậy làm thế nào mà chúng ta có thể triển khai 1 lớp định nghĩa tổng quát để sử dụng chung cho tất cả các loại mà không cần quan tâm chi tiết mỗi loại hoạt động như thế nào
+
+<p align = "center">
+<img src = "https://github.com/user-attachments/assets/4c961370-bde5-489f-8d5d-48e932daf15b" width ="500" height = "300">
+
+__Định nghĩa:__
+
+Cung cấp 1 cơ chế cho phép ta định nghĩa 1 đối tượng thông qua 1 lớp trừu tượng mà không cần chỉ rõ lớp của đối tượng đó
+
+__Các thành phần__
+
+__+ Product:__ Lớp cơ sở hoặc interface mà lớp con sẽ kế thừa
+
+__+ Concrete product:__ Các lớp con cụ thể được tạo ra từ factory
+
+__+ Factory:__ lớp trung gian để tạo ra các đối tượng
+
+__Lợi ích:__
+
+__+ Trừu tượng:__ Giúp ẩn đi những phần chi tiết của đối tượng, cung cấp 1 lớp trung gian để tạo ra đối tượng mà không cần hiểu rõ cấu trúc của từng loại 
+
+__+ Mở rộng:__ Dễ dàng tích hợp thêm nhiều đối tượng mới mà không ảnh hưởng đến mã nguồn 
+
+__+ Linh hoạt:__ Khi cần thêm đối tượng mới chỉ cần cập nhật factory mà không phải thay đổi mã nguồn
+
+__+ Giảm sự phụ thuộc:__ Factory giúp mã nguồn giảm sự phụ thuộc vào các lớp cụ thể, mà chỉ cần thao tác thông qua lớp trung gian. Tăng tính tái sử dụng mã nguồn cho các dự án khác nhau
+
+__Triển khai cụ thể:__ Ta có ví dụ sau đây để khởi tạo cảm biến thông qua 1 lớp trung gian mà không cần quan tâm đến lớp cụ thể 
+
++ Tạo lớp cơ sở và định nghĩa 1 method ảo để đọc dữ liệu của các cảm biến, method này sẽ được triển khai cụ thể ở các lớp con kế thừa
+
+```bash
+// Abstract class
+class Sensor{
+    public:
+        virtual void readData() = 0;
+};
+```
++ Tạo các lớp con để xử lý dữ liệu cho từng loại cảm biến
+```bash
+
+// Temperature class
+class TemperatureSensor : public Sensor{
+    public:
+        void readData() override {
+            cout<<"reading temp data: "<<endl;
+        }
+};
+
+// Humidity class
+class HumiditySensor : public Sensor{
+    public:
+        void readData() override {
+            cout<<"reading humidity data: "<<endl;
+        }
+};
+```
++ Định nghĩa lớp trung gian để khởi tạo gián tiếp đối tượng
+
+```bash
+// Factory class (Creator)
+class SensorFactory{
+    public:
+        static Sensor* createSensor(const char* sensorType){
+            if(sensorType == "temp"){
+                return new TemperatureSensor();     // trả về đối tượng TemperatureSensor
+            }
+            else if (sensorType == "humi"){
+                return new HumiditySensor();        // trả về đối tượng PressureSensor
+            }
+            else{
+                return nullptr;                     // trả về con trỏ null
+            }
+        }
+};
+
+```
++ khởi tạo và đọc giá trị cảm biến
+
+```bash
+int main(int argc, char const *argv[])
+{
+    Sensor* sensor = SensorFactory::createSensor("temp");
+    sensor->readData();
+    return 0;
+}
+
+```
+    
 ## 2.2 Structural patterns
+
+### a) Decorator 
+
 ## 2.3 Behavioral pattern (quản lý hành vi và tương tác giữa các thành module trong hệ thống)
 
 <p align = "center">
 <img src = "https://github.com/user-attachments/assets/feea3ffc-22c4-41a0-b4d9-9a435c9bc2f4" width = "500" height = "280">
 
-### a) MVP pattern
+### a) MVP 
 
-__Mục đích:__ tách chương trình thành các phần độc lập để dễ dàng quản lý, bảo trì và phát hiện sửa lỗi
+__Định nghĩa:__ 
+
++ tách chương trình thành các phần độc lập để quản lý cách mà các thành phần hệ thống tương tác trao đổi dữ liệu với nhau bên trong hệ thống giúp dễ dàng bảo trì và phát hiện sửa lỗi
++ Phổ biến trong lập trình giao diện người dùng __UI__ 
 
 __Các thành phần chính:__
 
@@ -116,13 +215,15 @@ __=> ví dụ:__ APi hiển thị, nhận tương tác thông qua nút nhấn , 
 <p align = "center">
 <img src = "https://github.com/user-attachments/assets/9c2315be-97ed-401b-8f96-55c92fcff3fd" width = "500" height = "350">
 
-__Ví dụ:__ Hệ thống điều hòa điều khiển bởi người dùng 
+__Triển khai cụ thể:__ 
 
-### a) Khởi tạo dữ liệu cho hệ thống
+Hệ thống điều hòa điều khiển bởi người dùng 
 
-__database:__ nhiệt độ, trạng thái
+__Khởi tạo dữ liệu cho hệ thống__
 
-__Phương thức thao tác__: cài đặt , đọc về dữ liệu trong database
+__+ database:__ nhiệt độ, trạng thái
+
+__+ Phương thức thao tác__: cài đặt , đọc về dữ liệu trong database
 
 
 ```bash
@@ -153,9 +254,9 @@ class ClimateControlModel{
 };
 ```
 
-### b) Hiển thị và tương tác với người dùng
+__Hiển thị và tương tác với người dùng__
 
-__Phương thức thao tác:__ Hiển thị lựa chọn, cài đặt nhiệt độ, cài đặt trạng thái 
+__+ Phương thức thao tác:__ Hiển thị lựa chọn, cài đặt nhiệt độ, cài đặt trạng thái 
 
 ```bash
 class ClimateControlView{
@@ -182,7 +283,7 @@ class ClimateControlView{
 };
 ```
 
-### c) Khởi tạo lớp thao tác trung gian
+__Khởi tạo lớp thao tác trung gian__
 
 ```bash
 class ClimateControlPresenter{
@@ -210,8 +311,7 @@ class ClimateControlPresenter{
 };
 ```
 
-### d) Luồng hoạt động của chương trính chính
-
+ __Luồng hoạt động của chương trình chính__
 
 ```bash
 int main()
@@ -255,7 +355,156 @@ int main()
 
     return 0;
 }
-
-
 ```
 
+### b) Oberserver  
+__Định nghĩa:__
+
+Là 1 cớ chế giám sát mô tả 1 mối quan hẹ phụ thuộc __1 to many__ , có nghĩa là khi 1 đối tượng __(subject)__ thay đổi trạng thái thì các đối tượng khác __(observer)__ phụ thuộc vào nó cũng sẽ được thông báo và cập nhật
+
+<p align = "center">
+<img src = "https://github.com/user-attachments/assets/93726554-1e6f-48e8-8958-bc8cf0e95432" width ="450" height = "250">
+
+__Ứng dụng:__ 
+
+Khi ta mướn đọc dữ liệu từ 1 cảm biến, thì đồng thời các ngoại vi khác như LCD sẽ được tự động hiển thị dữ liệu và đèn hoặc động cơ sẽ được bật/kích hoạt
+
+__Các thành phần__
+
+__+ Subject:__ 
+
+=> Đối tượng chính thông báo cho các observer về sự thay đổi trạng thái
+
+=> Cung cấp các cơ chế thêm/xóa/thông báo cho observer
+
+__+ Concrete subject:__ 
+
+=> Các lớp con triển khai cụ thể của subject
+
+=> Chứa các logic quản lý danh sách các observer và trạng thái của object
+
+__+ Oberserver:__ 
+
+=> Là lớp cơ sở, chứa các định nghĩa về phương thức update() mà các lớp con phải triển khai  
+
+=> Thực hiện hành động khi nhận được thông báo từ subject
+
+__+ Concrete Oberserver:__
+
+=> Lớp con kế thừa từ Observer, triễn khai cụ thể các phương thức update()
+
+=> Nhận thông báo từ subject và xử lý
+
+__Mối quan hệ giữa Observer và Subject__
+
+<p align = "center">
+<img src = "https://github.com/user-attachments/assets/14510c02-9eee-4eb8-a1fd-58e7df7ee778" width ="400" height = "200">
+
+__Subject:__ 
+
++ giữ danh sách chứa các observer
++ dễ dàng thay đổi observer mà không phải thay đổi subject
+
+__Observer:__ 
+
++ đăng ký và nhận thông báo từ subject khi có sự thay đổi từ subject
++ Có thể thêm/xóa trên danh sách mà subject quản lý 
++ Có thể ngừng nhận thông báo bằng cách hủy đăng ký , giúp kiểm soát tốt tài nguyên và sự kiện hệ thống
+
+__Triển khai cụ thể__ : Ta có ví dụ sau đây để mô tả cách đọc dữ liệu từ cảm biến và thực hiện các hành động cụ thể
+
++ Định nghĩa 1 subject để giữ trạng thái và thông báo đến các observer
+
+```bash
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+// Subject (SensorManager) holds the state and notifies observers
+class SensorManager {
+    float temperature;
+    float humidity;
+    float light;
+    std::vector<Observer*> observers; //khởi tạo danh sách chứa các observer để quản lý 
+public:
+    //method thêm observer
+    void registerObserver(Observer* observer) {
+        observers.push_back(observer);
+    }
+    //method xóa observer
+    void removeObserver(Observer* observer) {
+        observers.erase(std::remove(observers.begin(), observers.end(), observer), observers.end());
+    }
+    //method thông báo 
+    void notifyObservers() {
+        //thông báo đến từng concrete observer 
+        for (auto observer : observers) {
+            observer->update(temperature, humidity, light); //mỗi obserer nhận thông báo và thực hiện hành động cụ thể
+        }
+    }
+    //method cập nhật trạng thái 
+    void setMeasurements(float temp, float hum, float lightLvl) {
+        temperature = temp;
+        humidity = hum;
+        light = lightLvl;
+        notifyObservers();
+    }
+};
+```
+
++ Định nghĩa 1 Observer để nhận thông báo từ observer thông qua method update(), sẽ được triển khai cụ thể tùy vào các concrete observer
+
+```bash
+// Interface for observers (display, logger, etc.)
+class Observer {
+public:
+    //Định nghĩa method để nhận thông báo từ observer
+    virtual void update(float temperature, float humidity, float light) = 0;
+};
+```
++ Định nghĩa 2 concrete observer để hiển thị và ghi dữ liệu ghi nhận được thông báo từ observer
+
+```bash
+// Display component (an observer)
+class Display : public Observer {
+public:
+    void update(float temperature, float humidity, float light) override {
+        std::cout << "Display: Temperature: " << temperature
+                  << ", Humidity: " << humidity
+                  << ", Light: " << light << std::endl;
+    }
+};
+
+// Logger component (an observer)
+class Logger : public Observer {
+public:
+    void update(float temperature, float humidity, float light) override {
+        std::cout << "Logging data... Temp: " << temperature
+                  << ", Humidity: " << humidity
+                  << ", Light: " << light << std::endl;
+    }
+};
+```
++ Giao tiếp giữa Subject và Observer
+    
+```bash
+
+int main() {
+    SensorManager sensorManager; //Khởi tạo subject và cập nhật trạng thái
+
+    //Khởi tạo concrete observer 
+    Display display;
+    Logger logger;
+
+    //đăng ký vào subject để nhận thông báo
+    sensorManager.registerObserver(&display);
+    sensorManager.registerObserver(&logger);
+
+    //thực hiện hành động sau khi nhận thông báo
+    sensorManager.setMeasurements(25.0, 60.0, 700.0); // Simulate sensor data update
+    sensorManager.setMeasurements(26.0, 65.0, 800.0); // Another sensor update
+
+    return 0;
+}
+
+``` 

@@ -642,6 +642,135 @@ int main(){
     return 0;
 }
 ```
+## 2.5 Ví dụ kết hợp 4 tính chất OOP
+
+### a) Tạo ra 1 lớp chung để cung cấp những thuộc tính và phương thức chung cho các loại xe
+
+__+ Tính Đóng gói:__ chứa các thuộc tính và đặc điểm của xe cần được bảo mật và không cho phép truy cậo trực tiếp
+
+__+ Tính Trừu tượng:__ Chứa các hành động mà xe sẽ thực hiện (phương thức). Mỗi loại xe sẽ có cung cấp cách vận hành khác nhau
+
+__Triển khai cụ thể__ 
+
+```bash
+#include <iostream>
+using namespace std;
+class Car
+{
+private:
+    /*ENCAPSULATION  */
+    string brand;
+    string model;
+    int speed;
+
+public:
+    /* ABSTRACT */
+    virtual void startEngine()
+    {
+        cout << "base startEngine" << endl;
+    }
+    virtual void stopEngine()
+    {
+        cout << "base stopEngine" << endl;
+    }
+
+    virtual ~Car() {} // Destructor ảo
+    // Constructor
+    Car(string b, string m, int s) : brand(b), model(m), speed(s) {}
+
+    // Getter và Setter
+    string getBrand() { return brand; }
+    void setBrand(string b) { brand = b; }
+
+    string getModel() { return model; }
+    void setModel(string m) { model = m; }
+
+    int getSpeed() { return speed; }
+    void setSpeed(int s)
+    {
+        if (s >= 0)
+            speed = s;
+    }
+
+    // Hiển thị thông tin
+     void displayInfo()
+    {
+        cout << "Brand: " << getBrand() << ", Model: " << getModel()  << ", Speed: " << getSpeed() << " km/h" << endl;
+    }
+};
+```
+
+__Sử dụng như sau__
+
+```bash
+int main() {
+    Car basicCar("Toyota", "Corolla", 180);
+    basicCar.displayInfo();
+```
+    
+
+### b) Tạo ra các lớp con đại diện cho các loại xe khác nhau sử dụng những thuộc tính và phương thức chung cơ bản cúa 1 chiếc xe (lớp cơ bản)
+
+__+ Tính Kế thừa:__ 2 lớp Gascar và EletricCar sẽ sử dụng lại những thành phần được cung cấp từ lớp Car đồng thời có những thuộc tính và phương thức riêng 
+
+
+```bash
+class ElectricCar : public Car {
+private:
+    int batteryCapacity; // Dung lượng pin
+
+public:
+    // Constructor
+    ElectricCar(string b, string m, int s, int battery) : Car(b, m, s), batteryCapacity(battery) {}
+
+    // Getter và Setter cho batteryCapacity
+    int getBatteryCapacity() { return batteryCapacity; }
+    void setBatteryCapacity(int battery) { batteryCapacity = battery; }
+
+    // Ghi đè phương thức displayInfo để hiển thị thêm thông tin về pin
+    void displayInfo() {
+        Car::displayInfo();
+        cout << "Battery Capacity: " << batteryCapacity << " kWh" << endl;
+    }
+};
+class GasCar : public Car {
+public:
+    GasCar(string b, string m, int s) : Car(b, m, s) {}
+    void startEngine() override {
+        cout << "Gas engine started!" << endl;
+    }
+
+    void stopEngine() override {
+        cout << "Gas engine stopped!" << endl;
+    }
+};
+```
+
+
+__Sử dụng như sau__
+
+```bash
+int main() {
+    ElectricCar tesla("Tesla", "Model 3", 200, 75);
+    tesla.displayInfo();
+
+    GasCar toyota("Toyota","Model 2",180);
+    toyota.displayInfo();
+```
+### c) Áp dụng tính đa hình để quản lý nhiều loại xe thông qua lớp cơ sở
+```bash
+int main(){
+    Car* myElectricCar = new ElectricCar("Tesla", "Model S", 250, 100);
+    myElectricCar->startEngine();
+    myElectricCar->stopEngine();
+    delete myElectricCar;   
+}
+```
+
+    
+
+
+
 
 
 

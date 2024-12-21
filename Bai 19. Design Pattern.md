@@ -413,6 +413,9 @@ __Observer:__
 
 __Triển khai cụ thể__ : Ta có ví dụ sau đây để mô tả cách đọc dữ liệu từ cảm biến và thực hiện các hành động cụ thể
 
+<p align = "center">
+<img src = "https://github.com/user-attachments/assets/ff0ebcd1-be51-4c23-88e0-777c7a6b15ab" width = "500" height = "250">
+
 + Định nghĩa 1 subject để giữ trạng thái và thông báo đến các observer
 
 ```bash

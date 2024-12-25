@@ -131,8 +131,19 @@ __Triển khai cụ thể:__ Ta có ví dụ sau đây để khởi tạo cảm 
 class Sensor{
     public:
         virtual void readData() = 0;
+        ~virtual Sensor(){
+            cout << "Destructor for Sensor is called" << endl;
+        }
 };
 ```
+__Giải thích cụ thể:__
+
+__+ readData()__ : được khai báo là 1 hàm ảo cho phép nó được ghi đè cách triển khai tùy vào các lớp con định nghĩa các loại cảm biến khác nhau
+
+__+ ~Sensor()__ : Hàm hủy ảo của lớp trừu tượng, ở các lớp con cũng cần phải có hàm hủy riêng để thu hồi hoàn toàn bộ.
+
+__=> Lý do khai báo hàm hủy là virtual__:cho phép ta xóa các đối tượng của lớp kế thừa thông qua con trỏ của lớp cơ sở
+
 + Tạo các lớp con để xử lý dữ liệu cho từng loại cảm biến
 ```bash
 
@@ -142,6 +153,9 @@ class TemperatureSensor : public Sensor{
         void readData() override {
             cout<<"reading temp data: "<<endl;
         }
+        ~TemperatureSensor(){
+            cout << "destructor for temp sensor is called" << endl;
+        }
 };
 
 // Humidity class
@@ -149,6 +163,9 @@ class HumiditySensor : public Sensor{
     public:
         void readData() override {
             cout<<"reading humidity data: "<<endl;
+        }
+       ~HumiditySensor(){
+            cout << "destructor for humi sensor is called" << endl;
         }
 };
 ```
@@ -170,8 +187,12 @@ class SensorFactory{
             }
         }
 };
-
 ```
+
+__Giải thích cụ thể__
+
+__+ createSensor(const char* sensorType)__ hàm này được dụng để khởi tạo các object và truy cập trực tiếp thông qua class Factory, trả về con trỏ đến các đối tượng được khởi tạo thông qua lớp cơ sở Sensor
+
 + khởi tạo và đọc giá trị cảm biến
 
 ```bash
@@ -179,6 +200,9 @@ int main(int argc, char const *argv[])
 {
     Sensor* sensor = SensorFactory::createSensor("temp");
     sensor->readData();
+
+    //giải phóng vùng nhớ sau sử dụng -> lúc này destructor mới được gọi 
+    delete sensor;
     return 0;
 }
 

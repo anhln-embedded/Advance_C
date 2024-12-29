@@ -17,8 +17,8 @@
  gcc -E main.c -o main.i
 ```
 Muc tiêu của bước này sẽ là xuất ra file main.i 
-+ thay thế nội dung của các chỉ #include bằng file nguồn mà nó định nghĩa
-+ thay thế các chỉ thị #define bằng nội dung mà nó định nghĩa 
++ tìm các file định nghĩa trong chỉ thì #include<> và thay thế bằng nội dung bên trong
++ thay thế các macro định nghĩa thông qua chỉ thị #define bằng nội dung mà nó định nghĩa 
 + xóa bỏ các comment trong file main.c 
 ### Bước 2: biên dịch (compiler) 
 Lúc này từ file main.s sẽ được biên dịch sang file main.s bằng câu lệnh sau
@@ -41,4 +41,10 @@ Mục tiêu của bước này là xuất ra file main.o
  gcc main.o -o main
  ```
 ### Bước 5: chạy chương trình
-Cuối cùng ta sẽ thực hiện chạy chương trình với file exe vừa sinh ra
+Cuối cùng ta sẽ thực hiện chạy chương trình với câu lệnh sau
+
+```bash
+./main
+ ```
+
+

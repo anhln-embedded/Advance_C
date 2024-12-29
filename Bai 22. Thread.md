@@ -61,7 +61,7 @@ int main(){
 Khi chạy chương trình trên sẽ bị dừng ngay lập tức. Lý do là vì sau khi luồng t1 được khởi tạo trong hàm main __(luồng chính)__ thì trong hàm main không còn tác vụ nào nữa nên có sẽ kết thúc dẫn đến các luồng phụ như t1 __(phụ thuộc vào luồng chính)__ cũng kết thúc theo.
 
 => Do đó ta sẽ cần 1 số method để quản lý các luồng phụ này
-### b) QUẢN LÝ LUỒNG
+### b) Quản lý luồng
 Thư viện đa luồng của C++ cung cấp 1 số hàm để thao tác với 1 luồng như sau
 
 __Hàm join()__
@@ -188,6 +188,10 @@ __=> tránh việc gọi join() và detach() của cùng 1 luồng trong chươn
 
 ## 2.2 Luồng đồng bộ (Synchronous)
 
+
+<p align = "center">
+<img src = "https://github.com/user-attachments/assets/f1b780ce-107a-4758-85da-15d2d576fe5c" height = "400" width = "600">
+
 ### a) Atomic 
 + là 1 struct template cho phép khai báo 1 biến toàn cục chia sẻ giữa các luồng để xử lý
 + cho phép nhiều luồng cùng truy cập vào tài nguyên nhưng không bị gián đoạn việc thao tác trên dữ liệu được chia sẻ chung giữa các luồng 
@@ -265,7 +269,7 @@ __Cơ ché hoạt động:__
 + Những luồng khác sẽ đợi đến khi tài nguyên được mở khóa 
 + Khi luồng đó thực thi xong, nó sẽ mở khóa mutex. Cho phép luồng khác truy cập vào tài nguyên. 
 
-__Các cơ chế của mutex__
+__CÁC CƠ CHẾ CỦA MUTEX__
 
 ### lock guard 
 + Cung cấp cơ chế lock/unlock tự động 
@@ -358,11 +362,15 @@ int main() {
 + Là 1 class cung cấp các cơ chế giao tiếp và đồng bộ cho phép 1 luồng chờ cho đến khi 1 điều kiện cụ thể được đáp ứng, và có thể gửi thông báo khi điều kiện được thực hiện 
 
 + Áp dụng khi 1 luồng cần chờ dữ liệu từ 1 luồng khác để xử lý
-__Các method__ 
-+ wait(): Cho phép 1 luồng chờ cho đến khi 1 điều kiện được thực hiện xong 
+
+__CÁC CƠ CHẾ CỦA CONDITION VARIABLE__ 
+
+__+ wait():__ Cho phép 1 luồng chờ cho đến khi 1 điều kiện được thực hiện xong 
 -> liên tục kiểm tra điều kiện xử lý từ luồng khác bằng cách unlock tạm thời shared resource -> nếu true thì sẽ dừng wait -> xử lý data 
-+ notify_one(): gửi thông báo xử lý đến 1 luồng
-+ notify_all(): gửi thông báo xử lý đến tất cả các luồng
+
+__+ notify_one():__ gửi thông báo xử lý đến 1 luồng
+
+__+ notify_all():__ gửi thông báo xử lý đến tất cả các luồng
 
 __Định nghĩa các biến cần thiết__
 
@@ -453,8 +461,11 @@ __Kết quả__
 <img src = "https://github.com/user-attachments/assets/3f3af358-8131-4bf2-be35-711c19bc92f4" height = "250" width = "600">
 
 
-## 2.3 LUỒNG BẤT ĐỒNG BỘ (Asynchrnous)
+## 2.3 Luồng bất đồng bộ (Asynchrnous)
 + Là luồng cung cấp các cơ chế cho phép chạy Độc lập so với luồng chính
+
+<p align = "center">
+<img src = "https://github.com/user-attachments/assets/168566fe-ea26-4a74-bf6d-bbb6fc273e53" height = "400" width = "600">
 
 ### a) So sánh với detach()
 
@@ -470,26 +481,34 @@ __Khác nhau__
 
 => Luồng Async vẫn chạy và trả về kết quả  
 
-### b) Cơ chế shared_future và future
+### b) Cơ chế future và shared future
 
-+ Là những class template dùng để lưu trữ kết quả của luồng bất đồng bộ __nằm ở heap__
-+ __future:__ đảm bảo không có luông nào truy cập đến kết quả này __(tương tự unique smart pointer)__
-+ __shared_future:__  cho phép kết quả trả về được truy cập bởi nhiều luồngluồng
+__Đặc điểm chung__
+
++ Là cơ chế dùng để lưu trữ kết quả xử lý sẽ hoàn thành trong tương lai của luồng bất đồng bộ __nằm ở heap__
++ __future:__ chỉ cho phép một lần duy nhất truy cập kết quả trả về __(tương tự unique smart pointer)__
++ __shared_future:__  cho phép kết quả trả về được truy cập bởi nhiều luồng mà không làm mất dữ liệu 
 + đọc về kết quả thông qua method __get()__ lúc này heap cũng được release luôn
 
-__Cú pháp__
+### Khởi tạo future
 
-__future<T> async(launch_policy,callable&& func,Args&&... args);__
+```bash
+future<T> Asyn_result = std::async(launch_policy::policy,callable&& func,Args&&... args);
+```
 
-__+ launch_policy__ chế độ chạy (2 mode)
-- async: tạo xong chạy luôn
+__+ std::async:__ đối tượng tạo ra tượng trưng cho 1 luồng bất đồng bộ
+
+__+ policy__ chế độ chạy (2 mode)
+- async: tạo và chạy 1 luồng bất đồng bộ
 - deferred: tạo xong đợi khi nào gọi mới chạy
 
 __+ func__ hàm thực thi local/global 
 
-__+ Args__ 
+__+ Args&&...__: là 1 macro variadic dùng để nhận số lượng đối số không xác định 
 
-__Ví dụ về 1 luồng đọc dữ liệu và chạy song song với 1 luồng khác, và trả về kết quả sau khi tất cả các luồng hoàn thành__ 
+### Ví dụ cụ thể
+
+__Sử dụng 1 luồng để đọc dữ liệu cảm bién, trong khi luồng chính vẫn tiếp tục xử lý công việc khác, và khi việc đọc dữ liệu hoàn tất, luồng chính sẽ chủ động đọc dữ liệu trả về của luồng đó thông qua method get()__ 
 
 __Khai báo thư viện và định nghĩa 1 số biến cần thiết__
 
@@ -502,8 +521,6 @@ __Khai báo thư viện và định nghĩa 1 số biến cần thiết__
 #include <future>
 using namespace std;
 atomic<int> sharedcnt(0); // shared variable used among multi-thread
-atomic<int> sensor_data(0);
-atomic<bool> IsdataRcv(false);
 mutex key;                // permission mechanism to access shared resources among multi-thread
 condition_variable signal;
 
@@ -522,7 +539,7 @@ int asyn_read(uint32_t limit) {
         unilock.unlock();
         delay_ms(100); 
     }
-    sensor_data = rand() % 100; //generate random data
+    int sensor_data = rand() % 100; //generate random data
     cout << "done read data" << endl;
     return sensor_data;
 }
@@ -535,7 +552,7 @@ __Tạo các luồng và chạy__
 ```bash
 int main() {
     //store returned data at heap 
-    int event_count = 0; //biến đếm số lần thực thi 
+    int event_count = 10; //biến đếm số lần thực thi 
     future<int> unique_result = async(launch::async, asyn_read,event_count);   //does not allow other thread to access result      
 
     for (int i = 0; i < 15; i++) {
@@ -555,6 +572,102 @@ __Kết quả chạy chương trình__
 <p align = "center">
 <img src = "https://github.com/user-attachments/assets/cef5fae2-c16f-43e0-95d9-7dcb7d047423" height = "250" width = "600">
 
+### Khỏi táo 1 luồng bất đồng bộ với cơ chế shared future
+
+
++ thông qua method __share() trên 1 một std::future
+
+```bash
+std::future<T> future_result = std::async(...); 
+std::shared_future<T> shared_result = future_result.share();
+```
+
++ thông qua method __share() trên 1 một std::future từ 1 hàm
+
+```bash
+std::shared_future<T> shared_result = std::async(...).share();
+
+```
+
+### Truy cập kết quả
+method get() có thể được gọi nhiều lần mà không làm mất dữ liệu
+
+```bash
+T result = shared_result.get();
+```
+
+### Kiểm tra trạng thái
+method valid() dược sử dụng để kiểm tra liệu shared future có đang giữ 1 trạng thái hợp lệ
+
+```bash
+if (shared_result.valid()) {
+    T result = shared_result.get();
+}
+
+```
+### Ví dụ cụ thể
+
+__Sử dụng 1 luồng để đọc dữ liệu, trong khi luồng chính vẫn tiếp tục xử lý mà không bị gián đoạn. Sau khi dữ liệu được đọc xong, các luồng khác sẽ sữ dụng dữ liệu này để xử lý.__
+
+
+__Tạo 1 hàm để đọc dữ liệu và trả về kết quả qua std::shared_future, 1 hàm dùng để xử lý dữ liệu chia sẻ từ cảm biến__
+
+
+```bash
+// Hàm đọc dữ liệu cảm biến
+int read_AsynSharedData() {
+    cout << "Reading sensor data..." << endl;
+    delay_ms(2000); // Giả lập thời gian đọc dữ liệu
+    int sensor_data = rand() % 100;
+    cout << "Done reading data: " << sensor_data << endl;
+    return sensor_data;
+}
+
+// Hàm xử lý dữ liệu trên thiết bị
+void process_AsynSharedData(int id, shared_future<int> shared_data) {
+    cout << "Device " << id << " processing data: " << shared_data.get() << endl;
+}
+```
+
+__tạo ra các luồng bất đồng bộ để chạy độc lập trong khi luồng chính vẫn xử lý các công việc khác__
+
+```bash
+
+int main() {
+    // Tạo shared_future để chia sẻ kết quả đọc dữ liệu
+    shared_future<int> shared_result = async(launch::async, read_AsynSharedData).share();
+
+    // Tạo hai luồng xử lý dữ liệu
+    thread shared_t1(process_AsynSharedData, 1, shared_result);
+    thread shared_t2(process_AsynSharedData, 2, shared_result);
+
+    // Luồng chính thực hiện nhiệm vụ độc lập
+    for (int i = 0; i < 15; i++) {
+        cout << "Main thread executing -> Event count: " << i << endl;
+        delay_ms(250);
+    }
+
+    // Chờ các luồng xử lý hoàn thành
+    shared_t1.join();
+    shared_t2.join();
+
+    return 0;
+}
+```
+
+__Kết quả chạy chương trình__ 
+
+
+<p align = "center">  
+<img src = "https://github.com/user-attachments/assets/74c523ee-ce2b-40a4-9a51-04682f295417" width = "700" , height = "300" >
+
+
+## 2.4 So sánh luồng đồng bộ và bất đồng bộ
 
 
 
+<p align = "center">
+<img src = "https://github.com/user-attachments/assets/668fb7f8-b931-46ee-9f86-2702e0617898" width = "700" , height = "300" >
+
+<p align = "center">  
+<img src = "https://github.com/user-attachments/assets/68b7c7af-1649-49e6-a6b7-e4f020df1cc3" width = "800" , height = "250" >

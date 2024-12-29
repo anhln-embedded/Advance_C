@@ -92,14 +92,14 @@ int main()
 ```
 
 # 2. Thư viện STDARD
-Đây là thư viện cung cấp các macro để thao tác và xử lý các đối số biến
+Đây là thư viện cung cấp các macro để thao tác và xử lý danh sách chứa các biến đối số 
 ## 2.1 Các macro phổ biến sử dụng trong STDARG
 
 __+ va_list:__ Định nghĩa 1 biến để lưu trữ danh sách các đối số ở dạng chuỗi
 
 __+ va_start:__ Xác định điểm bắt đầu của biến lưu danh sách để xử lý
 
-__+ va_ard:__ lấy ra đối số hiện tại mỗi lần gọi 
+__+ va_arg:__ lấy ra đối số hiện tại mỗi lần gọi 
 
 __+ va_copy:__ trỏ vào địa chỉ của các đối số trong biến danh sách
 

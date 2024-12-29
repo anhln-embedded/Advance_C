@@ -6,9 +6,9 @@
 
 __+ Dịch trái <<__ : Khi ta cần đẩy các bit từ phải sang trái
 ```bash
-uint8_t num = 3; //0b0000 0101 -> biểu diễn binary 
+uint8_t num = 5; //0b0000 0101 -> biểu diễn binary 
 //cách 1
-num = num << 5;  //0b0101 0000 -> dịch các bit của num 5 lần
+num = num << 5;  //0b1010 0000 -> dịch các bit của num 5 lần
 //cách 2
 num <<= 5;
 ```

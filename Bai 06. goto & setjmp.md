@@ -1,6 +1,8 @@
 # 1. Từ khóa goto
-goto có thể dùng để nhảy đến 1 vi trí bất kỳ trong chương trình phụ thuộc vào label (nhãn) mà ta định nghĩa, giúp ta có thể điều khiển được luồng chạy của chương trình
-## 1.1 Trường hợp 1: điều kiện dừng 
+## 1.1 Định nghĩa 
+goto có thể dùng để nhảy đến 1 label (nhãn) mà ta định nghĩa tại vị trí mà ta muốn điều hướng luồng chạy của chương trình.
+## 1.2 Cách sử dụng
+### a) Ứng dụng để làm điều kiện dừng
 + Ta có thể dùng goto như 1 cách để dừng việc xử lý 1 công việc nào đó như chương trình dưới đây
 ```bash
 #include <stdio.h>
@@ -17,7 +19,7 @@ int main(){
     return 0;
 }
 ```
-## 1.2 Trường hợp 2: Thoát khỏi nhiều vòng lặp
+### b) Ứng dụng Thoát khỏi nhiều vòng lặp
 + Ta có 1 chương trình với 1 vòng for để kiểm tra 1 giá trị nào đó và ta muốn dừng vòng lặp tại 1 giá trị nào đó, thì ta có thể dùng break như sau
 ```bash
 for(int i = 0 ; i < 5 ; i++){
@@ -38,23 +40,54 @@ for(int i = 0 ; i < 5 ; i++){
     }
 ```
 + Chính vì vậy ta có thể sử dụng goto thay cho break ở đây để thoát khỏi toàn bộ vòng lặp
-# 2. Thư viện setjmp.h
-Đây là thư viện cung cấp các hàm như setjmp và longjmp để thiết kế những mã lỗi hay các thông báo mà ta muốn hiển thị tùy thuộc vào các điều kiện xử lý của chương trình
-+ trong thư viện setjmp.h ta tìm đến phần định nghĩa sau 
-```bash   
-// Define the buffer type for holding the state information
-#ifndef _JMP_BUF_DEFINED
-    #define _JMP_BUF_DEFINED
-    typedef _JBTYPE jmp_buf[_JBLEN];
-#endif
+### c) Xử lý lỗi đơn giản
++ Giả sử ta sẽ thiết lập các trường hợp kiểm tra lỗi và sẽ thực thi hành động cụ thễ nếu phát hiện lỗi bằng cách sử dụng goto để nhảy đến vị trí xử lý lỗi
+```bash
+void process() {
+    if (!initialize()) {
+        goto error; // Nhảy đến xử lý lỗi nếu khởi tạo thất bại
+    }
+    if (!process_data()) {
+        goto error; // Nhảy đến xử lý lỗi nếu xử lý dữ liệu thất bại
+    }
+    cleanup();
+    return;
+
+error:
+    cleanup_error();
+}
 ```
-+ Đầu tiên ta sẽ khai báo 1 biến kiểu jmp_buf để lưu trạng thái hiện tại của môi Trường
+
+# 2. Thư viện setjmp.h
+## 2.1 Định nghĩa
+Đây là thư viện cung cấp các hàm như setjmp và longjmp để thực hiện nhảy giữa các hàm với mục đích là thiết kế những mã lỗi hay các thông báo mà ta muốn hiển thị tùy thuộc vào các điều kiện xử lý của chương trình
+
+## 2.2 Đặc điểm
+### a) Ưu điểm
+__Lưu trữ trạng thái toàn cục:__ Cho phép nhảy qua nhiều hàm, không chỉ gới hạn trong phạm định nghĩa như goto
+
+__Linh hoạt trong xử lý lỗi:__ Tiện lợi hơn so với goto khi xử lý các ngoại lệ và khôi phục trạng thái khi gặp lỗi
+
+### b) Nhược điểm
+
+__Khó bảo trì:__ Nếu quá lạm dụng có thể dẫn đến rối về cách xử lý 
+
+__Không có cơ chế bảo vệ tài nguyên:__ bỏ qua các bước như hủy bộ nhớ hoặc giải phóng tài nguyên dẫn đến rò rỉ bộ nhớ
+__
+
+## 2.3 Cách sử dụng
+
++ __setjmp__ : dùng để lưu trạng thái của vị trí hiện tại(giá trị, con trỏ stack)
++ __longjmp__: dùng để nhảy ngược trở lại vị trí đã lưu bởi setjmp, 
+
+__Ví dụ:__
+
 ```bash  
 jmp_buf state_pointer;
 ```
 + Ta gọi hàm setjmp và truyền vào biến này và gán nó cho 1 biến với kiểu dữ liệu bất kỳ 
 ```bash
-int state = setjump(state_pointer);
+int state = setjmp(state_pointer);
 ```
 + Ta gọi hàm longjmp ở vị trí nào đó trong chương trình mà ta muốn nhảy ngược trỏ lại vị trí ta gọi hàm setjmp.
 ```bash
@@ -88,3 +121,19 @@ int main(){
     return 0;
 }
 ```
+
+# 3. So sánh goto và setjmp
+
+<p align = "center">
+<img src = "https://github.com/user-attachments/assets/dcb978ce-20d6-4eb1-ab71-eb97c49451e9" width = "1200" height = "230">
+    
+## 3.1 Khi nào nên sử dụng goto hay setjmp
+
+### a) Dùng goto khi
++ Xử lý lỗi đơn giản, hoặc thoát ra khỏi nhiều vòng lặp
+### b) Sử dụng setjmp khi
++ Xử lý lỗi phức tạp, cần nhảy giữa các hàm
++ Yêu cầu khôi phục trạng thái chương trình khi có lỗi
+
+
+

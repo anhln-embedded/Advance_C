@@ -85,7 +85,11 @@ typedef struct{
 + Mảng b[2] sẽ được cấp phát memory 2 lần, và không có padding byte, do mỗi phần tử của nó đèu chiếm 8 byte, tồng là 16 byte
 ![image](https://github.com/user-attachments/assets/89f7d369-80ec-4621-bb8d-4a92f7f713e7)
 + Mảng c[5] sẽ được cấp phát memory 3 lần, mỗi lần cấp phát sẽ lưu trữ được 2 phần tử kiểu int, vì vậy ở lần cấp phát thứ 3, sẽ thừa ra 4 padding byte
-Do đó dựa vào kích thước của mỗi thành phần ta có kích thước tổng của struct std sẽ là 56 byte 
+Do đó dựa vào kích thước của mỗi thành phần ta có kích thước tổng của struct std sẽ là 56 byte
+
+### c) Đặc điểm của cấp phát vùng nhớ trong struct
++ Thành viên được cấp phát vùng nhớ sẽ được lưu ở địa chỉ có giá trị là bội số của tổng kích thước các thành viên được cấp phát trước đó
++ Tổng kích thước của struct sẽ luôn chia hết cho kiểu dữ liệu của thành viên lớn nhất 
 # 2. union 
 union cũng có cách sử dụng như stuct, tuy nhiên 
 + các biến khai báo bên trong sẽ sử dụng chung 1 vùng nhớ

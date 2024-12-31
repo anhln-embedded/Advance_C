@@ -1,24 +1,28 @@
 # KIỂU DỮ LIỆU CẤU TRÚC JSON
 ## 1.1 Định nghĩa
 Đây là 1 định dạng để truyền tải dữ liệu giữa các hệ thống với nhau ,và dữ liệu thường được chuẩn hóa về dạng chuỗi (__json string__) chứa nhiều loại dữ liệu khác bên trong. 
+## 1.2 Đặc điểm
++ Định dạng gọn nhẹ, dể đọc giúp dễ dàng phân tích
++ Cấu trúc gồm các cặp key-value, với key là chuỗi và value là bất kỳ kiểu dữ liệu nào
++ Được dùng để truyền dữ liệu giữa client và server 
 ## 1.2 Cấu trúc
 Json là 1 chuỗi chứa các dữ liệu được chuẩn hóa như sau :
 
-__+ Object__ : tập hợp của các cặp key - value được ngăn cách bởi dấu phẩy, 
+__+ Object__ : tập hợp của các cặp key - value được ngăn cách bởi dấu phẩy
 
-+ key: có kiểu char* 
-+ value: bất kỳ loại dữ liệu nàonào 
-+ Định dạng: thường được đặt trong 2 dấu ngoặc { }
++ key: là 1 chuỗi
++ value: bất kỳ loại dữ liệu nào
+
+__Ví dụ:__ : 1 định dạng json được viết dưới dạng 1 object là tập hợp các cặp key-value đặt trong dấu ngoặc nhọn {}
 
 ```bash
-char *json = “ 
 { 
   "name": "John Doe",
   "age": 30,
   "city": "New York",
   "isStudent": false,
   "grades": [85, 90, 78]
-}
+}"
 ```
 __+ array__: bên trong array có thể là bất kỳ dữ liệu nào
 + Định dạng: thường được đặt trong 2 dấu ngoặc [ ]
@@ -26,7 +30,7 @@ __+ array__: bên trong array có thể là bất kỳ dữ liệu nào
 ```bash
   [23,"hello world",[64,35,true"]]
 ```
-+ 1 array cùng có thể chức các thành phần là ObjectObject với các object cũng được ngăn cách bởi dấu phẩy ,
++ 1 array cùng có thể chức các thành phần là Object với các object cũng được ngăn cách bởi dấu phẩy ,
 ```bash
 [
   {
@@ -54,6 +58,9 @@ __+ array__: bên trong array có thể là bất kỳ dữ liệu nào
 ```
 ## 1.3 Ứng dụng trong lĩnh vực embedded
 ### a) Truyền nhận dữ liệu cảm biến trong lĩnh vực IoT
+<p align = "center">
+<img src = "https://github.com/user-attachments/assets/603c06ae-5bb6-462a-bb4f-8735051bf7c6" width = "700" height = "300">
+
 + __Gửi dữ liệu__ : ta có thể sử dụng chuỗi json để lưu các thông tin về nhiệt độ và độ ẩm và gửi lên server để xử lý
 + __Cấu hình điều khiển__: chuỗi json có thể được gửi từ server về thiết bị chứa các thông tin về cấu hình cài đặt như nhiệt độ,thời gian tương ứng để bật tắt các thiết bị ngoại vi
 ### b) So sánh với Struct 

@@ -33,13 +33,13 @@ int main(){
 ## 1.2 Kích thước
 kích thước của struct sẽ phụ thuộc vào 2 yếu tố sau
 ### a) Data Alignment
-căn chỉnh data trong struct là việc 1 biến khi được cấp phát vùng nhớ thì nó phải được lưu ở giá trị địa chỉ được quy định bởi hệ điều hành, để đảm bảo được việc truy cập chính xác và nhanh chóng.
+căn chỉnh data trong struct là việc 1 biến khi được cấp phát vùng nhớ thì nó phải được lưu ở giá trị địa chỉ được quy định bởi compiler và kiến trúc hệ thống, để đảm bảo được việc truy cập chính xác và nhanh chóng.
 
 ```bash
   typedef struct{
     uint8_t id;   //1 byte
     char* name;   //8 byte (x64)
-    uint8_t tuoi; //1 byte
+    int tuoi; //1 byte
   }info;
 ```
 Nhìn vào struct trên thì ta có thể tính được tổng kích thước của struct là 10 byte. Nhưng thực tế thì không phải như vậy. Để biết rõ kích thước ta sẽ thực hiện in ra như sau
@@ -62,7 +62,7 @@ size of info: 24
 * Như vậy tổng kích thước thực của struct là 24 byte. Mõi lần nó sẽ cấp phát 8 byte do yêu cầu của việc căn chỉnh vùng nhớ và dựa vào biến có kiểu dữ liệu lớn nhất là char*
 + Do đó tổng kích thước của struct sẽ luôn là con số chia hết cho kiểu dữ liệu lớn nhất được khai báo, địa chỉ bắt đầu của các thành phần trong struct cũng sẽ tuân theo quy luật này
 ### b) Padding byte
-+ Đây là những byte được thêm vào sau địa chỉ của mỗi biến được khai báo để đảm bảo được quy tắc căn chỉnh vùng nhớ như đã đề cập trước đó. 
++ Đây là những byte được thêm vào sau địa chỉ của mỗi biến được khai báo để đảm bảo được quy tắc căn chỉnh của từng thành viên hoặc cả struct. 
 + Dùng lại ví dụ trên ta hình dung được việc cấp phát vùng nhớ diễn ra như sau. 
 ![image](https://github.com/user-attachments/assets/4bcff813-7821-4f77-8232-033dd5384a0e)
 Dựa vào bảng trên ta thấy:
@@ -88,8 +88,8 @@ typedef struct{
 Do đó dựa vào kích thước của mỗi thành phần ta có kích thước tổng của struct std sẽ là 56 byte
 
 ### c) Đặc điểm của cấp phát vùng nhớ trong struct
-+ Thành viên được cấp phát vùng nhớ sẽ được lưu ở địa chỉ có giá trị là bội số của tổng kích thước các thành viên được cấp phát trước đó
-+ Tổng kích thước của struct sẽ luôn chia hết cho kiểu dữ liệu của thành viên lớn nhất 
++ Địa chỉ bắt đầu của từng thành viên phải phụ thuộc vào yêu cầu căn chỉnh của chính thành viên đó
++ Tổng kích thước của struct là bội số của thành viên có kiểu dữ liệu lớn nhất trong 
 # 2. union 
 union cũng có cách sử dụng như stuct, tuy nhiên 
 + các biến khai báo bên trong sẽ sử dụng chung 1 vùng nhớ

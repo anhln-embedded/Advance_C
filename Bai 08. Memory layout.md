@@ -1,6 +1,9 @@
 # Memory layout
 là phân vùng bố trí vùng nhớ của dữ liệu 1 chương trình được lưu trữ trên RAM khi ta tải chương trình lên. Nó sẽ chia làm 5 phần.
 
+<p align = "center">
+<img src = "https://github.com/user-attachments/assets/71fc9574-93e0-4cf0-a661-1d776b60a516" width = "500" height = "400">
+
 ## 1. Code segment
  Đây là phần vùng chỉ dọc mà không thể ghi dữ liệu, dùng để lưu:
  + các biến khai báo const
@@ -64,11 +67,14 @@ Ta có ví dụ sau minh họa cho việc sử dụng BSS
 ```
 Tất cả 4 biến trên khi in ra đều sẽ có giá trị bằng 0
 ## 4. STACK
-Đây là phân vùng dùng để lưu trữ: 
++ Vùng nhớ được cấp phát tại thời điểm biên dịch và được giải phóng khi ra khỏi phạm vi được cấp phát
+
+__phân vùng dùng để lưu trữ:__
+
 + các biến khai báo cục bộ (local)
 + tham số hàm 
 + địa chỉ trả về của hàm 
-+ Vùng nhớ được thu hồi khi hàm kết thúc theo LIFO
++ Vùng nhớ được thu hồi khi hàm kết thúc theo cơ chế LIFO
 Khi 1 hàm được gọi thì toàn bộ thông tin của hàm đó bao gồm các giá trị trên sẽ được push lên stack và cấp phát cho 1 vùng nhớ để lưu trữ và sẽ được giải phóng khi hàm thực thi xong. 
 => STACK có thể đọc/ghi data (tồn tại từ lúc cấp phát đến khi thoát khỏi hàm)
 + Ví dụ dưới đây sẽ mô tả cách mà stack được gọi:
@@ -117,8 +123,8 @@ khi ta khai báo 1 biến const ở phạm vi local, nó sẽ được lưu trê
 + Việc chỉnh sửa giá trị của 1 biến const cục bộ thông qua con trỏ sẽ khiến compiler đưa ra cảnh báo nhưng vẫn thực hiện được
 + Đối với biến const toàn cục, thì ta không thể thay đổi giá trị của nó như làm với biến local. 
 ## 5. HEAP
-Đây là vùng câp phát động dùng để 
-+ cấp phát vùng nhớ thay đổi được trong quá trình chương trình chạy để phù hợp với những yêu cầu về thay đổi data trong chương trình
++ Vùng nhớ cấp phát tại thời điểm run-time 
++ Kích thước thay đổi được trong khi chương trình chạy 
 + được quản lý bởi người dùng thông qua các từ khóa malloc, calloc,realloc, free (sử dụng thư viện stdlib.h)
 + vùng nhớ được giải phóng bằng cách sử dụng từ khóa free
 
@@ -189,23 +195,26 @@ Khi ta chạy chương trình trên, sẽ yêu cầu ta nhập vào số lượn
 ```
 ### So sánh malloc, calloc, realloc
 CÚ PHÁP KHAI BÁO
-### malloc
+### malloc 
 ```bash
 (void*)malloc(size_t size)
 ```
++ Chức năng để cấp phát vùng nhớ trên heap
 + size: kích thước hoặc số lượng phần tử 
 + hàm trên sẽ trả về 1 con trỏ tới vùng nhớ vừa cáp phát trên heap có kiểu void*
 ### calloc
 ```bash
 (void*)malloc(size_t count,size_t size)
 ```
++ Chức năng để cấp phát vùng nhớ trên heap
 + count: kích thước hoặc số lượng phần tử 
 + size: kích thước của 1 phần tử
 ### realloc 
 ```bash
 (void*)realloc(void* ptr,size_t size) 
 ```
--	ptr: Con trỏ  tới vùng nhớ đã cấp phát trước đó
++ Chức năng để điều chỉnh kích thước trên heap
++ ptr: Con trỏ  tới vùng nhớ đã cấp phát trước đó
 + size: kích thước của 1 phần tử
 SỬ DỤNG
 + cả 2 hàm calloc và malloc đều có cách khởi tạo giá trị giống nhau
@@ -241,7 +250,7 @@ For(int i = 0 ; i < size ; i++){
   printf("\n new heap\n");
   ptr = (int*)realloc(ptr,new_size * sizeof(int));
 
-  //gán giá trị cho phần kích thước vừa được thêm vàovào
+  //gán giá trị cho phần kích thước vừa được thêm vào
   for(int i = size ; i < new_size ; i++){
     ptr[i] = i + 3;
   }

@@ -1,13 +1,11 @@
-# 1. STACK 
-## 1.1. Đặc điểm
-+ Vùng nhớ lưu trữ biến cục bô,tham số hàm, địa chỉ trả về của hàm
-+ Được giải phóng khi hàm kết thúc
+# 1. STACK (Ngăn Xếp)
+## 1.1. Định nghĩa
++ Cấu trúc dữ liệu quản lý bởi người dùng
++ Lưu trữ dữ liệu tạm thời, hay các hàm gọi lồng nhau 
 + Quyền truy cập: đọc/ghi 
-+ Cấp phát và giải phóng vùng nhó theo cơ chế LIFO
-## 1.2. Quy trình quản lý memory trên stack
-### 1.2.1. Hoạt động của stack
-Mỗi khi có 1 biến được khai báo cục bộ, hay 1 hàm được gọi. Vùng nhớ của nó sẽ được đẩy vào stack, thành phần được cấp phát sau cùng cũng sẽ được giải phóng đầu tiên, trong khi vùng nhớ cấp phát đầu tiên sẽ được giải phóng sau cùng. 
-
++ Cấp phát và giải phóng vùng nhớ theo cơ chế LIFO
+## 1.2. Đặc điểm 
+### a) Cách thao tác 
 <p align = "center">
 <img src="https://github.com/user-attachments/assets/450259e6-d00c-422b-9f9e-bbde2566f956" alt="image" width="650" height="350">
 
@@ -26,7 +24,16 @@ __empty & full STACK__
 <p align = "center">
 <img src = "https://github.com/user-attachments/assets/34601b9a-79e2-408f-b93b-df4f3a39de71" width = "500" height = "250" >
 
-## 1.3 Ứng dụng của stack
+### b) Ưu điểm 
++ Dễ triển khai
++ Ứng dụng trong quản lý tài nguyên hoặc khi sử dụng với các hàm đệu quy
+### c) Ứng dụng 
+
++ __Quán lý stack frame__: lưu trữ những giá trị cục bộ, địa chỉ trả về, tham số hàm khi 1 hàm được gọi
++ __Undo hoặc redo tác vụ__: thường thấy khi ta chuyển tiếp hoặc quay lại giữa các giao diện trang web trên máy tính (mõi khi ta click chọn vào 1 trang web thì địa chỉ của chúng sẽ được lưu trữ trên stack)
+
+
+## 1.3 Mô phỏng stack 
 
 ### 1.3.1 Sử dụng với đệ quy 
 
@@ -173,7 +180,7 @@ top element: -1 -> add:000002E41321E9CC
 <p align = "center">
 <img src = "https://github.com/user-attachments/assets/cf831539-70c2-4bdc-8e43-e7ec84ac99ae" width = "400" height = "300">
 
-Đây là 1 kiểu cấp phát bộ nhớ theo cơ chế __FIFO__, có nghĩa là phần tử nào vào hàng đợi trước sẽ được lấy ra đầu tiên
+Đây là 1 kiểu cấu trúc dữ liệu tuân theo theo cơ chế __FIFO__, có nghĩa là phần tử nào vào hàng đợi trước sẽ được lấy ra đầu tiên
 
 __Các phần tử được thêm lần lượt__ 
 
@@ -186,8 +193,9 @@ __Lấy ra theo thứ tự cái nào vào trước__
 <p align = "center">
 <img src = "https://github.com/user-attachments/assets/0ffca03c-95c0-424a-8827-3cda964f8d61" width = "400" height = "150">
 
-## 2.1 Các thành phần của QUEUE
+## 2.1 Đặc điểm của QUEUE
 
+### a) Các thao tác 
 <p align = "center">
 <img src = "https://github.com/user-attachments/assets/b0885609-b47a-4c21-84ca-136bd4eed15f" width = "500" height = "250">
 
@@ -203,7 +211,20 @@ __Empty queue__ : 1 queue được xem là rỗng khi giá trị front và rear 
 
 __full queue__ : khi kích thước của queue size = rear - 1
 
-## 2.2 Linear và Circular queue
+
+### b) Ưu điểm
++ Thích hợp cho quản lý các tác vụ hoặc dữ liệu xử lý theo thứ tự thời gian
++ Truyền nhận dữ liệu của các ngoại vi như UART,SPI,
+
+### c) Ứng dụng 
+
+__Quản lý dữ liệu giao tiếp giữa cảm biến và MCU__
+<p align = "center">
+<img src = "https://github.com/user-attachments/assets/7f2ff887-5c22-4919-b223-0e0f9651024a" width = "600" height = "400">
+
+
+__
+## 2.2 Các loại queue
 
 ### a) linear queue
 + Trong hàng đợi linear, khi ta dequeue trong trường hợp full queue __(size = rear - 1)__ , thì lúc này ta sẽ không thể enqueue phần tử mới được dù cho có vùng nhớ trống ở đầu vừa được dequeue Cơ ché này được giải thích như sau.
@@ -228,7 +249,7 @@ __full queue__ : khi kích thước của queue size = rear - 1
 
 + Cơ chế của circular cũng tương tự như linear, tuy nhiên nó tối ưu hơn do giải quyết được vấn đề của linear. Nó cho phép ta tiếp tục enqueue au khi dequeue 1 full queue
 
-# 2.3 Mô phỏng cấp phát cơ chế queue
+## 2.3 Mô phỏng cấp phát cơ chế queue
 
 + đầu tiên ta tạo ra 1 struct lưu trữ các thuộc tính của queue
 
@@ -261,7 +282,7 @@ bool IsQueue_Empty(Queue queue)
     return ((queue.front == -1) ? true : false); 
 }
 ```  
-## a) Linear queue
+### a) Linear queue
 + Đối với linear queue thì điều kiện để 1 queue đầy sẽ khác circular queue
 ```  
 bool IsQueue_Full(Queue queue)
@@ -360,19 +381,19 @@ dequeue 5 -> 00000217ACBFE920
 queue underflow
 ```  
 
-## b) Circular queue 
+### b) Circular queue 
 
 + Ta biết rằng 1 linear queue sẽ chỉ được enqueue sau khi queue đã đày bằng cách dequeue toàn bộ phần tử bên trong nó. vậy nên ta sẽ không thể enqueue phần tử mới khi bắt đầu dequeue. Chính vì vậy ta sẽ sử dụng co chế __circular queue__ để giải quyết được vấn đề này 
 
 <p align = "center">
 <img src = "https://github.com/user-attachments/assets/1aace635-b65c-482f-88e9-5560ee928196" width = "300" height = "250">
 
-+ Hình trên mô tả 1 queue được dequeue 3 phần tử và chỉ số front lúc này bằng 33 đang trỏ tới phần tử thứ 4. Trong khi đó chỉ số read = size - 1. Lúc này cơ chế circular sẽ cho phép rear trỏ đến đầu hàng đợi để enqueue tiếp 
++ Hình trên mô tả 1 queue được dequeue 3 phần tử và chỉ số front lúc này bằng 3 đang trỏ tới phần tử thứ 4. Trong khi đó chỉ số rear = size - 1. Lúc này cơ chế circular sẽ cho phép rear trỏ đến đầu hàng đợi để enqueue tiếp 
 
 <p align = "center">
 <img src = "https://github.com/user-attachments/assets/c9fc6a35-624b-4b51-b4e1-d2dfd1fccb16" width = "300" height = "150">
 
-+ Lúc này ta sẽ có thể tiếp tục enqueue cho đến khi các ô trống được lắp đầy. Và miễn là, ta không thực hiện dequeue tại vị trí front hiện tại, thì lúc này circular queue sẽ ở trạng thái đầy. 
++ Lúc này ta sẽ có thể tiếp tục enqueue cho đến khi các ô trống được lắp đầy
 
 <p align = "center">
 <img src = "https://github.com/user-attachments/assets/2b1ec340-0185-4801-bac5-3f8d008e58d8" width = "300" height = "150">
@@ -498,6 +519,12 @@ queue 3
 queue 4
 queue 5
 ```
+# 3 So sánh stack và queue
+
+<p align = "center">
+<img src = "https://github.com/user-attachments/assets/d64c2f7c-3557-4701-850c-7302fbf944c9" wisth = "600" height = "400">
+
+
     
 
 

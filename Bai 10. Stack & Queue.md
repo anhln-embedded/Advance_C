@@ -413,6 +413,11 @@ bool IsQueue_Full(Queue queue)
     return (queue.rear + 1) % queue.size == queue.front; 
 }
 ```
+__Phân tích biểu thức:__
+
++ rear + 1 : đảm bảo giá trị rear nằm trong khoảng cho phép không vượt quá size
++ (rear + 1 ) % size : tính vị trí tiếp theo của queue và so sánh với chỉ số của front nếu bằng nhau thì kết luận hàng đợi đầy
+
 + Lúc này trong hàm enqueue ta cũng sửa lại điều kiện cập nhật chỉ số  rear như sau, toàn bộ những phần còn lại thì giữ nguyên như linear queue
 
 ```bash

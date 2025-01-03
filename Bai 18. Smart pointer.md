@@ -32,6 +32,10 @@ delete[] arr;
 __=> Chính vì vậy ta sẽ cần 1 cách hiệu quả hơn để giải quyết những vấn đề trên 1 cách tự động. Smart pointer sẽ cung cấp những tính năng cho phép ta làm được điều đó__ 
 
 ## 1.2. Thế nào là smart pointer 
+
+<p align = "center">
+<img src = "https://github.com/user-attachments/assets/3ec2eefd-9801-4935-a649-d73e7e3cdb05"width = "600" height = "300">
+
 ### a) Khái niệm
 Đây là 1 class template cung cấp những method cho phép ta quản lý vùng nhớ với lợi ích như tự động giải phóng vùng nhớ để tránh các lỗi phổ biến khi sử dụng với raw pointer như
 
@@ -49,6 +53,9 @@ Có 3 loại smart pointer như sau và ta có thể truy cập chúng thông qu
 __#include<memory>__
 
 ## 2.1 Unique pointer
+
+<p align = "center">
+<img src = "https://github.com/user-attachments/assets/3b151c6b-6f69-4ca0-9def-454095e30bbb" width = "600" height = "300" >
 
 ### a) Đặc điểm
 + Dùng để quản lý duy nhất 1 đối tượng
@@ -184,6 +191,10 @@ int main(){
 ```
 
 ## 2.2 Share pointer
+
+<p align = "center">
+<img src = "https://github.com/user-attachments/assets/1fe09512-3714-47d9-aa15-7846d45c07c3"width = "600" height = "300">
+    
 ### a) Đặc điểm
 + Cho phép nhiều con trỏ thô của smart pointer cùng quản lý 1 tài nguyên cấp phát
 + Có tích hợp method để đếm số lượng con trỏ thô đang trỏ đến đối tượng
@@ -220,6 +231,10 @@ int main(){
 ```
 
 ## 2.3 Weak pointer
+
+<p align = "center">
+<img src = "https://github.com/user-attachments/assets/778b1cef-d26c-4bc6-b4e6-7a1ab396fe7b" width = "600" height = "300">
+
 ### a) Đặc điểm
 + Được sử dụng để giám sát các share pointer thông qua việc sử dụng 1 tham chiếu yếu đến 1 đối tượng quản lý bởi share pointer
 + Cung cấp 1 cơ chế theo dõi an toàn mà không làm tăng bộ đếm tham chiếu của share pointer

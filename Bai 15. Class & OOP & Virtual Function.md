@@ -24,7 +24,7 @@ __+ Khai báo private:__ đối với các properties khi ta muốn đảm bảo
 
 __+ Khai báo public:__ đối với các method, được gọi và sử dũng bên ngoài class
 
-__+ Khai báo :__ Đối với các thành viên mà ta muốn nó được phép truy cập thông qua các lớp con kế thừa từ lớp gốc
+__+ Khai báo protected :__ Đối với các thành viên mà ta muốn nó được phép truy cập thông qua các lớp con kế thừa từ lớp gốc
 
 ### a) Sử dụng properties và method
 ```bash
@@ -128,12 +128,11 @@ constructor: Pham Cao Duy has been released
 ```
 ### c) method và property static 
 
-__Định nghĩa__
+__Đặc điểm__
 
-các method trong class khi được khai báo là static
-+ có thể truy cập trực tiếp thông qua tên class
-+ được cấp phát vùng nhớ khi ta gọi nó thông qua tên class ở ngoài class __(lúc này ta mới sử dụng được property này)__
-+ chỉ được truy cập thông qua static method
++ các method và property được sử dụng bằng cách gọi trực tiếp thông qua tên class kết hợp với toán tử phạm vi ::
++ Static property chỉ được cấp phát địa chỉ để sử dụng khi ta gán giá trị bên ngoài class __(lúc này ta mới sử dụng được property này)__
++ Chỉ có các static method mới được phép truy cập đến static property
 
 __Ví dụ:__ Ta sẽ dùng static property để lưu giá trị đếm, và truy cập nó thông qua static method. 
 
@@ -217,9 +216,9 @@ int main() {
 ```
 __Giải thích chương trình__
 
-+ biến static baudRate được sử dụng để lưu giá trị cài đặt chung. Thay đổi giá trị này sẽ tự động cập nhật cho tất cả bộ UART
-+ Biến non-static instanceId được dùng để phân biệt giữa 2 bộ UART với nhau. Mỗi bộ UART sẽ có 1 ID riêng
-+ method getBaudRate được sử dụng để đọc ra giá trị baud thông qua tên class mà không cần phải sử dụng object cụ thể
++ __baudRate__:được sử dụng để lưu giá trị cài đặt chung. Thay đổi giá trị này sẽ tự động cập nhật cho tất cả bộ UART
++ __instanceId__: được dùng để phân biệt giữa 2 bộ UART với nhau. Mỗi bộ UART sẽ có 1 ID riêng
++ __getBaudRate__: được sử dụng để đọc ra giá trị baud thông qua tên class mà không cần phải sử dụng object cụ thể
 
 __Lợi ích sử dụng static member__
 
@@ -301,13 +300,13 @@ int main()
 ```
 __Giải thích chương trình__
 
-+ Đối với hàm calculate khi ta truyền trực tiếp giá trị cùa biến write (pass by value) thì để cập nhật giá trị thay đổi trong hàm này ta cần phải sử dụng từ khóa return và sửa đổi kiểu trả về của hàm. Viêc pass by value cũng gây phát sinh vùng nhớ, lãng phí tài nguyên trên RAM
++ __Hàm calculate__ khi ta truyền trực tiếp giá trị cùa biến write (pass by value) thì để cập nhật giá trị thay đổi trong hàm này ta cần phải sử dụng từ khóa return và sửa đổi kiểu trả về của hàm. Viêc pass by value cũng gây phát sinh vùng nhớ, lãng phí tài nguyên trên RAM
 
-+ ở hàm write_and_read, 2 đối số truyền vào hàm chính là địa chỉ của chúng để xử lý, vì vậy không gây phát sinh thêm bất kỳ vùng nhớ nào
++ __Hàm write_and_read__ ta sử dụng tham chiếu để truy cập trực tiếp đến địa chỉ các đối số để xử lý, vì vậy không gây phát sinh thêm bất kỳ vùng nhớ nào. Mọi thay đổi bên trong hàm cục bộ đều được cập nhật ở bên ngoài 
 
-+ biến compare_value được truyền vào theo kiểu là 1 tham chiếu const cho biết nó chỉ được dùng để đọc ra chứ không cho phép thay đổi giá trị
++ __biến compare_value__ được truyền vào theo kiểu là 1 tham chiếu const cho biết nó chỉ được dùng để đọc ra chứ không cho phép thay đổi giá trị
 
-+ biến write_value được truyền vào như là 1 tham chiếu để cập nhật giá trị dựa trên giá trị của compare_value
++ __biến write_value__ được truyền vào như là 1 tham chiếu để cập nhật giá trị dựa trên giá trị của compare_value
 # 2. Các thao tác với OOP trong class
 ## 2.1 Inheritance (Tính kế thừa)
 
@@ -394,11 +393,14 @@ __Giải thích chương trình__
 
 __Định nghĩa:__
 
-+ Đây là khả năng ẩn đi những thông tin và chi tiết cách triển khai của 1 đối tượng. Chỉ cung cấp các method trung gian để tương tác với chúng
++ Đây là khả năng đóng gói những dữ liệu quan trọng ảnh hường bao gồm cả thuộc tính và phương thức trong 1 class, là những thành phần sẽ thay đổi dựa trên tương tác giữa người dùng và hệ thông
++ Được thiết lập thông qua các từ khóa public,private,protected
++ Cung cấp các API trung gian để thao tác như getter hay setter
 
 __Lợi ích:__
 
 + Giúp bảo vệ được dữ liệu, nhằm ngăn chặn việc truy cập trực tiếp bên ngoài. Qua đó giảm được nguy cơ lỗi và các vấn để bảo mật
+
 
 __Ví du:__
 
@@ -456,6 +458,8 @@ __Giải thích chương trình__
 __Định nghĩa:__
 
 + Đây là khả năng cho phép ẩn đi những phần phức tạp và cách triển khai chi tiết của 1 đối tượng thông qua việc cung cấp các API để thao tác với chúng
++ Nó chỉ tập trung vào việc ứng dụng những gì cho sẵn và sử dụng, thay vì hiểu rõ bản chất quy trình
++ Nó có thể được sử dụng thông qua các __abstract class__ cùng với __pure virtual function__ 
 
  __Lợi ích:__
 
@@ -760,10 +764,12 @@ int main() {
 ### c) Áp dụng tính đa hình để quản lý nhiều loại xe thông qua lớp cơ sở
 ```bash
 int main(){
-    Car* myElectricCar = new ElectricCar("Tesla", "Model S", 250, 100);
-    myElectricCar->startEngine();
-    myElectricCar->stopEngine();
-    delete myElectricCar;   
+     Car* type[2];
+    type[0] = new ElectricCar("Tesla", "Model S", 250, 100);
+    type[1] = new GasCar("Toyota","model A",180);
+    //tham chiếu đến từng object và gọi ra cách triển khai method tương ứng 
+    for(auto& car : type)
+        car->displayInfo();
 }
 ```
 

@@ -22,7 +22,7 @@ __Ưu điểm của đa luồng__
 + Thích hợp với các hệ thống real-time như embedded system 
 
 # 2. Thư viện pthread trong C
-Trong c có hỗ trợ lập trình qua thư viện __#include<pthrea.h> cung cấp các APIs để thực hiện các chức năng như
+Trong c có hỗ trợ lập trình qua thư viện __#include<pthreah.h> cung cấp các APIs để thực hiện các chức năng như
 
 ## 2.1  Synchronization 
 + Cho phép các thread chia sẻ tài nguyên chung và xử lý 1 cách an toàn
@@ -54,7 +54,7 @@ __+ thread:__ ID của luồng cần chở
 
 __+ retval:__ con trỏ đến giá trị trả về từ luồng. mặc định là null
 
-### c) Các API để đồng bộ hóa muxtex 
+### c) Các API để đồng bộ hóa mutex 
 Đây là 1 cơ chế cho phép các hàm chia sẻ tài nguyên chung để xử lý dữ liệu trong đa luồng. Tuy nhiên nó đảm bảo rằng ở mỗi thời điểm chỉ có 1 luồng duy nhất được cho phép truy cập vào tài nguyên để tránh xung đột và đảm bảo an toàn cho tài nguyên chia sẻ đó. Quy trình hoạt động mutex như sau
 
 __+ Khởi tạo mutex:__

@@ -8,7 +8,6 @@
 + Có địa chỉ riêng 
 + Tương tác được với ngoại vi khác phần cứng bên ngoài
 + 1 process có thể chứa nhiều thread
-+ Giao tiếp giữa các process thông qua 
 ## 1.2 Thread (Luồng
 + Là Đơn vị nhỏ nhất của 1 process 
 + Các luồng trong cùng process chia sẻ tài nguyên chung
@@ -19,11 +18,8 @@ __+ Thao tác đa nhiệm trên máy tính mà ta sử dụng hằng ngày:__ Đ
 
 __+ Giao tiếp giữa các thành phần trong 1 hệ thống điều khiển thời gian thực:__ Các hệ thống như ô tô với nhiều cảm biến và yêu cầu cập nhật dữ liệu và phản hồi liên tục để phối hợp với các thành phần khác để điều khiển được xe thì cần phải sử dụng cơ chế đa luồng để có thể xử lý nhanh chóng, tránh gây chậm trễ dữ liệu dẫn tới mất điều khiển bị sai sót gây mất an toàn cho người lái.
 
-# 2. Lập trình thread
-
-## 2.1 Cơ bản về luồng
-
-### a) Khởi tạo luồng
+# 2. Các thao tác cơ bản trên luồng
+## 2.1 Khởi tạo luồng
 
 __Cú pháp__ : std::thread thread_id(function,args...)
 
@@ -61,12 +57,13 @@ int main(){
 Khi chạy chương trình trên sẽ bị dừng ngay lập tức. Lý do là vì sau khi luồng t1 được khởi tạo trong hàm main __(luồng chính)__ thì trong hàm main không còn tác vụ nào nữa nên có sẽ kết thúc dẫn đến các luồng phụ như t1 __(phụ thuộc vào luồng chính)__ cũng kết thúc theo.
 
 => Do đó ta sẽ cần 1 số method để quản lý các luồng phụ này
-### b) Quản lý luồng
+## 2.2 Quản lý luồng
 Thư viện đa luồng của C++ cung cấp 1 số hàm để thao tác với 1 luồng như sau
 
-__Hàm join()__
+### a) Hàm join()
 + Chờ cho đến khi 1 luồng thực thi xong thì luồng khác mới được thực thi
 + Khi 1 luồng phụ được khai báo nó sẽ phụ thuộc vào luồng chính  khi luồng chính không gọi ra __join()__ thì nó sẽ kết thúc và không chờ luồng phụ thực hiện -> lúc này chương trình sẽ bị xung đột (lỗi)
+  
 __=> Luôn đảm bảo luồng phụ kết thúc trước luồng chính__
 
 __Ví dụ tạo ra 2 luồng chạy song song và kết thúc trước khi chạy luồng chính__ 
@@ -114,7 +111,7 @@ __+ Kết quả:__
 <p align = "center">
 <img src = "https://github.com/user-attachments/assets/f4453150-9687-44bd-b16c-6472afc77f56"height = "280" width = "600">
     
-### Hàm joinable()
+### b) Hàm joinable()
 
 + kiểm tra 1 luồng đã kết thúc hoặc đã gọi join() chưa
 + return true -> khi luồng chưa kết thúc/chưa gọi join()
@@ -142,7 +139,7 @@ int main() {
 
 
 
-### Hàm detach()
+### c) Hàm detach()
 + cho phép luồng phụ tách khỏi luồng chính và chạy độc lập
 + Luồng chính không cần chờ hàm phụ kết thúc
 + Chương trình sẽ kết thúc nếu luồng chính kết thúc trước luồng phụ (xóa kết quả luồng phụ -> không bị xung đột)
@@ -174,7 +171,7 @@ __=> tránh việc gọi join() và detach() của cùng 1 luồng trong chươn
 
 
 
-###  Khi nào dùng join() hay detach()
+### d) Khi nào dùng join() hay detach()
 
 <p align = "center">
 <img src = "https://github.com/user-attachments/assets/a2a2200b-f065-4cae-8f91-17e1061403a5" height = "350" width = "800">
@@ -186,13 +183,13 @@ __=> tránh việc gọi join() và detach() của cùng 1 luồng trong chươn
 
 
 
-## 2.2 Luồng đồng bộ (Synchronous)
+# 3. Luồng đồng bộ (Synchronous)
 
 
 <p align = "center">
 <img src = "https://github.com/user-attachments/assets/f1b780ce-107a-4758-85da-15d2d576fe5c" height = "400" width = "600">
 
-### a) Atomic 
+## 3.1 Atomic 
 + là 1 struct template cho phép khai báo 1 biến toàn cục chia sẻ giữa các luồng để xử lý
 + cho phép nhiều luồng cùng truy cập vào tài nguyên nhưng không bị gián đoạn việc thao tác trên dữ liệu được chia sẻ chung giữa các luồng 
 
@@ -255,7 +252,7 @@ __Kết quả__
 
 Chương trình vẫn chưa tối ưu khi 1 số dòng bị dính vào nhau gây ra do sự chậm trễ trong quá trình xử lý bởi hàm cout khi 1 luồng chưa kịp xử lý lệnh xuống dòng endl thì luồng khác đã can thiệp. Chính vì vây ta sẽ có 1 giải pháp tôi ưu hơn để khắc phục tình trạng này 
 
-### b) Mutex
+## 3.2 Mutex
 
 <p align = "center">
 <img src = "https://github.com/user-attachments/assets/aa02dd69-e03f-4f61-bd3f-cdaab9413b32" height = "350" width = "600">
@@ -269,9 +266,10 @@ __Cơ ché hoạt động:__
 + Những luồng khác sẽ đợi đến khi tài nguyên được mở khóa 
 + Khi luồng đó thực thi xong, nó sẽ mở khóa mutex. Cho phép luồng khác truy cập vào tài nguyên. 
 
-__CÁC CƠ CHẾ CỦA MUTEX__
+### a) CÁC CƠ CHẾ CỦA MUTEX__
 
-### lock guard 
+__lock guard__
+
 + Cung cấp cơ chế lock/unlock tự động 
 + Giúp bảo vệ tài nguyên chung không bị thay đổi ngoài ý muốn
 
@@ -318,7 +316,7 @@ __Kết quả__ : Luồng t1 và t2 sẽ được thực hiện xen kẽ nhau c�
 <img src = "https://github.com/user-attachments/assets/ed3bbd6d-8ce3-4c06-bfd0-a48248c03f0b" height = "250" width = "600">
 
 
-### Unique lock
+__Unique lock__
 
 + Cho phép lock/unlock 1 cách thủ công hoặc tự động 
 + Ứng dụng trong việc chọn khối lệnh sẽ thực hiện để xử lý tài nguyên chung nào đó chia sẻ giữa nhiều luồng
@@ -357,7 +355,7 @@ int main() {
 }
 ```
 
-### condition variable
+## 3.3 condition variable
 
 + Là 1 class cung cấp các cơ chế giao tiếp và đồng bộ cho phép 1 luồng chờ cho đến khi 1 điều kiện cụ thể được đáp ứng, và có thể gửi thông báo khi điều kiện được thực hiện 
 
@@ -461,13 +459,13 @@ __Kết quả__
 <img src = "https://github.com/user-attachments/assets/3f3af358-8131-4bf2-be35-711c19bc92f4" height = "250" width = "600">
 
 
-## 2.3 Luồng bất đồng bộ (Asynchrnous)
+# 4. Luồng bất đồng bộ (Asynchrnous)
 + Là luồng cung cấp các cơ chế cho phép chạy Độc lập so với luồng chính
 
 <p align = "center">
 <img src = "https://github.com/user-attachments/assets/168566fe-ea26-4a74-bf6d-bbb6fc273e53" height = "400" width = "600">
 
-### a) So sánh với detach()
+## 4.1 So sánh với detach()
 
 __Giống nhau__
 
@@ -481,7 +479,7 @@ __Khác nhau__
 
 => Luồng Async vẫn chạy và trả về kết quả  
 
-### b) Cơ chế future và shared future
+## 4.2 Cơ chế future và shared future
 
 __Đặc điểm chung__
 
@@ -490,7 +488,7 @@ __Đặc điểm chung__
 + __shared_future:__  cho phép kết quả trả về được truy cập bởi nhiều luồng mà không làm mất dữ liệu 
 + đọc về kết quả thông qua method __get()__ lúc này heap cũng được release luôn
 
-### Khởi tạo future
+### a) Khỏi táo 1 luồng bất đồng bộ với cơ chế future
 
 ```bash
 future<T> Asyn_result = std::async(launch_policy::policy,callable&& func,Args&&... args);
@@ -572,7 +570,7 @@ __Kết quả chạy chương trình__
 <p align = "center">
 <img src = "https://github.com/user-attachments/assets/cef5fae2-c16f-43e0-95d9-7dcb7d047423" height = "250" width = "600">
 
-### Khỏi táo 1 luồng bất đồng bộ với cơ chế shared future
+### b) Khỏi táo 1 luồng bất đồng bộ với cơ chế shared future
 
 
 + thông qua method __share() trên 1 một std::future
@@ -662,7 +660,7 @@ __Kết quả chạy chương trình__
 <img src = "https://github.com/user-attachments/assets/74c523ee-ce2b-40a4-9a51-04682f295417" width = "700" , height = "300" >
 
 
-## 2.4 So sánh luồng đồng bộ và bất đồng bộ
+# 5. So sánh luồng đồng bộ và bất đồng bộ
 
 
 

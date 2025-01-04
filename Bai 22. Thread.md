@@ -266,7 +266,7 @@ __Cơ ché hoạt động:__
 + Những luồng khác sẽ đợi đến khi tài nguyên được mở khóa 
 + Khi luồng đó thực thi xong, nó sẽ mở khóa mutex. Cho phép luồng khác truy cập vào tài nguyên. 
 
-### a) CÁC CƠ CHẾ CỦA MUTEX__
+__CÁC CƠ CHẾ CỦA MUTEX__
 
 __lock guard__
 

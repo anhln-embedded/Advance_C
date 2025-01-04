@@ -4,7 +4,7 @@
 <img src = "https://github.com/user-attachments/assets/e82287dc-52d1-4d8e-9918-f89e1f96f8e0" width = "550" height = "300">
 
 ## 1.1 Định Nghĩa 
-Đây là các hàm khai báo với từ khóa inliine để thông báo đển compiler biết được là nò sẽ gọi thay thế việc gọi tên hàm bằng nội dung bên trong hàm. Điều này giúp tôi ưu hóa các bước __(push/pop stack)__ khi 1 hàm được gọi.
+Từ khóa inline được dùng để thông báo đển compiler biết được là nội dung bên trong hàm sẽ được thay thế trực tiếp thay vì xử lý như cách thông thường mỗi khi 1 hàm được gọi đó là địa chỉ của nó sẽ phải được lưu vào trong main stack pointer trước sau đó mói nhảy đến nội dung trong hàm để thực 
 ## 1.2 Đặc điểm
 ### a) Ưu và Nhươc điểm
 + Thích hợp cho những hàm được gọi nhiều lần

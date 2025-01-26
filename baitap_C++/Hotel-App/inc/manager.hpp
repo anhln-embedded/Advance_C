@@ -3,6 +3,8 @@
 #include "file-handle.hpp"
 #include "Menu.hpp"
 #include <cstdlib>
+
+//lớp xây dựng các hàm để tương tác giữa quản lý và các chức năng hệ thống
 class Manager
 {
 public:

@@ -1,8 +1,6 @@
 #ifndef UI_HPP
 #define UI_HPP
-
-#include <string>
-using namespace std;
+#include "Std_Types.hpp"
 class UI {
 public:
     // Phương thức hiển thị và lấy dữ liệu đầu vào

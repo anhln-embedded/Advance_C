@@ -4,14 +4,11 @@
 #include "Employee-info.hpp"
 #include "Account.hpp"
 #include "UI.hpp"
-#include <vector>
-#include <string>
 #include <sstream>
 #include <iomanip>
 #include <algorithm>
 #include <cstdlib> // Cần cho hàm rand và srand
 #include <ctime>   // Cần cho hàm time nếu muốn tạo seed ngẫu nhiên
-#include <map>
 using namespace std;
 class EmployeeManager {
 private:

@@ -1,17 +1,16 @@
 #ifndef __GUESS_HPP
 #define __GUESS_HPP
-#include <iostream>
-#include <vector>
-#include <map>
-#include <string>
+#include "Std_Types.hpp"
 using namespace std;
+
+//enum lưu trữ các định dạng phản hồi của khách
 typedef enum{
     NONE_FEEDBACK,
     NEGATIVE,
     POSITIVE,
     TOTAL_FEEDBACK
 }feedback_selection;
-typedef map<feedback_selection,string> feedback_dtype;
+typedef map<feedback_selection,string> feedback_dtype; //định nghĩa kiểu dữ liệu để lưu trữ phản hồi của khách
 class Guess{
     private:
         int room;

@@ -1,10 +1,7 @@
 #ifndef ACCOUNT_HPP
 #define ACCOUNT_HPP
 
-#include <string>
-#include <vector>
-#include <iostream>
-using namespace std;
+#include "Std_Types.hpp"
 class Account {
 private:
     string username;  // Tên tài khoản
@@ -30,7 +27,7 @@ public:
     static void showListAccount(); //only for test purpse
 };
 
-extern vector<Account> accountList;
+extern vector<Account> accountList; //biến toàn cục lưu trữ danh sách tài khoản nhân viên và quản lý sử dụng ở nhiều file
 
 #define SUCCESS 1
 #define FAIL   0

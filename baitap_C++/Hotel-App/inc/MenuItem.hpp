@@ -1,7 +1,7 @@
 #ifndef MENUITEM_HPP
 #define MENUITEM_HPP
+#include "Std_Types.hpp"
 #include <functional>
-#include <string>
 
 class MenuItem {
 private:

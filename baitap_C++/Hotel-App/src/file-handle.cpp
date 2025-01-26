@@ -1,27 +1,10 @@
 #include "../inc/file-handle.hpp"
-extern vector<room_default_dtype> list_room_default;    
-
-bool File_Handle::Erase_CSV(){
-    vector<const char*> path = {ROOM_CSV_PATH,
-                                GUESS_CSV_PATH,
-                                EMPLOYEE_CSV_PATH,
-                                SERVICE_CSV_PATH};
-    for(unsigned int i = 0 ; i <path.size() ; i++){
-        FILE* file = fopen(path[i],"w");
-        if(file == NULL){
-            return FAIL;
-        }
-        char line[100];
-        memset(file,0,sizeof(line));
-        fclose(file);
-    }
-    return SUCCESS;
-}       
+// sử dụng lại biến này để khôi phục lại danh sách các phòng khởi tạo ban đầu với trạng thái là Unavailable/Available
+extern vector<room_default_dtype> list_room_default;        
                                             /* GHI FILE */
 bool File_Handle::SaveData(const char* path,Storage_dtype infotype){
     FILE *file = fopen(path, "w");
     if (file == NULL){
-        fclose(file);
         error_handle:
         return FAIL;
     }

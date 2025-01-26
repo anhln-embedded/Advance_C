@@ -1,11 +1,8 @@
 #ifndef __FILE_HANDLE_HPP
 #define __FILE_HANDLE_HPP
 #include <stdio.h>
-#include <string>
 #include <string.h>
 #include <cstdlib>
-
-
 #include "Account.hpp"
 #include "guess-employee.hpp"
 #include "employee-manager.hpp"
@@ -16,10 +13,13 @@
 #define ROOM_CSV_PATH ".//database//room.csv"
 #define SERVICE_CSV_PATH ".//database//service.csv"
 #define EMPLOYEE_CSV_PATH ".//database//employee.csv"
-using namespace std;
+
+
 #define FILE_EMPTY 2
 #define FILE_NOT_EMPTY 3
 
+
+//enum lưu trữ định dạng loại dữ liệu sẽ lưu trữ
 typedef enum
 {
     GUESS_CSV,

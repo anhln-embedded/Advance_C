@@ -9,14 +9,15 @@ static void delay_ms(uint32_t ms){
 }
 void simulation(EngineControlUnit *ECU, uint32_t sample_period, uint32_t simlulation_time)
 {
-    cout << "CAR STARTS MOVING" << endl;
-    while (simlulation_time--)
+    cout << "XE BÁT ĐẦU DI CHUYỂN" << endl;
+    while(simlulation_time--)
     {   cout<<"-------------"<<endl;
-        ECU->readsensor_ECU();
-        ECU->display_ECU();
+        ECU->ECU_Read();
+        ECU->brakeControlInteraction();
+        ECU->setFuelInjectionRate();
         cout<<"-------------"<<endl;
         delay_ms(sample_period);
     }
-    ECU->DataRecord_ECU();
-    cout << "CAR HAS STOPPED" << endl;
+    ECU->ECU_SaveData();
+    cout << "XE ĐÃ DỪNG" << endl;
 }

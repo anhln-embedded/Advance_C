@@ -9,6 +9,7 @@ void delay_ms(size_t ms){
 }
 void simulation(Engine& subject,size_t sample_period,uint8_t sample_time){
     cout << "Begin communication between OBSERVER and SUBJECT" << endl;
+   
     while(sample_time-- > 0){
         cout << "-----------" << endl;
         subject.setEngineState();

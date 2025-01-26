@@ -1,10 +1,9 @@
 #ifndef EMPLOYEE_HPP
 #define EMPLOYEE_HPP
 
-#include <vector>
-#include <map>
-#include <string>
+#include "Std_Types.hpp"
 using namespace std;
+//kiểu enum lưu trữ các định dạng ca làm
 typedef enum
 {
     none,
@@ -13,6 +12,7 @@ typedef enum
     evening    // Tối
 }session;
 
+//kiểu enum lưu trữ các định dạng ngày trong tuần
 typedef enum 
 {
     Mon, // Thứ 2
@@ -23,6 +23,8 @@ typedef enum
     totalday
 }dayinWeek;
 typedef map<dayinWeek,vector<session>> workshift_dtype;
+
+
 class Employee_Info{
 private:
     string id_;  // ID tự động

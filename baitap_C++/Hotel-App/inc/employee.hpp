@@ -3,6 +3,8 @@
 #include "file-handle.hpp"
 #include "Menu.hpp"
 #include <cstdlib>
+
+//lớp xây dựng các hàm tương tác giữa nhân viên và các chức năng hệ thống
 class Employee
 {
 public: 

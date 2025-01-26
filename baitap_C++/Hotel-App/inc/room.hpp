@@ -1,23 +1,23 @@
 #ifndef __ROOM_HPP
 #define __ROOM_HPP
-#include <iostream>
-#include <map>
-using namespace std;
+#include "Std_Types.hpp"
 
+//enum mô tả định dạng cho trạng thái của danh sách các phòng được khởi tạo ban đầu khi chạy chương trình
 typedef enum{
-    Unavailable,
-    Available
+    Unavailable, //chưa được thêm bởi quản lý
+    Available    //đã được thêm bởi quản lý
 }default_room_status;
 
+//enum mô tả định dạng cho trạng thái của danh sách các phòng đã thêm bởi quản lý
 typedef enum
 {
-    Empty,
-    Reserved
+    Empty,      //còn trống
+    Reserved    //đã đặtđặt
 }available_roomstatus;
 
-typedef int room_number;
-typedef map<room_number,available_roomstatus> room_available_dtype;
-typedef map<room_number,default_room_status> room_default_dtype;
+typedef int room_number; 
+typedef map<room_number,available_roomstatus> room_available_dtype; //định nghĩa kiểu dữ liệu cho phòng được thêm
+typedef map<room_number,default_room_status> room_default_dtype;    //định nghĩa kiểu dữ liệu cho phòng được khởi tạo ban đầu
 
 
 class Room

@@ -2,12 +2,10 @@
 #define __SERVICEMANAGER_HPP
 #include "service.hpp"
 #include "UI.hpp"
-#include <vector>
 #include <iomanip>
 #define SERVICE_EXIST     0
 #define SERVICE_NOT_EXIST 1
-#define FAIL            0
-#define SUCCESS         1
+
 class ServiceManager{
     private:
         bool IsServiceExist(const service_option& name_service);

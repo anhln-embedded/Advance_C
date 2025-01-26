@@ -1,12 +1,6 @@
 #include "../inc/manager.hpp"
 #include "../inc/employee.hpp"
-/*
-#include "..//inc//employee-manager.hpp"
-#include "..//inc//room-manager.hpp"
-#include "..//inc//service-manager.hpp"
-#include "..//inc//guess-employee.hpp"
-#include "..//inc//file-handle.hpp" 
-*/
+
 											/*CÁC HÀM ĐỂ TEST*/
 /*
 void writeCSV(){

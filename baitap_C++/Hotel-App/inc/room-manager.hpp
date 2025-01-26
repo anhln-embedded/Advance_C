@@ -3,12 +3,11 @@
 #include "room.hpp"
 #include "guess-employee.hpp"
 #include "UI.hpp"
-#include <vector>
 #define SUCCESS 1
 #define FAIL    0
 #define EXIST       0
 #define NOT_EXIST   1
-
+//lớp xây dựng các tính năng quản lý phòng sử dụng bởi quản lý
 class RoomManager{
     private:
         Guess* findguessbyRoom(const int& room);
@@ -23,5 +22,5 @@ class RoomManager{
         bool RoomInfo(const int& room);
         void ShowListRoomDefault();
 };
-extern vector<Room> list_room_available; //danh sách các phòng đã thêm bởi manager
+extern vector<Room> list_room_available; //biến toàn cục lưu trữ danh sách phòng đã thêm sử dụng ở nhiều file
 #endif

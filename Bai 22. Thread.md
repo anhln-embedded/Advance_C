@@ -184,7 +184,7 @@ __=> tránh việc gọi join() và detach() của cùng 1 luồng trong chươn
 
 
 # 3. Luồng đồng bộ (Synchronous)
-
++ Các luồng được coi là đồng bộ khi nó chờ phải chờ đợi và thay phiên nhau thực hiện sau một khoảng thời gian, nói cách khác là chúng phụ thuộc lẫn nhau
 
 <p align = "center">
 <img src = "https://github.com/user-attachments/assets/f1b780ce-107a-4758-85da-15d2d576fe5c" height = "400" width = "600">
@@ -460,7 +460,7 @@ __Kết quả__
 
 
 # 4. Luồng bất đồng bộ (Asynchrnous)
-+ Là luồng cung cấp các cơ chế cho phép chạy Độc lập so với luồng chính
++ Là luồng cung cấp các cơ chế cho phép chạy Độc lập so với luồng chính, và luồng chính sẽ không chờ đợi các luồng này hoàn thành mà tiếp tục thực hiện công việc của 
 
 <p align = "center">
 <img src = "https://github.com/user-attachments/assets/168566fe-ea26-4a74-bf6d-bbb6fc273e53" height = "400" width = "600">

@@ -28,10 +28,7 @@ __empty & full STACK__
 + Dễ triển khai
 + Ứng dụng trong quản lý tài nguyên hoặc khi sử dụng với các hàm đệu quy
 ### c) Ứng dụng 
-
-+ __Quán lý stack frame__: lưu trữ những giá trị cục bộ, địa chỉ trả về, tham số hàm khi 1 hàm được gọi
 + __Undo hoặc redo tác vụ__: thường thấy khi ta chuyển tiếp hoặc quay lại giữa các giao diện trang web trên máy tính (mõi khi ta click chọn vào 1 trang web thì địa chỉ của chúng sẽ được lưu trữ trên stack)
-
 
 ## 1.3 Mô phỏng stack 
 
@@ -174,7 +171,12 @@ top element: 3 -> add:000002E41321E9D4
 top element: 2 -> add:000002E41321E9D0
 Stack underflow
 top element: -1 -> add:000002E41321E9CC
-```   
+```
+
+### 1.3.3 So sánh với Stack trong Memory Layout
+<p align = "center">
+<img src  = "https://github.com/user-attachments/assets/e9444dc9-9967-4f0f-b53a-64c2f04f992e" width = "650" , height = "350" >
+
 # 2. QUEUE
 
 <p align = "center">

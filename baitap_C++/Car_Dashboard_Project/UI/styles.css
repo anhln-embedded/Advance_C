@@ -1,0 +1,417 @@
+/* Thiết lập chung cho body */
+body {
+    background-color: #1E2A38; /* Màu nền tối */
+    color: #fff;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    padding: 20px;
+}
+
+/* Bố cục tổng thể */
+.dashboard-wrapper {
+    display: flex;
+    gap: 20px;
+    width: 100%;
+    max-width: 1200px;
+}
+
+/* Giao diện bên trái */
+.left-dashboard {
+    width: 300px;
+    padding: 20px;
+    background-color: #222;
+    border-radius: 15px;
+    text-align: center;
+    position: relative;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+}
+
+.dashboard-indicators {
+    display: flex;
+    justify-content: space-between;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+}
+
+.indicator-left, .indicator-right {
+    font-size: 20px;
+    color: #FFD700; /* Màu vàng biểu thị đèn xi nhan */
+    visibility: hidden; /* Mặc định ẩn đi */
+}
+
+.dashboard-time {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.dashboard-status {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    font-size: 18px;
+    color: limegreen;
+    margin-bottom: 20px;
+}
+
+.dashboard-speed {
+    font-size: 48px;
+    font-weight: bold;
+    margin: 10px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.speed-value {
+    margin-right: 5px;
+}
+
+.speed-unit {
+    font-size: 24px;
+}
+
+.dashboard-gear {
+    margin: 10px 0;
+    font-size: 20px;
+}
+
+.dashboard-battery-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 20px 0;
+}
+
+.battery-bar-wrapper {
+    background-color: #666;
+    width: 80%;
+    height: 10px;
+    border-radius: 5px;
+    overflow: hidden;
+    position: relative;
+}
+
+.battery-bar-fill {
+    background-color: limegreen;
+    width: 60%; /* Thay đổi tùy theo phần trăm pin */
+    height: 100%;
+}
+
+.dashboard-odometer {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #444;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.odometer-label, .odometer-description {
+    font-size: 14px;
+    color: #B0C4DE;
+}
+
+.odometer-value {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.dashboard-features {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+}
+
+.feature-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #555;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 10px;
+    width: 100px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.brake-button {
+    background-color: #FF4500; /* Màu cam cho thắng */
+}
+
+.handbrake-button {
+    background-color: #1E90FF; /* Màu xanh dương cho phanh */
+}
+
+.feature-button:hover {
+    background-color: #FFD700; /* Màu vàng khi hover */
+}
+
+.feature-button:active {
+    background-color: #32CD32; /* Màu xanh lá khi nhấn */
+}
+
+.feature-button i {
+    font-size: 30px;
+    margin-bottom: 5px;
+}
+
+/* Phần giao diện bên phải */
+.right-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Khối thông tin pin */
+.right-battery-section {
+    background-color: #2B3E50; /* Màu nền hộp thông tin */
+    border-radius: 15px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+}
+
+.battery-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.battery-icon-container {
+    background-color: #4CAF50; /* Màu nền cho icon */
+    padding: 10px;
+    border-radius: 50%;
+}
+
+.battery-header i {
+    font-size: 24px;
+    color: #fff; /* Màu icon pin */
+}
+
+.battery-header h2 {
+    margin: 0;
+    font-size: 24px;
+}
+
+.battery-display {
+    display: flex;
+    justify-content: center;
+    align-items: center; /* Căn giữa theo chiều dọc */
+    margin-bottom: 20px;
+}
+
+.battery-body {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Đảm bảo phần tử con nằm giữa */
+    width: fit-content; /* Điều chỉnh chiều rộng tự động theo nội dung */
+    width: 100%;
+}
+
+.battery-level-bar {
+    width: 400px;
+    height: 80px;
+    background-color: #555; /* Màu nền thanh pin */
+    border-radius: 8px;
+    position: relative;
+    overflow: hidden;
+}
+
+.battery-level-fill {
+    height: 100%;
+    background-color: #FFA500; /* Màu cam hiển thị mức pin */
+}
+
+.battery-level-percentage {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 18px;
+    font-weight: bold;
+    color: #fff;
+}
+
+.battery-tip {
+    width: 10px;
+    height: 30px;
+    background-color: #555; /* Màu tip pin */
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+    margin-left: 5px;
+}
+
+.battery-details {
+    margin-bottom: 20px;
+}
+
+.details-row {
+    display: flex;
+    justify-content: space-between;
+}
+
+.details-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.details-label {
+    font-size: 16px;
+    color: #B0C4DE; /* Màu nhãn */
+}
+
+.details-value {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* Khối điều hòa và quạt */
+.right-ac-fan-section {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.ac-section, .fan-section {
+    background-color: #2B3E50;
+    border-radius: 15px;
+    padding: 20px;
+    text-align: left;
+    width: 48%; /* Chia đều không gian */
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+}
+
+.ac-info, .fan-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.ac-label {
+    font-size: 18px;
+    color: #B0C4DE;
+}
+
+.ac-value {
+    font-size: 24px;
+    font-weight: bold;
+    color: #00FF7F; /* Màu xanh lá cây hiển thị nhiệt độ */
+    align-items: center;
+}
+
+.fan-level-indicators {
+    display: flex;
+    align-items: center;
+    gap: 2px; /* Khoảng cách nhỏ giữa các thẻ */
+}
+
+.fan-level-bar {
+    height: 40px; /* Chiều cao thanh */
+    width: 20px; /* Chiều rộng bằng 1/2 chiều cao */
+    border-radius: 8px;
+    background-color: #354A5F; /* Màu nền mặc định */
+    transition: background-color 0.3s;
+}
+
+.fan-level-bar.level-1 {
+    background-color: #00FF7F; /* Màu mức 1 */
+}
+
+.fan-level-bar.level-2 {
+    background-color: #5A9FDC; /* Màu mức 2 */
+}
+
+.fan-level-bar.level-3 {
+    background-color: #3B7D7A; /* Màu mức 3 */
+}
+
+.fan-level-bar.level-4 {
+    background-color: #FF8C00; /* Màu mức 4 */
+}
+
+.fan-level-bar.level-5 {
+    background-color: #FF4500; /* Màu mức 5 */
+}
+
+
+.fan-level-bar.active {
+    background-color: #00FF7F; /* Màu nền hiển thị mức gió hiện tại */
+}
+
+.fan-level-bar:hover {
+    background-color: #3D9C91; /* Màu nền khi hover */
+    cursor: pointer;
+}
+
+/* Khối giao diện bàn phím */
+.right-key-section {
+    background-color: #2B3E50; /* Màu nền hộp thông tin */
+    border-radius: 15px;
+    padding: 5px;
+    text-align: center;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+}
+
+.keyboard {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    max-width: 1000px;
+}
+
+.key-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.key {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #fff; /* Màu xám cho phím */
+    color: #000;
+    border: 1px solid #333;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* Tạo hiệu ứng nổi */
+    font-weight: bold;
+    font-size: 16px;
+    width: 50px;
+    height: 50px;
+    text-align: center;
+    transition: background-color 0.2s, transform 0.1s;
+}
+
+.key.active {
+    background-color: #808080; /* Màu khi nhấn phím */
+    color: #fff; /* Màu chữ khi nhấn */
+    transform: translateY(2px); /* Hiệu ứng nhấn phím */
+    box-shadow: 0 2px #1e1e1e; /* Giảm bóng đổ khi nhấn */
+}
+
+.key.space {
+    width: 180px; /* Kích thước lớn hơn cho phím Space */
+}
+
+.key.enter {
+    width: 100px; /* Kích thước cho phím Enter */
+}
+
+.function {
+    font-size: 14px;
+    color: #fff;
+    margin-left: 10px; /* Khoảng cách giữa phím và mô tả */
+    white-space: nowrap; /* Ngăn mô tả xuống dòng */
+}

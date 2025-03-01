@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <!-- Thêm script từ liên kết -->
+    <script src="script.js"></script>
+
+
+</head>
+
+<body>
+    <div class="dashboard-wrapper">
+        <!-- Phần giao diện bên trái -->
+        <div class="left-dashboard">
+            <div class="dashboard-indicators">
+                <i class="fas fa-arrow-left indicator-left"></i>
+                <i class="fas fa-arrow-right indicator-right"></i>
+            </div>
+            <div class="dashboard-time">22:42</div>
+            <div class="dashboard-status">
+                <span class="status-item">ECO</span>
+                <span class="status-item">SPORT</span>
+            </div>
+            <div class="dashboard-speed">
+                <span class="speed-value">76</span>
+                <span class="speed-unit">km/h</span>
+            </div>
+            <div class="dashboard-gear">
+                <span style="color: limegreen;"> P </span> <span> R </span> <span> N </span> <span>D</span>
+            </div>
+            <div class="dashboard-battery-info">
+                <span class="battery-distance">125 km</span>
+                <div class="battery-bar-wrapper">
+                    <div class="battery-bar-fill" style="width: 60%;"></div>
+                </div>
+                <span class="battery-percentage">60%</span>
+            </div>
+            <div class="dashboard-odometer">
+                <div class="odometer-label">Công tơ mét</div>
+                <div class="odometer-value">10015 km</div>
+                <div class="odometer-description">Tổng quãng đường</div>
+            </div>
+            <div class="dashboard-features">
+                <button class="feature-button brake-button">
+                    <i class="fas fa-hand-paper"></i> <!-- Biểu tượng bàn tay cho phanh -->
+                    <div>Phanh</div>
+                </button>
+                <button class="feature-button handbrake-button">
+                    <i class="fas fa-shoe-prints fa-rotate-270"></i> <!-- Biểu tượng đạp ga xoay 270 độ -->
+                    <div>Đạp ga</div>
+                </button>
+            </div>
+        </div>
+
+        <!-- Phần giao diện bên phải -->
+        <div class="right-container">
+            <!-- Khối thông tin pin -->
+            <div class="right-battery-section">
+                <div class="battery-header">
+                    <div class="battery-icon-container">
+                        <i class="fas fa-battery-half"></i>
+                    </div>
+                    <h2>Pin</h2>
+                </div>
+                <div class="battery-display">
+                    <div class="battery-body">
+                        <div class="battery-level-bar">
+                            <div class="battery-level-fill" style="width: 19%;"></div>
+                            <div class="battery-level-percentage">19%</div>
+                        </div>
+                        <div class="battery-tip"></div>
+                    </div>
+                </div>
+                <div class="battery-details">
+                    <div class="details-row">
+                        <div class="details-item">
+                            <i class="fas fa-road"></i>
+                            <span class="details-label">Quãng đường dự kiến:</span>
+                            <span class="details-value">44 km</span>
+                        </div>
+                        <div class="details-item">
+                            <i class="fas fa-thermometer-half"></i>
+                            <span class="details-label">Nhiệt độ:</span>
+                            <span class="details-value">31°C</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Khối điều hòa và quạt -->
+            <div class="right-ac-fan-section">
+                <!-- Khối điều hòa nhiệt độ -->
+                <div class="ac-section">
+                    <div class="ac-info">
+                        <i class="fas fa-snowflake"></i>
+                        <span class="ac-label">Điều hòa:</span>
+                        <span class="ac-value">24°C</span>
+                    </div>
+                </div>
+
+                <!-- Khối mức gió -->
+                <div class="fan-section">
+                    <div class="fan-info">
+                        <i class="fas fa-fan"></i>
+                        <span class="fan-label">Mức gió:</span>
+                        <div class="fan-level-indicators">
+                       
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bổ sung giao diện bàn phím -->
+            <div class="right-key-section">
+                <div class="keyboard">
+                    <div class="key-container">
+                        <div class="key">↑</div>
+                        <div class="function">Tăng nhiệt độ</div>
+                    </div>
+                    <div class="key-container">
+                        <div class="key">↓</div>
+                        <div class="function">Giảm nhiệt độ</div>
+                    </div>
+                    <div class="key-container">
+                        <div class="key">→</div>
+                        <div class="function">Tăng mức gió</div>
+                    </div>
+                    <div class="key-container">
+                        <div class="key">V</div>
+                        <div class="function">Xi-nhan trái</div>
+                    </div>
+                    <div class="key-container">
+                        <div class="key">B</div>
+                        <div class="function">Xi-nhan phải</div>
+                    </div>
+                    <div class="key-container">
+                        <div class="key space">Space</div>
+                        <div class="function">Đạp ga</div>
+                    </div>
+                    <div class="key-container">
+                        <div class="key enter">Enter</div>
+                        <div class="function">Phanh</div>
+                    </div>
+                    <div class="key-container">
+                        <div class="key">N</div>
+                        <div class="function">Bật/tắt điều hòa</div>
+                    </div>
+                    <div class="key-container">
+                        <div class="key">M</div>
+                        <div class="function">Chuyển chế độ lái</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

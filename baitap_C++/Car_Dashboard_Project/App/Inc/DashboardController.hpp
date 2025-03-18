@@ -1,10 +1,17 @@
 #ifndef DASHBOARDCONTROLLER_HPP
 #define DASHBOARDCONTROLLER_HPP
-
 #include "VehicleConfig.hpp"
-// Forward declarations for the observer and other components
+
+/**
+ * @brief Lớp quản lý việc cập nhật những thay đổi từ DashboardController
+ * @details Là 1 Observer trung gian cung cấp Api chung để cập nhật dữ liệu đến tất cả 
+ *          các module trong danh sách observer quản lý bới DashboardController
+ */
 class Observer{
   public:
+    /**
+    * @brief lớp thuần ảo được ghi đè bởi các module (observer con) để thực hiện hành động cụ thẻ
+    */
     virtual void update(
                         const uint16_t& speed,
                         const uint16_t& remaining_range,
@@ -17,9 +24,17 @@ class Observer{
                         const bool& IsAccelerating,
                         const bool& AC_status
                     ) = 0;
+    /**
+     * @brief hàm hủy các obserer con khi chương trình kết thúc
+    */
     ~Observer(){};
 }; // Abstract base class for observers
 
+/**
+ * @brief Lớp quản lý việc cập nhật dữ liệu từ database
+ * @details Lớp này đóng vai trò là 1 subject luôn lắng nghe dữ liệu từ các cảm biến vá 
+ *          thông báo đến các Observer mà nó quản lý
+ */
 class DashboardController {
 public:
     // Constructor and Destructor

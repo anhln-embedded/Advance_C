@@ -1,5 +1,5 @@
 #include "DriveModeManager.hpp"
-
+#include "VehicleConfig.hpp"
 DriveModeManager::DriveModeManager(){
     //cập nhật chế độ lái ban đầu
     this->currentDriveMode = Mode::ECO;

@@ -7,7 +7,10 @@
 #include <thread>
 #include <atomic>
 #include <iostream>
-
+/**
+ * @brief Lớp quản lý việc giao tiếp giữa bàn phím và hệ thống
+ * @details Lớp này cung cấp API để đọc và ghi nhận trạng thái của phím nhấn  
+ */
 class KeyboardHandler {
 private:
     DatabaseHandler& dbHandler; // Tham chiếu đến đối tượng DatabaseHandler để ghi dữ liệu
@@ -23,7 +26,9 @@ private:
     std::unordered_set<int> activeKeys; //Lưu trữ danh sách các phím đang được nhấn giữ
 
 public:
-    // Constructor
+    /**
+     * @brief Hàm tạo để khởi tạo bản đồ lưu trữ phím nhấn với các thuộc tính hệ thống
+     */
     KeyboardHandler(DatabaseHandler& db);
     
     // Destructor để dừng listener khi đối tượng bị hủy

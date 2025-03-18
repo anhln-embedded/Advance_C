@@ -15,6 +15,14 @@ atomic<int> ac_temp(0),current_odometer(0),wind_level(0),remaining_range(0),curr
 atomic<bool> Isbraking,IsAcclerating,acSignal,IsEcoModeChanged(false),IsSportModeChanged(false);
 string drivemode,turnSignal;
 
+
+/**
+ * @brief  hàm khởi tạo trạng thái ban đầu cho xe
+ * @details các thông số hệ thống của xe lưu trữ trong database sẽ được đặt về 
+ *          giá trị mặc định khi xe chưa khởi động
+ * @param[in] dataInit tham chiếu đển module DatabaseHandler để ghi dữ liệu vào server 
+ * @note cần được gọi trước khi chương trình chạy các luồng 
+ */
 void Vehicle_BaseInit(DatabaseHandler& dataInit){
     dataInit.setMultipleData( 
         {
@@ -36,6 +44,14 @@ void Vehicle_BaseInit(DatabaseHandler& dataInit){
 
 }
 
+/**
+ * @brief   hàm cập nhật dữ liệu được gọi liên tục khi chạy chương trình 
+ * @details được gọi trong luồng đọc dữ liệu để cập nhật data
+ *          từ server  và thông báo tới các module khác 
+ * @param[in] dbHandler  tham chiếu đển module DatabaseHandler để truy xuất dữ liệu từ server 
+ * @param[in] dbcontroller tham chiếu đến module DashboardController để cập nhật dữ liệu vào hệ thống
+ * @note cần được gọi trong luồng chạy đồng bộ với luồng chính
+ */
 void Read_Data(DatabaseHandler &dbHandler,DashboardController& dbcontroler)
 {
     unordered_map<string,string> data_update; //biến tạm dùng để lưu trữ dữ liệu cập nhật 
@@ -56,7 +72,7 @@ void Read_Data(DatabaseHandler &dbHandler,DashboardController& dbcontroler)
             data_update["ACCELERATOR"]  = dbHandler.getDataString(SystemAttribute::ACCELERATOR);
             data_update["TURN_SIGNAL"] = dbHandler.getDataString(SystemAttribute::TURN_SIGNAL);
 
-            dbcontroler.updateData(data_update);     //cập nhật dữ liệu đọc từ file csv -> thông báo đến displayManager
+            dbcontroler.updateData(data_update);     //cập nhật dữ liệu đọc từ server  -> thông báo đến displayManager
 
             //tài nguyên sử dụng bởi luồng xử lý yêu cầu từ bàn phím 
             ac_temp = stoi(data_update["AC_CONTROL"]);                  //nhiệt độ điều hòa
@@ -78,6 +94,16 @@ void Read_Data(DatabaseHandler &dbHandler,DashboardController& dbcontroler)
     }
 }
 
+
+/**
+ * @brief   hàm xử lý yêu cầu từ bàn phím
+ * @details được gọi trong lường xử lý yêu cầu từ bàn phím để cập nhật và điều chỉnh 
+ *          1 số trạng thái của xe như điều hòa,mức gió,tín hiệu xi nhan 
+ * @param[in] dbHandler         tham chiếu đển module DatabaseHandler để ghi dữ liệu vào server 
+ * @param[in] safetyHandler     tham chiếu đến module SafetyManager để liên tục kiểm tra các yếu tố an toàn 
+ * @param[in] drivemodeManager  tham chiếu đến module DriveModeManager để cập nhật chế độ lái
+ * @note cần được gọi trong luồng chạy đồng bộ với luồng chính 
+ */
 void Handle_Input(DatabaseHandler &dbHandler,SafetyManager& safetyHandler, DriveModeManager& drivemodeHandler){
      //các giá trị ngưỡng để giới hạn thông số cài đặt
     const int ac_min = ElectricVehicle_Init::getDesignValue(vehicle_Attribute::AC_TEMP_MIN);
@@ -200,6 +226,19 @@ void Handle_Input(DatabaseHandler &dbHandler,SafetyManager& safetyHandler, Drive
     }
 }
 
+/**
+ * @brief   hàm điều phối các chức năng của hệ thống  
+ * @details được gọi trong lường chính để xử lý các công việc như
+ *      - hiển thị dữ liệu lên terminal
+ *      - tính toán và cập nhật mức pin, quãng đượng còn lại, và tốc độ lên server
+ *      - đồng bộ hóa các thành phần với chế độ lái
+ * @param[in] dbUpdate          tham chiếu đển module DatabaseHandler để ghi dữ liệu vào server 
+ * @param[in] displayUpdate     tham chiếu đến module DisplayManager để cập nhật dữ liệu lên terminal 
+ * @param[in] speedUpdate       tham chiếu đến module SpeedCalculator để tính toán tốc độ hiện tại
+ * @param[in] batteryUpdate     tham chiếu đến module BatteryManager để tính toán quãng đường và mức pin còn lại
+ * @param[in] drivemodeUpdate   tham chiếu đến module DriveModeManager để lấy ra chế độ lái hỗ trợ cho việc đồng bộ với các tính năng khác
+ * @note được gọi trực tiếp trong hàm main sau khi đã khởi tạo các luồng khác
+ */
 void update_Data(DatabaseHandler& dbUpdate ,DisplayManager& displayUpdate,SpeedCalculator& speedUpdate,BatteryManager& batteryUpdate,DriveModeManager& drivemodeUpdate)
 {
     int update_speed;
@@ -211,7 +250,7 @@ void update_Data(DatabaseHandler& dbUpdate ,DisplayManager& displayUpdate,SpeedC
             lock_guard<mutex> lock(key);
         //hiển thị dữ liệu lên terminal
             displayUpdate.updateDisplay();
-        //cạp nhật mức pin,chế độ lái, và tốc độ
+        //cạp nhật mức pin, quãng đượng còn lại, và tốc độ
             batteryUpdate.updateBatteryLevel(ac_temp.load(),wind_level.load());
         //dự đoán quãng đường còn lại, đã đi, mức pin, nhiệt độ pin
             int update_battery_level =  static_cast<int>(batteryUpdate.getBatteryLevel());
@@ -260,7 +299,7 @@ void update_Data(DatabaseHandler& dbUpdate ,DisplayManager& displayUpdate,SpeedC
 
 int main()
 {
-    //DatabaseHandler::WriteDataBase(); //dùng để ghi lại cấu trúc dữ liệu trong file csv trong trường hợp file bị lỗi tự động xóa trắng
+    //DatabaseHandler::WriteDataBase(); //dùng để ghi lại cấu trúc dữ liệu trong server  trong trường hợp file bị lỗi tự động xóa trắng
     DatabaseHandler dbHandler;                   //khoi tao co so du lieu
     KeyboardHandler keyboard(dbHandler);         //khoi tao giao dien ban phim tuong tac voi user
     

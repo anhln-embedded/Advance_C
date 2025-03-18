@@ -82,7 +82,15 @@ public:
     //     }
     //     throw runtime_error("Không tìm thấy key: " + keyStr);
     // }
+
+    /**
+         * @brief Ghi cấu trúc dữ liệu vào trong database.
+         * @details Được gọi khi cần cập nhật lại dữ liệu trong file csv nếu database bị lỗi tự động xóa 
+         * @note Chỉ nên gọi ở đầu chương trình 1 lần duy nhất để cập nhật cấu trúc database, trước khi chạy 
+         *       chương trình
+    */
     static void WriteDataBase(){
+        //bản đồ lưu trữ cặp key - value được ghi vào database để truy cập đọc/ghi dữ liệu
         unordered_map<string, string> Database_Structure = {
             {"VEHICLE_SPEED","0"},
             {"DRIVE_MODE","0"},
@@ -199,6 +207,9 @@ public:
      * - `SystemAttribute`: Enum biểu diễn key cần cập nhật.
      * - `DataVariant`: Kiểu `variant` chứa giá trị có thể là int, string, hoặc các enum.
      */
+
+
+     
     void setMultipleData(const vector<pair<SystemAttribute, DataVariant>> &keyValuePairs);
 
     /**

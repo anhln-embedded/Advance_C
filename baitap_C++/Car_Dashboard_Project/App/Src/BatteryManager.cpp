@@ -1,4 +1,5 @@
 #include "BatteryManager.hpp"
+#include "VehicleConfig.hpp"
 
 float environment_temp = 35.0f;  //giả sử nhiệt độ môi trường -> ảnh hưởng đến nhiệt độ ban đầu của pin khi xe khởi động
 

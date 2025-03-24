@@ -5,8 +5,6 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-// Lớp DisplayManager chịu trách nhiệm hiển thị thông tin lên giao diện
-
 /**
  * @brief Lớp quản lý việc hiển thị thông tin lên giao diện
  * @details Lớp này cung cấp API để hiển thị dữ liệu cập nhật từ module DashboardController sau 

@@ -12,7 +12,7 @@ mutex key;
 
 //định nghĩa các tài nguyên truy cập bởi các luồng
 atomic<int> ac_temp(0),current_odometer(0),wind_level(0),remaining_range(0),current_speed(0),battery_level(0),current_battery_temp(0);
-atomic<bool> Isbraking,IsAcclerating,acSignal,IsEcoModeChanged(false),IsSportModeChanged(false);
+atomic<bool> Isbraking,IsAcclerating,acSignal,IsEcoModeChanged(false);
 string drivemode,turnSignal;
 
 
@@ -48,13 +48,13 @@ void Vehicle_BaseInit(DatabaseHandler& dataInit){
  * @brief   hàm cập nhật dữ liệu được gọi liên tục khi chạy chương trình 
  * @details được gọi trong luồng đọc dữ liệu để cập nhật data
  *          từ server  và thông báo tới các module khác 
- * @param[in] dbHandler  tham chiếu đển module DatabaseHandler để truy xuất dữ liệu từ server 
- * @param[in] dbcontroller tham chiếu đến module DashboardController để cập nhật dữ liệu vào hệ thống
+ * @param[in] dbHandler  tham chiếu đển module DatabaseHandler để truy xuất dữ liệu trên server
+ * @param[in] dbcontroller tham chiếu đến module DashboardController để lưu trữ dữ liệu đọc từ server
  * @note cần được gọi trong luồng chạy đồng bộ với luồng chính
  */
 void Read_Data(DatabaseHandler &dbHandler,DashboardController& dbcontroler)
 {
-    unordered_map<string,string> data_update; //biến tạm dùng để lưu trữ dữ liệu cập nhật 
+    unordered_map<string,string> data_update; //bản đồ để lưu trữ dữ liệu cập nhật theo từng cặp key - value 
     while (1)
     {
         {
@@ -93,7 +93,6 @@ void Read_Data(DatabaseHandler &dbHandler,DashboardController& dbcontroler)
         this_thread::sleep_for(chrono::milliseconds(200)); //delay để giảm tải
     }
 }
-
 
 /**
  * @brief   hàm xử lý yêu cầu từ bàn phím
@@ -210,7 +209,6 @@ void Handle_Input(DatabaseHandler &dbHandler,SafetyManager& safetyHandler, Drive
                 dbHandler.setData(SystemAttribute::BRAKE,PedalState::RELEASED);
                 lastBrakeStatus = PedalState::RELEASED;
             }
-            //kiểm tra có đạp phanh và gas cùng lúc
             //chỉ xử lý reset lại trạng thái nếu phát hiện đã nhấn phím
             if(isKeyPressed == KeyState::PRESSED){
                 isKeyPressed = KeyState::RELEASED;
@@ -303,7 +301,7 @@ int main()
     DatabaseHandler dbHandler;                   //khoi tao co so du lieu
     KeyboardHandler keyboard(dbHandler);         //khoi tao giao dien ban phim tuong tac voi user
     
-    ElectricVehicle_Init TeslaModel3(Vehicle_Version::LONG_RANGE,Vehicle_Brand::TESLA); //Khởi tạo thông số kỹ thuật cho xe 
+    ElectricVehicle_Init TeslaModel3(Vehicle_Version::PERFORMANCE,Vehicle_Brand::TESLA); //Khởi tạo thông số kỹ thuật cho xe 
     ElectricVehicle_Init::Display_VehicleInfo(); //hiển thị thông số của xe
 
     //khoi tao cac module
@@ -312,27 +310,27 @@ int main()
     SafetyManager safetymanage;
     DriveModeManager drivemodemanage;  
     SpeedCalculator speedControl(&drivemodemanage,&safetymanage);//đồng bộ 2 module tính toán tốc độ và chế độ lái
-    BatteryManager batterymanage(&speedControl);   //đồng bộ 2 module quản lý pin,tính tốc độ 
+    BatteryManager batterymanage(&speedControl);                 //đồng bộ 2 module quản lý pin,tính tốc độ 
 
-    //khoi tao trang thai ban dau cua xe
+    //Khởi tạo các thông số thuộc tính hệ thống ban đầu 
     Vehicle_BaseInit(dbHandler);
     
-    this_thread::sleep_for(chrono::seconds(2)); // hien thi thong so xe truoc khi mo phong
+    this_thread::sleep_for(chrono::seconds(5)); // hiển thị thông số kỹ thuật
     
-    //khoi tao luong doc du lieu 
-    thread Read_Task(Read_Data,ref(dbHandler),ref(dashboard));                          
-    //khoi tao luong xu ly yeu cau tu ban phim
-    thread HandleInput_Task(Handle_Input,ref(dbHandler),ref(safetymanage),ref(drivemodemanage));  
+    //Khởi tạo luòng đọc dữ liệu
+    thread Thread1(Read_Data,ref(dbHandler),ref(dashboard));                          
+    //Khởi tạo luồng xử lý yêu cầu từ bàn phím
+    thread Thread2(Handle_Input,ref(dbHandler),ref(safetymanage),ref(drivemodemanage));  
 
     //luồng đọc và lưu phím nhấn
-    keyboard.start();  //chạy độc lập với luồng chính
+    keyboard.start();  
 
     //luồng chính -> điều phối và xử lý các chức năng cụ thể
     update_Data(dbHandler,displayControl,speedControl,batterymanage,drivemodemanage); 
 
     //các luồng đồng bộ chạy song song với luồng chính
-    Read_Task.join();        //đọc dữ liệu
-    HandleInput_Task.join(); //xử lý yêu cầu từ bàn phím
+    Thread1.join();       
+    Thread2.join(); 
 
     keyboard.stop();
    

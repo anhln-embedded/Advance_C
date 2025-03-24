@@ -6,18 +6,20 @@ using namespace std;
 
 /**
  * @brief Lớp quản lý các chức năng an toàn
- * @details Lớp này cung cấp API để kiểm soát và điều chỉnh mức gas,phanh mỗi khi người dùng nhấn và nhả bàn đạp
+ * @details Lớp này cung cấp API để kiểm soát và điều chỉnh mức gas,phanh,
+ *          cũng như cho phép kích hoạt/vô hiệu hóa phanh thông qua việc liên tục 
+ *          kiểm các điều kiện an toàn
  */
 
 class SafetyManager {
 public:
     /**
-    * @brief phương thức tạo để cài đặt giá trị mức gas và phanh ban đầu
+    * @brief Hàm tạo để cài đặt giá trị mức gas và phanh ban đầu
     */
     SafetyManager();
 
      /**
-    * @brief phương thức hủy đối tượng SafetyManager
+    * @brief hàm hủy đối tượng SafetyManager
     */
     ~SafetyManager(){};
      /**
@@ -37,16 +39,14 @@ public:
     /**
      * @brief   phương thức kích hoạt phanh
      * @details giá trị cường độ phanh sẽ tăng dần khi phương thức được gọi để giảm tốc
-     * @note được gọi bởi module SpeedCalculator 
-     *       thông qua Api adjustSpeedForDriveMode
+     * @note được gọi bởi module SpeedCalculator  thông qua Api adjustSpeedForDriveMode
      */
     void applyBrake();       
 
     /**
      * @brief   phương thức kích hoạt chân gas
      * @details giá trị cường độ gas sẽ tăng dần khi phương thức được gọi để tăng tốc
-     * @note được gọi bởi module SpeedCalculator 
-     *       thông qua Api adjustSpeedForDriveMode
+     * @note được gọi bởi module SpeedCalculator thông qua Api adjustSpeedForDriveMode
      */
 
     void applyGas();
@@ -54,32 +54,29 @@ public:
     /**
      * @brief   phương thức giải phóng chân phanh
      * @details giá trị cường độ phanh sẽ giảm dần khi người lái nhả chân phanh
-     * @note được gọi bởi module SpeedCalculator 
-     *       thông qua Api adjustSpeedForDriveMode
+     * @note được gọi bởi module SpeedCalculator thông qua Api adjustSpeedForDriveMode
      */
     void releaseBrake();                    
 
     /**
      * @brief   phương thức giải phóng bàn đạp gas
      * @details giá trị cường độ gas sẽ giảm dần khi người lái nhả chân gas
-     * @note được gọi bởi module SpeedCalculator 
-     *       thông qua Api adjustSpeedForDriveMode
+     * @note được gọi bởi module SpeedCalculator thông qua Api adjustSpeedForDriveMode
      */
     void releaseGas();               
 
     // Kiểm tra trạng thái của phanh
     //bool isBrakeApplied() const {return brakeApplied;}  // Trả về trạng thái phanh có đang được nhấn hay không
 
-      /**
+    /**
      * @brief getter cho giá trị mức gas
-     * @note được gọi bởi module SpeedCalculator 
-     *       thông qua Api adjustSpeedForDriveMode
+     * @note được gọi bởi module SpeedCalculator thông qua Api adjustSpeedForDriveMode
      */
     int getGasLevel() const {return gasIntensity;}
-     /**
+     
+    /**
      * @brief getter cho giá trị mức phanh
-     * @note được gọi bởi module SpeedCalculator 
-     *       thông qua Api adjustSpeedForDriveMode
+     * @note được gọi bởi module SpeedCalculator thông qua Api adjustSpeedForDriveMode
      */
     int getBrakeLevel() const {return brakeIntensity;}
 private:

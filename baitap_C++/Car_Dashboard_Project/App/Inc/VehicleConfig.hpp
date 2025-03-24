@@ -1,8 +1,3 @@
-/* 
-    + cung cấp các class và kiểu dữ liệu sử dụng cho toàn bộ hệ thống
-    + cung cấp các thông số thuộc tính cho loại xe cụ thể  
-    + cung cấp các phương thức tính toán các thông số ảnh hưởng đến trạng thái hoạt động của các thành phần trong xe
-*/
 #ifndef VEHICLE_CONFIG
 #define VEHICLE_CONFIG
 #include <iostream>
@@ -28,35 +23,36 @@ bool strToBool(const string& str);
 
 /**
  * @brief lớp để quản lý việc tính toán các thuộc tính của xe
- * @details Cung cấp các API để trừu tượng quá việc tính toán các 
- *        thành phần phức tạp ảnh hưởng đến quá trình vận hành của xexe
+ * @details Cung cấp các API để trừu tượng việc tính toán các yếu tố vận hành cũa xe
+ *          như lực tác động,mo-men xoắn,tốc độ góc,vòng tua,gia tốc và năng lượng tiêu hao
+ *          do động cơ,diều hòa,mức gió, nhiệt độ pin
  */
 class VehicleCalculation {
     private:
-    /*sử dụng constexpr 
-        + tối ưu hóa hiệu suất 
-        + đảm bảo các giá trị không bị thay đổi trong suốt thời gian chương trình chạy.
+    /**
+     * @brief Định nghĩa các hệ số để tính toán các lực cản lăn,cản gió,lực kéo,lực hãm,tốc độ góc,
     */
-    //các hệ số để tính toán lực ma sát lăn, lực cản gió, và hiệu suất
-        static constexpr int gear_ratio = 9;                  //ty so truyen cua hop so xe dien           
-        static constexpr float pi = 3.14;                     //hang so pi
-        static constexpr float GR = 9.1;                      //ti so truyen cuoi cung 
-        static constexpr float gravity = 9.81;                //gia toc trong truong m/s^2
-        static constexpr float Cr = 0.011;                    //He so ma sat lan
-        static constexpr float Cd = 0.23;                     //He so can khi dong
+        static constexpr int gear_ratio = 9;                  //tỷ số truyền của hộp số xe điện    
+        static constexpr float pi = 3.14;                     //hằng số pi
+        static constexpr float GR = 9.1;                      //Tỷ số truyền cuối cùng
+        static constexpr float gravity = 9.81;                //gia tốc trọng trường m/s^2
+        static constexpr float Cr = 0.011;                    //Hệ số ma sát lăn
+        static constexpr float Cd = 0.23;                     //Hệ số cản khí động
         static constexpr float Us = 0.013;                    //hệ số ma sát tĩnh tối thiểu lớn hơn hệ số cho ma sát lắn 
-        static constexpr float Uk = 0.7;                      //hệ số ma sát động luôn nhỏ hơn us
-        static constexpr float airdensity =  1.225;           //mat do khong khi kg/m^3
-        static constexpr float efficiency_drivetrain =  0.95; //hieu suat truyen dong
-        static constexpr float efficiency_engine =  0.9;      //hieu suat dong co dien
-        static constexpr float Area = 2.22;                   //dien tich mat can truoc m^2
-    //các hệ số để tính toán ảnh hưởng đến nhiệt độ pin
-        static constexpr float Talpha = 0.01; //he so the hien muc do nhiet sinh ra do cong suat dong co (độ C / Kw)
-        static constexpr float Tbeta = 0.15;   //he so the hien muc do lam mat anh huong den nhiet pin (độ c / Kw)
-        static constexpr const int C_coolingBase = 1000; // hieu qua lam mat co ban (w)
-        static constexpr const int k_cooling = 30;      // he so tang cuong lam mat (w/do c)
+        static constexpr float Uk = 0.7;                      //hệ số ma sát động 
+        static constexpr float airdensity =  1.225;           //mật độ không khí kg/m^3
+        static constexpr float efficiency_drivetrain =  0.95; //hiệu suất truyền động
+        static constexpr float efficiency_engine =  0.9;      //hiệu suất động cơ điện
+        static constexpr float Area = 2.22;                   //diện tích mặt cản trước m^2
+    /**
+    * @brief Định nghĩa các hệ số để tính toán nhiệt độ pin
+    */
+        static constexpr float Talpha = 0.01;                 //hệ số thể hiện mức nhiệt độ sinh ra do công suất động cơ (độ C / Kw)
+        static constexpr float Tbeta = 0.15;                  //hệ số thể hiện mức độ làm mát ảnh hưởng đến nhiệt độ pin (độ c / Kw)
+        static constexpr const int C_coolingBase = 1000;      //hiệu quả làm mát cơ bản (w)
+        static constexpr const int k_cooling = 30;            //hệ số tăng cường làm mát (w/do c)
     //hệ số để tính tiêu hao do điều hòa
-        static constexpr int deltaT_ac  = 20; //chênh lệch nhiệt độ lớn nhất mà điều hòa xử lý ổn định nhất
+        static constexpr int deltaT_ac  = 20;                 //chênh lệch nhiệt độ lớn nhất mà điều hòa xử lý ổn định nhất
 
         /**
          * @brief phương thức tính toán ma sát tĩnh tối thiểu
@@ -142,12 +138,11 @@ class VehicleCalculation {
          */
         static float getAcceleration(const float& speed_ms,const float& F_traction,const int& weight,const int& brakeLevel){
             float a = 0.0f;
-            //float F_Static_Friction = getMaxStaticFriction(weight);
             float F_static_friction = getMinStaticFriction(weight);
             //cout << F_static_friction;
             //trường hợp xe đứng yên -> kiểm tra lực kéo cung cấp cho xe 
             if(speed_ms <= 0.0f){
-                //nếu lực kéo < ma sát tĩnh cưc đại -> xe chưa thẻ chuyển động
+                //nếu lực kéo < ma sát tĩnh tối thiểu -> xe chưa thẻ chuyển động
                 if(F_traction < F_static_friction){
                     a = 0.0f;
                 }
@@ -327,7 +322,6 @@ enum class vehicle_Attribute {
     AC_TEMP_MIN,      //do c -> nhiet do nho nhat dieu chinh duoc tren dieu hoa
     WIND_LEVEL_MAX    //muc gio manh nhat tren dieu hoa
 };
-//định nghĩa kiểu tổng quát cho giá trị của thông số
 
 /**
  * @brief kiểu dữ liệu chung mô tả giá trị của các thuộc tính thông số xe

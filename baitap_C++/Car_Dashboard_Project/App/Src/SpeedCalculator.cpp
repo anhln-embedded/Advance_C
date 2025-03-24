@@ -5,10 +5,22 @@
 
 //điều chỉnh cường độ gas và phanh dựa trên trạng thái bàn đạp 
 void SpeedCalculator::AdjustGasBrakeLevel(bool isGasApplied, bool isBrakeApplied){
-    if(isGasApplied && !isBrakeApplied) safetyGet->applyGas();
-    else if(!isGasApplied) safetyGet->releaseGas();
-    if(isBrakeApplied && !isGasApplied) safetyGet->applyBrake();
-    else if(!isBrakeApplied) safetyGet->releaseBrake();
+    if(isGasApplied && !isBrakeApplied) {
+        safetyGet->applyGas();
+        safetyGet->releaseBrake();
+    }
+    else if(!isGasApplied && isBrakeApplied){
+        safetyGet->releaseGas();
+        safetyGet->applyBrake();
+    }
+    else if(!isBrakeApplied && !isBrakeApplied){
+        safetyGet->releaseGas();
+        safetyGet->releaseBrake();
+    }
+    else{
+         safetyGet->releaseBrake();
+         safetyGet->releaseGas();
+    }
 }
 SpeedCalculator::SpeedCalculator(DriveModeManager* drivemodeGet_,SafetyManager* safetyGet_){
     //khởi tạo địa chỉ cho con trỏ tới DrivemodeManager để lấy chế độ lái và SafetyManager để láy phương thức điều chỉnh mức gas và phanh
@@ -26,10 +38,10 @@ int SpeedCalculator::calculateSpeed(bool isAccelerating, bool isBraking){
     static const int maxTorque = ElectricVehicle_Init::getDesignValue(vehicle_Attribute::MAX_TORQUE);
     static const int wheelRadius = ElectricVehicle_Init::getDesignValue(vehicle_Attribute::WHEEL_RADIUS);
     static const int vehicleWeight = ElectricVehicle_Init::getDesignValue(vehicle_Attribute::WEIGHT);
-    static const int totalWeight = vehicleWeight + LOAD;// tổng trọng lượng của xe
+    static const int totalWeight = vehicleWeight + LOAD;    // tổng trọng lượng của xe
 
-    static float speed_ms = 0;   // lưu trữ và cập nhật lại tốc độ m/s
-    static float distance_ms = 0;// lưu trữ quãng đường cập nhật theo mét   
+    static float speed_ms = 0;                      // lưu trữ và cập nhật lại tốc độ m/s
+    static float distance_ms = 0;                   // lưu trữ quãng đường cập nhật theo mét   
     static auto previousTime = steady_clock::now(); // Thời gian trước đó
     
     auto currentTime = steady_clock::now();
@@ -39,6 +51,7 @@ int SpeedCalculator::calculateSpeed(bool isAccelerating, bool isBraking){
     //điều chỉnh cường độ gas và phanh 
     AdjustGasBrakeLevel(isAccelerating,isBraking);
 
+    //truy cập SafetyManager để lấy mức gas và phanh
     int gasLevel = safetyGet->getGasLevel();
     int brakeLevel = safetyGet->getBrakeLevel();
  

@@ -3,7 +3,6 @@
 
 #include "SpeedCalculator.hpp"
 
-// Lớp BatteryManager quản lý mức pin và tính toán quãng đường di chuyển dựa trên các yếu tố vận hành
 /**
  * @brief Lớp quản lý các chức năng tính toán mức pin, quãng đường còn lại
  * @details Lớp này cung cấp API để tính mức tiêu thụ pin, và dự đoán quãng đường đi được còn lại của xe

@@ -26,14 +26,16 @@ private:
      * @details tự động hiệu chỉnh mức gas và phanh dựa trên trạng thái gas và phanh
      * @param[in] isGasApplied     trạng thái bàn chân gas
      * @param[in] isBrakeApplied   trạng thái chân phanh
+     * - 'true' đang nhấn 
+     * - 'false' đang nhả
      * @note được gọi trong phương thức calculateSpeed trước khi thực hiện tính toán tốc độ
      */
     void AdjustGasBrakeLevel(bool isGasApplied, bool isBrakeApplied);
     /**
      * @brief   phương thức điều chỉnh tốc độ dựa trên chế độ lái
      * @param[in] driveMode chế độ lái
-     *              + "Eco": chế độ eco
-     *              + "Sport": chế độ sport
+     *              + "ECO":    chế độ lái tiết kiệm nhiên liệu
+     *              + "SPORT":  chế độ lái thế thao
      * @note được gọi trong phương thức calculateSpeed trước khi thực hiện tính toán tốc độ
      */
     void adjustSpeedForDriveMode(const std::string& driveMode); 

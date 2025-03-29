@@ -1,7 +1,6 @@
 #ifndef SAFETYMANAGER_HPP
 #define SAFETYMANAGER_HPP
 
-#include <iostream>
 using namespace std;
 
 /**

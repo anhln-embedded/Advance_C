@@ -1,4 +1,5 @@
 #include "SafetyManager.hpp"
+#include <iostream>
 #define MAX_PEDAL   100
 #define MIN_PEDAL   0
 SafetyManager::SafetyManager(){

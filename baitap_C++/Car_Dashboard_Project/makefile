@@ -4,7 +4,7 @@ CXXFLAGS = -std=c++17 -Wall -Wextra -I./App/Inc -I./Data -I./UI -I./Server -I./S
 
 # Directories
 SRC_DIR_MAIN = ./App/Src
-DATA_DIR = ./Data
+DATA_DIR = ./Data	
 SRC_DIR_SERVER = ./Server
 BIN_DIR = ./bin
 

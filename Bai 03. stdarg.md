@@ -114,14 +114,14 @@ __+ va_end:__ giải phóng biến lưu danh sách
 
 //tham số thứ 2 là danh sách các đối số truyền vào
 int sum(int count,...){
-    va_list list;  //biến lưu danh sách đối số kiểu char*
-    va_start(list,count); //xác định điểm bắt đầu của danh sách cũng chính là đối số đầu tiên 
+    va_list list;         //biến lưu danh sách đối số kiểu char*
+    va_start(list,count); //xác định điểm bắt đầu của danh sách
     int sum = 0;
     while(count > 0){
         sum += va_arg(list,int); //lấy ra từng đối số và tính toán
         count--;
     }
-    va_end(list); //release memory
+    va_end(list); //giải phóng danh sách đối số
     return sum;
 }
 int main(){
@@ -169,23 +169,17 @@ int main(){
 #define tong1(...) sum3(__VA_ARGS__,'\n') 
 
 int sum3(int begin,...){
-    va_list list; //save input arguments
+    va_list list;  //khai báo biên danh sách
     va_list check; //con trỏ để kiểm tra các biến danh sách
     
     va_start(list,begin); 
-    
-    /** 
-     * @param: first : pointer used to loop through every argument in list
-     *         second: list contains input arguments 
-    
-     */
-    va_copy(check,list); 
-
-    int result = count; //save the first element to result
+    va_copy(check,list); //trỏ đến địa chỉ đầu của biến list
+    int result = count;  //gán đối số đầu cho kết quả cuối cùng
 
     int value = 0;
-    while(va_arg(check,char*) != (char*)'\n'){ //nếu gặp ký tự kết thúc chuỗi thì dừng xử lý -> vì biến danh sách thuộc kiểu char* 
-        result += va_arg(list,int);
+   //nếu gặp ký tự kết thúc chuỗi thì dừng xử lý -> vì biến danh sách thuộc kiểu char* 
+    while(va_arg(check,char*) != (char*)'\n'){ 
+        result += va_arg(list,int); //cộng dồn từng đối số và gán cho kết quả cuối cùng
     }
 
     va_end(list);
@@ -210,12 +204,9 @@ typedef struct Data
 
 void display(int count, ...)
 {
-
     va_list data_list;
     va_list check;
-
     va_start(data_list, count);
-
     while (count > 0)
     {
         sensor_info tmp = va_arg(data_list, sensor_info);

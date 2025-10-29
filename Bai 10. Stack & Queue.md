@@ -4,6 +4,8 @@
 + Lưu trữ dữ liệu tạm thời, hay các hàm gọi lồng nhau 
 + Quyền truy cập: đọc/ghi 
 + Cấp phát và giải phóng vùng nhớ theo cơ chế LIFO
+
+**Lưu ý**: 1 ngăn xếp có thể được cài đặt bằng cách lưu dữ liệu trong bất kỳ vùng nhớ nào   `.data`,`.bss`,`.heap`,`.stack` segment
 ## 1.2. Đặc điểm 
 ### a) Cách thao tác 
 <p align = "center">
@@ -24,15 +26,52 @@ __empty & full STACK__
 <p align = "center">
 <img src = "https://github.com/user-attachments/assets/34601b9a-79e2-408f-b93b-df4f3a39de71" width = "500" height = "250" >
 
-### b) Ưu điểm 
-+ Dễ triển khai
-+ Ứng dụng trong quản lý tài nguyên hoặc khi sử dụng với các hàm đệu quy
-### c) Ứng dụng 
-+ __Undo hoặc redo tác vụ__: thường thấy khi ta chuyển tiếp hoặc quay lại giữa các giao diện trang web trên máy tính (mõi khi ta click chọn vào 1 trang web thì địa chỉ của chúng sẽ được lưu trữ trên stack)
+### b) Dữ liệu lưu trên ngăn xếp phổ biến trên heap so với stack
 
-## 1.3 Mô phỏng stack 
+**Hạn chế cũa Stack so với Heap**
++ Kích thước nhỏ
++ Dữ liệu khai báo là tĩnh - cố định khi chạy runtime
++ Thời gian tồn tại ngắn, cục bộ trong phạm vi cấp phát
+=> Dùng Stack khi biến nhỏ,tạm thời,không yêu cầu tồn tại lâu, và yêu cầu cấp tốc độ cấp phát nhanh
 
-### 1.3.1 Sử dụng với đệ quy 
+**Ưu điểm của heap**
++ Kích thước lớn
++ dữ liệu khai báo tại run-time và điều chỉnh được
++ Thời gian tồn tại dài, phụ thuộc user quản lý
+=> Dùng stack khi quản lý dữ liệu lâu dài, truyền qua nhiều hàm
+
+**Ví dụ cơ bản**
+
+```c
+char* createName() {
+    char name[100]; // biến trên stack → sẽ invalid sau return!
+    strcpy(name, "Duy");
+    return name;    // ⚠️ lỗi – trả về con trỏ tới vùng nhớ đã bị hủy
+}
+
+// Giải pháp đúng:
+char* createName() {
+    char* name = malloc(100); // cấp phát trên heap
+    strcpy(name, "Duy");
+    return name;              // an toàn
+}
+```
+
+
+**So sánh ví dụ thực tế**
+
+| Tình huống                      | Dùng Stack hay Heap? | Lý do                                      |
+| ------------------------------- | -------------------- | ------------------------------------------ |
+| Gọi hàm tính toán đơn giản      | Stack                | Biến cục bộ, nhỏ                           |
+| Cấp phát mảng ảnh 1920x1080     | Heap                 | Stack không đủ lớn                         |
+| Trả về chuỗi từ hàm             | Heap                 | Stack không tồn tại sau khi hàm kết thúc   |
+| Buffer nhận UART                | Heap hoặc Static     | Heap nếu cần linh hoạt; static nếu cố định |
+| Temporary struct xử lý ngắn hạn | Stack                | Nhanh và gọn                               |
+
+
+## 1.3 Triển khai Thuật toán Ngăn Xếp 
+
+### a) Sử dụng với đệ quy 
 
 Hàm sau đây sẽ dùng để tính giai thừa của 1 số với công thức                    
 !n = n(n-1)(n-2)...
@@ -68,9 +107,9 @@ main() -> return giaithua(6) // 0x01
 ```
 + Như vậy kết quả sẽ là: 6 * 5 * 4 * 3 * 2 * 1 = 720
 
-### 1.3.2 Mô phỏng code cấp phát trên stack
+### 1.3.2 Các bước triển khai Ngăn xếp
 
-+ đầu tiên ta sẽ tạo ra 1 struct để khai báo những thuộc tính của stack
+**+ Định nghĩa cấu trúc Ngăn xếp**
 ```bash
 typedef struct Stack {
     int* items; // mảng giả lập stack để lưu trữ dữ liệu
@@ -78,15 +117,16 @@ typedef struct Stack {
     int top; //chỉ số để truy cập vào phần tử trong stack
 } Stack;
 ```
-+ Tiếp theo ta sẽ tạo ra 1 hàm để cài đặt giá trị ban đầu cho stack
+**+ Khởi tạo ngăn xếp**
 ```bash
 void initialize(Stack *stack, int size) {
-  stack->items = (int*) malloc(sizeof(int) * size);// cấp phát memory cho các phần tử
-  stack->size = size; // kích thuóc của stack
-  stack->top = -1; //cài đặt stack rỗng ban đầu
+  stack->items = (int*) malloc(sizeof(int) * size);// cấp phát ngăn xếp trên heap
+  stack->size = size;                              // kích thuóc ngăn xếp
+  stack->top = -1;                                 // cài đặt ngăn xếp rỗng ban đầu
 }
 ```
-+ Ta tạo ra 2 hàm để kiểm tra tình trạng hiện tại của stack là rỗng hay đầy
+**+ kiểm tra trạng thái ngăn xếp**
+
 ```bash
 bool is_empty(Stack stack) {
     return (stack.top == -1) ? true : false;
@@ -95,7 +135,9 @@ bool is_full( Stack stack) {
     return (stack.top == stack.size - 1) ? true : false;
 }
 ```
-+ Cuối cùng ta sẽ có 3 hàm để thao tác với stack 
+
+**+ Các thao tác với ngăn xếp**
+
 ```bash
 #define STACK_EMPTY -1
 
@@ -154,29 +196,30 @@ int main()
 
     return 0;
 }
-```   
+```  
 
-Kết quả in ra màn hình
-```bash
-element: 2 -> add:000002E41321E9D0
-element: 3 -> add:000002E41321E9D4
-element: 4 -> add:000002E41321E9D8
-element: 5 -> add:000002E41321E9DC
-element: 6 -> add:000002E41321E9E0
-Stack overflow
-top element: 6 -> add:000002E41321E9E0
-top element: 5 -> add:000002E41321E9DC
-top element: 4 -> add:000002E41321E9D8
-top element: 3 -> add:000002E41321E9D4
-top element: 2 -> add:000002E41321E9D0
-Stack underflow
-top element: -1 -> add:000002E41321E9CC
-```
+### 1.4 Stack Segment vs Stack (Ngăn xếp)
 
-### 1.3.3 So sánh với Stack trong Memory Layout
-<p align = "center">
-<img src  = "https://github.com/user-attachments/assets/e9444dc9-9967-4f0f-b53a-64c2f04f992e" width = "650" , height = "350" >
+**a) So sánh**
 
+| Tiêu chí             | Ngăn xếp (Stack Data Structure)                                                 | Stack trong Memory Layout (OS cấp phát)                                      |
+|----------------------|----------------------------------------------------------------------------------|-------------------------------------------------------------------------------|
+| **Bản chất**          | Là một cấu trúc dữ liệu tuyến tính (LIFO).                                      | Là một vùng nhớ trong RAM do hệ điều hành cấp phát cho mỗi thread/process.   |
+| **Quản lý bộ nhớ**    | Do lập trình viên tự quản lý (cấp phát tĩnh, động, hoặc biến toàn cục).        | Được quản lý tự động bởi OS hoặc trình biên dịch.                            |
+| **Cách hoạt động**    | Dựa trên thao tác `push()` và `pop()`.                                          | Khi một hàm được gọi, một *stack frame* được tạo; kết thúc thì bị xóa.       |
+| **Kích thước**        | Linh hoạt, tùy thuộc vào cách cài đặt và vị trí lưu trữ (heap, static, v.v.).  | Giới hạn (thường vài KB - vài MB), có thể gây lỗi stack overflow.           |
+| **Lưu trữ**           | Bất kỳ loại dữ liệu nào theo nhu cầu thuật toán.                                | Tham số hàm, biến cục bộ, địa chỉ trả về, frame pointer,...                  |
+| **Mục đích**          | Quản lý dữ liệu LIFO, hỗ trợ thuật toán như duyệt cây, hậu tố, đệ quy, undo,... | Quản lý lời gọi hàm, lưu trạng thái hàm đang chạy trong chương trình.        |
+| **Tồn tại bao lâu?**  | Tùy ý – tồn tại miễn là chương trình còn sử dụng nó.                            | Tự động tạo khi vào hàm và xóa khi ra khỏi hàm (runtime).                    |
+| **Tốc độ truy cập**   | Nhanh (nếu cài bằng mảng/tĩnh); chậm hơn nếu trên heap.                         | Rất nhanh, do tối ưu cho lời gọi hàm.                                        |
+| **Vị trí lưu trữ**    | Có thể nằm ở `.bss`, `.data`, `heap`, hoặc `stack`.                             | Nằm ở vùng stack segment riêng biệt trong bộ nhớ tiến trình.                 |
+| **Lỗi thường gặp**    | Tràn stack logic (push nhiều hơn pop, lỗi thuật toán).                         | Stack overflow do gọi hàm sâu/biến cục bộ lớn quá.                           |
+
+**b) Tóm tát**
++ Stack (Data Structure) là thuật toán liên quan đến cách tổ chức dữ liệu 1 cách linh hoạt, cho phép triển khai ở bất kỳ đâu trong RAM
+=> Do người lập trình quản lý 
++ Stack (Memory layout) là segment trên RAM được Os quản lý, để lưu call stack (chứa các stack frame khi 1 hảm được gọi)
+=> Được tự động cấp phát khi chạy
 # 2. QUEUE
 
 <p align = "center">
@@ -209,23 +252,21 @@ __front__ : chỉ số truy cập giá trị ở đàu hàng đợi (tăng khi d
 
 __rear__ : chỉ số truy cập giá trị ở cuối hàng đợi (tăng khi enqueue)
 
-__Empty queue__ : 1 queue được xem là rỗng khi giá trị front và rear là -1 
+__Empty queue__ : khi front = rear = -1
 
-__full queue__ : khi kích thước của queue size = rear - 1
-
+__full queue__ : khi rear = size - 1 hoặc front > rear
 
 ### b) Ưu điểm
 + Thích hợp cho quản lý các tác vụ hoặc dữ liệu xử lý theo thứ tự thời gian
-+ Truyền nhận dữ liệu của các ngoại vi như UART,SPI,
++ Truyền nhận dữ liệu của các ngoại vi như UART,SPI
 
 ### c) Ứng dụng 
 
 __Quản lý dữ liệu giao tiếp giữa cảm biến và MCU__
 <p align = "center">
 <img src = "https://github.com/user-attachments/assets/7f2ff887-5c22-4919-b223-0e0f9651024a" width = "600" height = "400">
-
-
 __
+
 ## 2.2 Các loại queue
 
 ### a) linear queue
@@ -236,24 +277,26 @@ __
 <img src = "https://github.com/user-attachments/assets/62f24d68-44eb-4064-b9cf-501c8867f1af" widht = "250" height = "100">
 
 
-+ Tiếp theo ta sẽ tiến hành enqueue, lúc này chỉ số front và rear sẽ tăng lên 0 trước khi giá trị được enqueue vào
++ enqueue lần đầu, lúc này chỉ số front = rear = -1
 
-+ Tuy nhiên khi ta tiếp tục enqueue, thì front sẽ luôn chỉ tới giá trị ở đầu hàng đợi, trong khi rear sẽ tăng để trỏ tới các vùng nhớ tiếp theo về phía cuối hàng đợi.
++ enqueue sau lần đầu,front giữ nguyên, trong khi rear tăng để trỏ tới phần tử cuối queue
 
-+ Sau khi hàng đợi đầy, ta tiến hành dequeue thì lúc này do chỉ số rear đã trỏ đến cuối hàng đợi nên nó sẽ không cho phép ta enqueue nữa, mặc dù vùng nhớ ở đầu hàng đợi mà ta vừa dequeue giá trị, đang trống. Chính vì vậy nó sẽ gây lãng phí memory và có thể được coi là 1 nhược điểm của linear queue
++ khi queue đầy, tiến hành dequeue thì lúc này do rear = size - 1 ,không cho phép ta enqueue nữa, mặc dù vùng nhớ vùng nhớ ở đầu queue đang trống, gây lãng phí vùng nhớ
+
++ Khi dequeue hết tất cả phần tử , lúc này front > rear, tiến hành cập nhật front = rear = -1 để reset queue mới cho phép enqueue phần tử mới
 
 <p align = "center">
 <img src = "https://github.com/user-attachments/assets/df3db37c-321d-4489-b4ef-cde304b6d6e7" widht = "450" height = "250">
 
-=> Khi ta dequeue hết tất cả phần tử trong queue, lúc này chỉ số front bằng với rear, khi đó chúng sẽ được reset về -1. Quá trình enqueue mới được cho phép
+
 
 ### b) Circular queue
 
-+ Cơ chế của circular cũng tương tự như linear, tuy nhiên nó tối ưu hơn do giải quyết được vấn đề của linear. Nó cho phép ta tiếp tục enqueue au khi dequeue 1 full queue
++ Cho phép tiếp tục enqueue khi rear = size - 1 và front != 0. Bằng cách quay vòng về đầu queue để thêm phần tử ở các vị trí trống thông qua cập nhật rear = 0
 
 ## 2.3 Mô phỏng cấp phát cơ chế queue
 
-+ đầu tiên ta tạo ra 1 struct lưu trữ các thuộc tính của queue
+**+ Cấu trúc lưu trữ thuộc tính của queue**
 
 ```bash
 typedef struct Queue
@@ -264,7 +307,8 @@ typedef struct Queue
     int rear;        //chỉ số truy cập vào phần tử cuối hàng đợi
 }Queue;
 ```
-+ Tiếp theo ta tạo ra 1 hàm để khởi tạo 1 queue 
+
+**+ Khởi tạo queue**
 
 ```bash
 Queue* initialize(int size)
@@ -276,7 +320,7 @@ Queue* initialize(int size)
     return queue;   // trả về địa chỉ của vùng nhớ vừa được khởi tạo
 }
 ```  
-+ Ta sẽ có 2 hàm để kiểm tra queue đầy hay rỗng
+**+ Kiểm tra queue empty**
 
 ```bash
 bool IsQueue_Empty(Queue queue)
@@ -284,22 +328,23 @@ bool IsQueue_Empty(Queue queue)
     return ((queue.front == -1) ? true : false); 
 }
 ```  
-### a) Linear queue
-+ Đối với linear queue thì điều kiện để 1 queue đầy sẽ khác circular queue
+### a) Triển khai Linear queue
+
+**+ Kiểm tra queue full**
 ```  
 bool IsQueue_Full(Queue queue)
 {
-    /* circular */
-    return (queue.rear + 1) % queue.size == queue.front; //khi front = 0 và rear = size - 1
-    /* linear */
     //return ((queue.rear == queue.size - 1) ? true : false); 
 }
-
 ```  
-+ Tiếp theo ta viết hàm để enqueue phần tử vào queue 
-+ Để enqueue thì trước hết ta phải đảm bảo queue không đầy
-+ Tiếp theo ta sẽ kiểm tra nếu queue rỗng thì sẽ cập nhật chỉ số front và rear đều bằng 0 
-+ Nếu queue không rỗng thì ta chỉ tăng giá trị rear để enqueue phần tử vào, còn chỉ số front thì luôn luôn trỏ tới phần tử đầu tiên của hàng đợi
+
+**+ Quá trình enqueue**
++ Queue full ? 
+    => true => queue empty ? 
+                => true => cập nhật front = rear = 0
+                => false => rear++
+            => thêm phần tử mới vào vị trí rear mới cập nhật
+    => false => dừng xử lý
  ```bash
 void enqueue(Queue *queue, int value)
 {
@@ -320,12 +365,8 @@ void enqueue(Queue *queue, int value)
         printf("queue overflow, can't add more item\n");
 }
 ```  
-+ Ta viết hàm dequeue để lấy phần tử đầu tiên của hàng đợi ra
-+ Trước khi dequeue ta cũng kiểm tra liệu có phần tử nào trong queue không
-+ Nếu queue không rỗng ta sẽ in giá trị hiện tại ra và kiểm tra liệu chỉ số front có nhỏ hơn rear không
-+ nếu front chưa bằng rear, có nghĩa là vẫn còn phần tử phía sau, lúc này ta tiếp tục tăng chỉ số front để dequeue phần tử tiếp theo
-+ Nếu front bằng rear, nghĩa là không còn phần tử nào phía sau cã, lúc này ta sẽ reset giá trị front và rear để chuẩn bị cho lần enqueue tiếp theo
 
+**+ Quá trình dequeue**
 ```bash
 
 void dequeue(Queue *queue)
@@ -333,7 +374,7 @@ void dequeue(Queue *queue)
     if (!IsQueue_Empty(*queue))
     {
         printf("dequeue %d -> %p\n", queue->queue_item[queue->front], &queue->queue_item[queue->front]);
-        if (queue->front == queue->rear)
+        if (queue->front == queue->rear && queue->rear = queue->size - 1)
         {
             queue->front = queue->rear = -1;
         }
@@ -497,35 +538,7 @@ int main(){
     return 0;
 }
 ```
-+ In ra kết quả ta được
 
-```bash
-***enqueue process***
-enqueue 1 -> 000001F5D4169690
-enqueue 2 -> 000001F5D4169694
-enqueue 3 -> 000001F5D4169698
-enqueue 4 -> 000001F5D416969C
-enqueue 5 -> 000001F5D41696A0
-***dequeue 2 element***
-dequeue: 1
-dequeue: 2
-
-elements in queue
-queue 3
-queue 4
-queue 5
-
-enqueue more
-enqueue 6 -> 000001F5D4169690
-enqueue 7 -> 000001F5D4169694
-
-elements in queue
-queue 6
-queue 7
-queue 3
-queue 4
-queue 5
-```
 # 3 So sánh stack và queue
 
 <p align = "center">

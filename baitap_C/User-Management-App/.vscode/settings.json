@@ -1,0 +1,19 @@
+{
+    "files.associations": {
+        "read.h": "c",
+        "typeinfo": "c",
+        "stdlib.h": "c",
+        "keyboard.h": "c",
+        "datastructure.h": "c",
+        "userhandler.h": "c",
+        "usertree.h": "c",
+        "compare": "c",
+        "type_traits": "c",
+        "userapp.h": "c",
+        "fileoperation.h": "c",
+        "addnode.h": "c",
+        "buildtree.h": "c",
+        "centerpoint.h": "c",
+        "usernode.h": "c"
+    }
+}

@@ -14,7 +14,7 @@
 using namespace std;
 
 // Đường dẫn cứng tới file CSV
-#define DATABASE_PATH ".\\Data\\Database.csv"
+#define DATABASE_PATH "./Data/Database.csv"
 
 // Định nghĩa kiểu dữ liệu có thể chứa nhiều loại giá trị
 using DataVariant = variant<int, string, DriveMode, TurnSignalState, KeyState, GearShift, PedalState,DeviceState>;

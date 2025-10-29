@@ -1,0 +1,11 @@
+{
+    "files.associations": {
+        "search.h": "c",
+        "diagnostic_swc.h": "c",
+        "rte.h": "c",
+        "sensor_swc.h": "c",
+        "ecustate_swc.h": "c",
+        "signal.h": "c",
+        "stdbool.h": "c"
+    }
+}

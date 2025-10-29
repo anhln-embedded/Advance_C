@@ -88,8 +88,8 @@ typedef struct{
 Do đó dựa vào kích thước của mỗi thành phần ta có kích thước tổng của struct std sẽ là 56 byte
 
 ### c) Đặc điểm của cấp phát vùng nhớ trong struct
-+ Địa chỉ bắt đầu của từng thành viên phải phụ thuộc vào yêu cầu căn chỉnh của chính thành viên đó
-+ Tổng kích thước của struct là bội số của thành viên có kiểu dữ liệu lớn nhất trong 
++ Địa chỉ bắt đầu của từng thành viên phải phụ thuộc vào yêu cầu căn chỉnh của chính thành viên đó. Nghĩa là địa chỉ đầu tiển của thành viên khai báo hiện tại phải chia hết cho kiểu dữ liệu của chính nó
++ Tổng kích thước của struct là bội số của thành viên có kiểu dữ liệu lớn nhất  
 # 2. union 
 union cũng có cách sử dụng như stuct, tuy nhiên 
 + các biến khai báo bên trong sẽ sử dụng chung 1 vùng nhớ

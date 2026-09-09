@@ -46,7 +46,7 @@ Vi điều khiển **STM32F103C8T6** gồm lõi xử lý **ARM Cortex-M3** tốc
 ---
 
 <p align="center">
-  <img src="images/bai01_stm32f103_bluepill_pinout.svg" width="950" alt="Sơ đồ bản đồ chân Pinout STM32F103C8T6 Blue Pill">
+  <img src="images/stm32f103c8.webp" width="950" alt="Sơ đồ bản đồ chân Pinout STM32F103C8T6 Blue Pill">
 </p>
 
 ---

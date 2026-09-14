@@ -4,3 +4,8 @@ __pycache__/
 unique_comments.txt
 unique_vn_comments.json
 svg_overflow_report.json
+batch*.json
+dump_batches.py
+lesson_comments.json
+remaining_to_translate.txt
+

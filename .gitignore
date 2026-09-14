@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+.system_generated/
+unique_comments.txt
+unique_vn_comments.json
+svg_overflow_report.json

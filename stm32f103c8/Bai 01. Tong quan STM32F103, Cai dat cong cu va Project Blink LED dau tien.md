@@ -173,19 +173,19 @@ void delay_raw(volatile unsigned int count)
 
 int main(void)
 {
-    // Cấp xung nhịp cho GPIOC
+    // Enable peripheral clock for GPIOC
     REG_RCC_APB2ENR |= (1 << 4);
 
-    // Cấu hình PC13: Output Push-Pull 2MHz
+    // Configure PC13: Output Push-Pull 2MHz
     REG_GPIOC_CRH &= ~(0x0F << 20);
     REG_GPIOC_CRH |= (0x02 << 20);
 
     while (1)
     {
-        REG_GPIOC_BRR = (1 << 13);   // Bật LED (Active-Low)
+        REG_GPIOC_BRR = (1 << 13);   // Turn on LED (Active-Low)
         delay_raw(500000);
 
-        REG_GPIOC_BSRR = (1 << 13);  // Tắt LED
+        REG_GPIOC_BSRR = (1 << 13);  // Turn off LED
         delay_raw(500000);
     }
 }
@@ -226,19 +226,19 @@ void delay(volatile uint32_t count)
 
 int main(void)
 {
-    // Cấp xung nhịp GPIOC
+    // Enable GPIOC clock
     RCC->APB2ENR |= (1 << 4);
 
-    // Cấu hình PC13: Output Push-Pull 2MHz
+    // Configure PC13: Output Push-Pull 2MHz
     GPIOC->CRH &= ~(0x0F << 20);
     GPIOC->CRH |= (0x02 << 20);
 
     while (1)
     {
-        GPIOC->BRR = (1 << 13);    // Bật LED
+        GPIOC->BRR = (1 << 13);    // Turn on LED
         delay(1000000);
 
-        GPIOC->BSRR = (1 << 13);   // Tắt LED
+        GPIOC->BSRR = (1 << 13);   // Turn off LED
         delay(1000000);
     }
 }
@@ -285,10 +285,10 @@ int main(void)
 
     while (1)
     {
-        GPIO_ResetBits(GPIOC, GPIO_Pin_13);  // Bật LED
+        GPIO_ResetBits(GPIOC, GPIO_Pin_13);  // Turn on LED
         delay_ms(500);
 
-        GPIO_SetBits(GPIOC, GPIO_Pin_13);    // Tắt LED
+        GPIO_SetBits(GPIOC, GPIO_Pin_13);    // Turn off LED
         delay_ms(500);
     }
 }

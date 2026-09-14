@@ -1,0 +1,145 @@
+import os
+import re
+
+dirs = [
+    r"F:\Advance_C\stm32f103c8\images",
+    r"F:\embedded-lab-web\public\images\stm32f103",
+    r"F:\embedded-lab-web\public\images"
+]
+
+for d in dirs:
+    os.makedirs(d, exist_ok=True)
+
+def split_light_dark(content):
+    light = re.sub(r'@media\s*\(prefers-color-scheme:\s*dark\)\s*\{[\s\S]*?\}\s*\}', '', content)
+    light = light.replace('--canvas-bg: #f8fafc;', '--canvas-bg: #ffffff;')
+    
+    dark_vars_match = re.search(r'@media\s*\(prefers-color-scheme:\s*dark\)\s*\{\s*:root\s*\{([\s\S]*?)\}\s*\}', content)
+    if dark_vars_match:
+        dark_vars = dark_vars_match.group(1).strip()
+        dark = re.sub(r':root\s*\{[\s\S]*?\}', ':root {\n        ' + dark_vars + '\n      }', content)
+        dark = re.sub(r'@media\s*\(prefers-color-scheme:\s*dark\)\s*\{[\s\S]*?\}\s*\}', '', dark)
+    else:
+        dark = content
+
+    return light.strip(), dark.strip()
+
+def save_svg(filename, content):
+    light_content, dark_content = split_light_dark(content)
+    base_name, ext = os.path.splitext(filename)
+    
+    files_to_save = [
+        (filename, light_content),
+        (f"{base_name}_light{ext}", light_content),
+        (f"{base_name}_dark{ext}", dark_content)
+    ]
+    
+    for fname, cnt in files_to_save:
+        for d in dirs:
+            p = os.path.join(d, fname)
+            with open(p, "w", encoding="utf-8") as f:
+                f.write(cnt)
+    print(f"Generated: {filename}")
+
+COMMON_STYLES = """
+    <style>
+      :root {
+        --canvas-bg: #f8fafc;
+        --canvas-border: #e2e8f0;
+        --card-bg: #ffffff;
+        --card-border: #cbd5e1;
+        --title-color: #0f172a;
+        --subtitle-color: #475569;
+        --text-primary: #1e293b;
+        --text-muted: #64748b;
+        --accent-blue: #0284c7;
+        --accent-green: #10b981;
+        --accent-amber: #f59e0b;
+        --accent-red: #ef4444;
+        --accent-purple: #8b5cf6;
+        --wire-line: #94a3b8;
+        --bus-line: #3b82f6;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --canvas-bg: #0b1120;
+          --canvas-border: #1e293b;
+          --card-bg: #1e293b;
+          --card-border: #334155;
+          --title-color: #f8fafc;
+          --subtitle-color: #94a3b8;
+          --text-primary: #f1f5f9;
+          --text-muted: #94a3b8;
+          --accent-blue: #38bdf8;
+          --accent-green: #34d399;
+          --accent-amber: #fbbf24;
+          --accent-red: #f87171;
+          --accent-purple: #c084fc;
+          --wire-line: #475569;
+          --bus-line: #60a5fa;
+        }
+      }
+      text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    </style>
+"""
+
+svg_task_notify = f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 360" width="100%" height="100%">
+{COMMON_STYLES}
+  <rect width="920" height="360" rx="14" fill="var(--canvas-bg)" stroke="var(--canvas-border)" stroke-width="2"/>
+  <text x="460" y="38" text-anchor="middle" font-size="20" font-weight="700" fill="var(--title-color)">CƠ CHẾ TRUYỀN TÍN HIỆU TASK NOTIFICATION (ZERO-RAM OVERHEAD)</text>
+  <text x="460" y="62" text-anchor="middle" font-size="13" fill="var(--subtitle-color)">Ghi trực tiếp vào biến nội tại của Task Control Block (TCB) mà không cần cấp phát RAM phụ</text>
+
+  <!-- Sender -->
+  <g transform="translate(60, 100)">
+    <rect width="220" height="180" rx="10" fill="var(--card-bg)" stroke="var(--accent-blue)" stroke-width="2"/>
+    <text x="110" y="35" text-anchor="middle" font-size="15" font-weight="700" fill="var(--accent-blue)">TASK GỬI / ISR</text>
+    
+    <rect x="20" y="60" width="180" height="45" rx="6" fill="var(--canvas-bg)" stroke="var(--card-border)"/>
+    <text x="110" y="87" text-anchor="middle" font-size="12" font-weight="600" fill="var(--text-primary)">xTaskNotifyGive()</text>
+
+    <rect x="20" y="115" width="180" height="45" rx="6" fill="var(--canvas-bg)" stroke="var(--card-border)"/>
+    <text x="110" y="142" text-anchor="middle" font-size="11" font-weight="600" fill="var(--accent-amber)">vTaskNotifyGiveFromISR()</text>
+  </g>
+
+  <!-- Arrow 1 -->
+  <path d="M 280 190 L 340 190" stroke="var(--bus-line)" stroke-width="3" marker-end="url(#arrow)"/>
+
+  <!-- TCB Center -->
+  <g transform="translate(340, 90)">
+    <rect width="240" height="200" rx="10" fill="var(--card-bg)" stroke="var(--accent-purple)" stroke-width="2"/>
+    <text x="120" y="32" text-anchor="middle" font-size="14" font-weight="700" fill="var(--accent-purple)">TASK CONTROL BLOCK (TCB)</text>
+    
+    <rect x="15" y="55" width="210" height="40" rx="4" fill="var(--canvas-bg)" stroke="var(--card-border)"/>
+    <text x="105" y="80" text-anchor="middle" font-size="11" fill="var(--text-muted)">pxTopOfStack</text>
+
+    <rect x="15" y="105" width="210" height="50" rx="4" fill="var(--accent-green)" fill-opacity="0.2" stroke="var(--accent-green)" stroke-width="1.5"/>
+    <text x="105" y="127" text-anchor="middle" font-size="11" font-weight="700" fill="var(--accent-green)">ulNotifiedValue (32-bit)</text>
+    <text x="105" y="145" text-anchor="middle" font-size="10" fill="var(--text-muted)">Tự động tăng hoặc gán cờ</text>
+
+    <rect x="15" y="165" width="210" height="25" rx="4" fill="var(--canvas-bg)" stroke="var(--card-border)"/>
+    <text x="105" y="182" text-anchor="middle" font-size="10" fill="var(--text-muted)">ucNotifyState: eNotified</text>
+  </g>
+
+  <!-- Arrow 2 -->
+  <path d="M 580 190 L 640 190" stroke="var(--accent-green)" stroke-width="3" marker-end="url(#arrow)"/>
+
+  <!-- Receiver -->
+  <g transform="translate(640, 100)">
+    <rect width="220" height="180" rx="10" fill="var(--card-bg)" stroke="var(--accent-green)" stroke-width="2"/>
+    <text x="110" y="35" text-anchor="middle" font-size="15" font-weight="700" fill="var(--accent-green)">TASK NHẬN</text>
+
+    <rect x="20" y="60" width="180" height="45" rx="6" fill="var(--canvas-bg)" stroke="var(--card-border)"/>
+    <text x="110" y="87" text-anchor="middle" font-size="12" font-weight="600" fill="var(--text-primary)">ulTaskNotifyTake()</text>
+
+    <text x="110" y="130" text-anchor="middle" font-size="11" fill="var(--text-muted)">Thức dậy ngay lập tức</text>
+    <text x="110" y="150" text-anchor="middle" font-size="11" font-weight="600" fill="var(--accent-green)">Không cần Mutex/Queue</text>
+  </g>
+
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="var(--bus-line)"/>
+    </marker>
+  </defs>
+</svg>"""
+
+save_svg("bai22_task_notifications.svg", svg_task_notify)

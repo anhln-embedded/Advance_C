@@ -1,0 +1,250 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 750" width="1200" height="750">
+
+    <style>
+      :root {
+        --canvas-bg: #ffffff;
+        --canvas-border: #cbd5e1;
+        --card-bg: #ffffff;
+        --card-border: #94a3b8;
+        --title-color: #0f172a;
+        --subtitle-color: #475569;
+        --text-primary: #0f172a;
+        --text-muted: #64748b;
+        --st-blue: #00205b;
+        --accent-blue: #0284c7;
+        --accent-green: #059669;
+        --accent-amber: #d97706;
+        --accent-red: #dc2626;
+        --accent-purple: #7c3aed;
+        --wire-line: #334155;
+        --bus-line: #0284c7;
+        --vdd-color: #dc2626;
+        --vss-color: #16a34a;
+        --logic-gate: #0284c7;
+      }
+      
+      path { fill: none; }
+      marker path { fill: inherit; }
+      polygon { fill: inherit; }
+      text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
+      .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
+    </style>
+    <defs>
+      <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M 0 1 L 8 5 L 0 9 z" fill="var(--wire-line)"/>
+      </marker>
+      <marker id="arrow-blue" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M 0 1 L 8 5 L 0 9 z" fill="var(--bus-line)"/>
+      </marker>
+      <marker id="arrow-red" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M 0 1 L 8 5 L 0 9 z" fill="var(--accent-red)"/>
+      </marker>
+      <marker id="arrow-green" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M 0 1 L 8 5 L 0 9 z" fill="var(--accent-green)"/>
+      </marker>
+    </defs>
+
+  <!-- Canvas Background -->
+  <rect width="1200" height="750" rx="12" fill="var(--canvas-bg)" stroke="var(--canvas-border)" stroke-width="2"/>
+
+  <!-- Top Title Bar -->
+  <rect x="25" y="16" width="1150" height="64" rx="8" fill="var(--card-bg)" stroke="var(--card-border)" stroke-width="1.5"/>
+  <text x="45" y="42" font-size="17" font-weight="800" fill="var(--title-color)">STMicroelectronics RM0008 Reference Manual — Section 6.2</text>
+  <text x="45" y="64" font-size="13" font-weight="600" fill="var(--accent-blue)">Figure 8: Clock tree (Sơ đồ cây xung nhịp và phân phối tần số STM32F103)</text>
+  <rect x="1020" y="28" width="135" height="36" rx="6" fill="#00205b"/>
+  <text x="1087" y="51" text-anchor="middle" font-size="12" font-weight="800" fill="#ffffff">STM32F103</text>
+
+  <!-- Left: Clock Sources (X: 30 -> 230) -->
+  <g transform="translate(30, 95)">
+    <rect width="200" height="625" rx="8" fill="var(--card-bg)" stroke="var(--card-border)" stroke-width="1.5"/>
+    <text x="100" y="26" text-anchor="middle" font-size="13" font-weight="800" fill="var(--title-color)">CLOCK SOURCES</text>
+    <text x="100" y="44" text-anchor="middle" font-size="10" fill="var(--text-muted)">(Nguồn dao động)</text>
+
+    <!-- HSE -->
+    <g transform="translate(15, 60)">
+      <rect width="170" height="75" rx="6" fill="var(--canvas-bg)" stroke="var(--accent-blue)" stroke-width="2"/>
+      <text x="85" y="22" text-anchor="middle" font-size="11" font-weight="800" fill="var(--accent-blue)">HSE OSCILLATOR</text>
+      <text x="85" y="40" text-anchor="middle" font-size="11" font-weight="700" fill="var(--title-color)">Thạch Anh Ngoài</text>
+      <text x="85" y="56" text-anchor="middle" font-size="10" fill="var(--text-muted)">4MHz - 16MHz</text>
+      <text x="85" y="69" text-anchor="middle" font-size="9" font-weight="700" fill="var(--accent-blue)">(Blue Pill: 8.000MHz)</text>
+    </g>
+
+    <!-- HSI -->
+    <g transform="translate(15, 150)">
+      <rect width="170" height="70" rx="6" fill="var(--canvas-bg)" stroke="var(--accent-green)" stroke-width="1.5"/>
+      <text x="85" y="22" text-anchor="middle" font-size="11" font-weight="800" fill="var(--accent-green)">HSI RC OSCILLATOR</text>
+      <text x="85" y="40" text-anchor="middle" font-size="11" font-weight="700" fill="var(--title-color)">Dao Động RC Nội</text>
+      <text x="85" y="56" text-anchor="middle" font-size="10" font-weight="700" fill="var(--accent-green)">8.000MHz (±1%)</text>
+      <text x="85" y="66" text-anchor="middle" font-size="8" fill="var(--text-muted)">(Xung mặc định khi Reset)</text>
+    </g>
+
+    <!-- LSI -->
+    <g transform="translate(15, 235)">
+      <rect width="170" height="65" rx="6" fill="var(--canvas-bg)" stroke="var(--accent-amber)" stroke-width="1.5"/>
+      <text x="85" y="20" text-anchor="middle" font-size="11" font-weight="800" fill="var(--accent-amber)">LSI RC OSCILLATOR</text>
+      <text x="85" y="38" text-anchor="middle" font-size="10" font-weight="700" fill="var(--title-color)">Xung Thấp Nội ~40kHz</text>
+      <text x="85" y="54" text-anchor="middle" font-size="9" fill="var(--text-muted)">Cấp cho IWDG &amp; RTC</text>
+    </g>
+
+    <!-- LSE -->
+    <g transform="translate(15, 315)">
+      <rect width="170" height="65" rx="6" fill="var(--canvas-bg)" stroke="var(--accent-purple)" stroke-width="1.5"/>
+      <text x="85" y="20" text-anchor="middle" font-size="11" font-weight="800" fill="var(--accent-purple)">LSE OSCILLATOR</text>
+      <text x="85" y="38" text-anchor="middle" font-size="10" font-weight="700" fill="var(--title-color)">Thạch Anh 32.768kHz</text>
+      <text x="85" y="54" text-anchor="middle" font-size="9" fill="var(--text-muted)">Cấp chuẩn cho RTC</text>
+    </g>
+
+    <!-- MCO Pin Box -->
+    <g transform="translate(15, 480)">
+      <rect width="170" height="90" rx="6" fill="var(--canvas-bg)" stroke="var(--card-border)" stroke-width="1.5"/>
+      <text x="85" y="22" text-anchor="middle" font-size="11" font-weight="800" fill="var(--title-color)">MCO PIN (PA8)</text>
+      <text x="85" y="40" text-anchor="middle" font-size="10" fill="var(--text-muted)">Clock Output đo kiểm</text>
+      <text x="85" y="58" text-anchor="middle" font-size="9" fill="var(--accent-blue)">Xuất SYSCLK, HSI, HSE</text>
+      <text x="85" y="74" text-anchor="middle" font-size="9" fill="var(--accent-purple)">Hoặc PLLCLK / 2</text>
+    </g>
+  </g>
+
+  <!-- Center-Left: PLL Multiplier & SYSCLK Switch (X: 260 -> 480) -->
+  <g transform="translate(260, 95)">
+    <!-- CSS (Clock Security System) -->
+    <rect x="0" y="0" width="220" height="55" rx="6" fill="var(--card-bg)" stroke="var(--accent-red)" stroke-width="1.5"/>
+    <text x="110" y="22" text-anchor="middle" font-size="11" font-weight="800" fill="var(--accent-red)">CSS (CLOCK SECURITY SYSTEM)</text>
+    <text x="110" y="40" text-anchor="middle" font-size="9" fill="var(--text-muted)">Tự chuyển sang HSI nếu HSE hỏng</text>
+
+    <!-- PLL Box -->
+    <g transform="translate(0, 70)">
+      <rect width="220" height="230" rx="8" fill="var(--card-bg)" stroke="var(--accent-blue)" stroke-width="2"/>
+      <text x="110" y="26" text-anchor="middle" font-size="13" font-weight="800" fill="var(--accent-blue)">PHASE-LOCKED LOOP (PLL)</text>
+      
+      <!-- PLL Source Selector -->
+      <g transform="translate(15, 40)">
+        <rect width="190" height="50" rx="4" fill="var(--canvas-bg)" stroke="var(--card-border)"/>
+        <text x="95" y="20" text-anchor="middle" font-size="10" font-weight="700" fill="var(--title-color)">PLL Source Selector:</text>
+        <text x="95" y="38" text-anchor="middle" font-size="10" fill="var(--accent-blue)">HSE / 1 (hoặc HSE / 2) | HSI / 2</text>
+      </g>
+
+      <!-- PLL Multiplier Factor -->
+      <g transform="translate(15, 105)">
+        <rect width="190" height="60" rx="4" fill="var(--canvas-bg)" stroke="var(--accent-blue)" stroke-width="2"/>
+        <text x="95" y="24" text-anchor="middle" font-size="12" font-weight="900" fill="var(--accent-blue)">PLLMUL: ×2 → ×16</text>
+        <text x="95" y="44" text-anchor="middle" font-size="10" font-weight="700" fill="var(--title-color)">8MHz × 9 = 72MHz (Tối Đa)</text>
+      </g>
+
+      <text x="110" y="190" text-anchor="middle" font-size="10" font-weight="700" fill="var(--accent-green)">PLLCLK = 72MHz Output</text>
+      <text x="110" y="210" text-anchor="middle" font-size="9" fill="var(--text-muted)">Cờ khóa tần: RCC_CR_PLLRDY</text>
+    </g>
+
+    <!-- SYSCLK Selector Switch MUX -->
+    <g transform="translate(0, 320)">
+      <rect width="220" height="200" rx="8" fill="var(--card-bg)" stroke="var(--accent-green)" stroke-width="2"/>
+      <text x="110" y="26" text-anchor="middle" font-size="13" font-weight="800" fill="var(--accent-green)">SYSCLK SELECTOR (SW MUX)</text>
+      <text x="110" y="44" text-anchor="middle" font-size="10" fill="var(--text-muted)">Chọn nguồn xung nhịp hệ thống</text>
+      
+      <g transform="translate(15, 55)">
+        <rect width="190" height="110" rx="6" fill="var(--canvas-bg)" stroke="var(--card-border)"/>
+        <text x="15" y="24" font-size="10" font-weight="600" fill="var(--text-primary)">• SW = 00: HSI (8MHz)</text>
+        <text x="15" y="46" font-size="10" font-weight="600" fill="var(--text-primary)">• SW = 01: HSE (8MHz)</text>
+        <text x="15" y="70" font-size="11" font-weight="900" fill="var(--accent-blue)">• SW = 10: PLLCLK (72MHz)</text>
+        <line x1="10" y1="80" x2="180" y2="80" stroke="var(--card-border)"/>
+        <text x="95" y="98" text-anchor="middle" font-size="9" fill="var(--text-muted)">Kiểm tra cờ chuyển: SWS[1:0]</text>
+      </g>
+
+      <text x="110" y="185" text-anchor="middle" font-size="11" font-weight="900" fill="var(--title-color)">SYSCLK = 72MHz</text>
+    </g>
+  </g>
+
+  <!-- Right: Prescalers & Peripheral Domains (X: 510 -> 1160) -->
+  <g transform="translate(510, 95)">
+    <!-- AHB Prescaler Container -->
+    <rect x="0" y="0" width="650" height="175" rx="8" fill="var(--card-bg)" stroke="var(--accent-blue)" stroke-width="2"/>
+    <text x="25" y="28" font-size="14" font-weight="800" fill="var(--accent-blue)">AHB PRESCALER (/1, /2, /4.. /512) → HCLK = 72MHz Tối Đa</text>
+    <text x="25" y="48" font-size="11" fill="var(--text-muted)">Cấp xung nhịp cho lõi ARM Cortex-M3, Bộ điều khiển DMA1/DMA2, SRAM và Flash</text>
+
+    <!-- Sub-blocks inside AHB -->
+    <g transform="translate(20, 60)">
+      <!-- Cortex-M3 Core -->
+      <rect width="185" height="95" rx="6" fill="var(--canvas-bg)" stroke="var(--accent-blue)" stroke-width="1.5"/>
+      <text x="92" y="24" text-anchor="middle" font-size="11" font-weight="800" fill="var(--accent-blue)">ARM CORTEX-M3</text>
+      <text x="92" y="44" text-anchor="middle" font-size="12" font-weight="900" fill="var(--title-color)">Core FCLK = 72MHz</text>
+      <text x="92" y="64" text-anchor="middle" font-size="9" fill="var(--text-muted)">Thực thi lệnh 1.25 DMIPS/MHz</text>
+      <text x="92" y="80" text-anchor="middle" font-size="9" fill="var(--text-muted)">Không chia tần số</text>
+
+      <!-- SysTick Timer -->
+      <rect x="200" width="195" height="95" rx="6" fill="var(--canvas-bg)" stroke="var(--card-border)" stroke-width="1.5"/>
+      <text x="297" y="24" text-anchor="middle" font-size="11" font-weight="800" fill="var(--title-color)">SYSTICK TIMER</text>
+      <text x="297" y="44" text-anchor="middle" font-size="11" font-weight="700" fill="var(--accent-green)">HCLK / 8 = 9MHz</text>
+      <text x="297" y="62" text-anchor="middle" font-size="9" fill="var(--text-muted)">(Hoặc HCLK trực tiếp 72MHz)</text>
+      <text x="297" y="80" text-anchor="middle" font-size="9" font-weight="700" fill="var(--accent-green)">Tạo ngắt định thời 1ms RTOS</text>
+
+      <!-- Flash Memory Access -->
+      <rect x="410" width="195" height="95" rx="6" fill="var(--canvas-bg)" stroke="var(--accent-amber)" stroke-width="1.5"/>
+      <text x="507" y="24" text-anchor="middle" font-size="11" font-weight="800" fill="var(--accent-amber)">FLASH ACCESS LATENCY</text>
+      <text x="507" y="44" text-anchor="middle" font-size="11" font-weight="800" fill="var(--title-color)">2 WAIT STATES (LATENCY=2)</text>
+      <text x="507" y="64" text-anchor="middle" font-size="9" fill="var(--accent-red)">! Bắt buộc khi HCLK &gt; 48MHz</text>
+      <text x="507" y="80" text-anchor="middle" font-size="9" fill="var(--text-muted)">Bật Prefetch Buffer: FLASH_ACR</text>
+    </g>
+
+    <!-- APB2 Prescaler (High Speed Domain) -->
+    <g transform="translate(0, 190)">
+      <rect width="650" height="210" rx="8" fill="var(--card-bg)" stroke="var(--accent-purple)" stroke-width="2"/>
+      <text x="25" y="28" font-size="14" font-weight="800" fill="var(--accent-purple)">APB2 PRESCALER (/1, /2, /4.. /16) → PCLK2 = 72MHz Tối Đa</text>
+      <text x="25" y="48" font-size="11" fill="var(--text-muted)">Miền ngoại vi tốc độ cao: GPIOA..GPIOG, ADC1, ADC2, TIM1, USART1, SPI1</text>
+
+      <g transform="translate(20, 60)">
+        <!-- ADC Prescaler Box -->
+        <rect width="395" height="75" rx="6" fill="var(--canvas-bg)" stroke="var(--accent-amber)" stroke-width="2"/>
+        <text x="15" y="24" font-size="12" font-weight="900" fill="var(--accent-amber)">ADC PRESCALER (/2, /4, /6, /8):</text>
+        <text x="15" y="45" font-size="12" font-weight="800" fill="var(--title-color)">ADCCLK = 72MHz / 6 = 12.0MHz</text>
+        <text x="15" y="65" font-size="9" font-weight="700" fill="var(--accent-red)">! TỐI ĐA 14MHz THEO DATASHEET (Không chia 2 hoặc 4 ở 72MHz)</text>
+
+        <!-- TIM1 Clock -->
+        <rect x="410" width="195" height="75" rx="6" fill="var(--canvas-bg)" stroke="var(--card-border)"/>
+        <text x="507" y="24" text-anchor="middle" font-size="11" font-weight="800" fill="var(--accent-purple)">TIM1 CLOCK</text>
+        <text x="507" y="45" text-anchor="middle" font-size="12" font-weight="800" fill="var(--title-color)">TIM1CLK = 72MHz</text>
+        <text x="507" y="65" text-anchor="middle" font-size="9" fill="var(--text-muted)">Timer cao cấp điều khiển động cơ</text>
+      </g>
+
+      <!-- Peripherals list on APB2 -->
+      <g transform="translate(20, 145)">
+        <rect width="605" height="50" rx="6" fill="var(--canvas-bg)" stroke="var(--card-border)"/>
+        <text x="15" y="22" font-size="11" font-weight="700" fill="var(--title-color)">Ngoại Vi APB2 (Bật qua RCC_APB2ENR):</text>
+        <text x="15" y="40" font-size="10" fill="var(--text-muted)">IOPAEN (Port A), IOPBEN (Port B), IOPCEN (Port C), AFIOEN, ADC1EN, ADC2EN, TIM1EN, USART1EN, SPI1EN</text>
+      </g>
+    </g>
+
+    <!-- APB1 Prescaler (Low Speed Domain) -->
+    <g transform="translate(0, 415)">
+      <rect width="650" height="210" rx="8" fill="var(--card-bg)" stroke="var(--accent-green)" stroke-width="2"/>
+      <text x="25" y="28" font-size="14" font-weight="800" fill="var(--accent-green)">APB1 PRESCALER (/2) → PCLK1 = 36MHz Tối Đa (BẮT BUỘC CHIA 2!)</text>
+      <text x="25" y="48" font-size="11" fill="var(--text-muted)">Miền ngoại vi tốc độ thấp: TIM2..TIM4, USART2..3, SPI2, I2C1..2, CAN 2.0B, WWDG, PWR</text>
+
+      <g transform="translate(20, 60)">
+        <!-- Timer Multiplier Logic -->
+        <rect width="395" height="75" rx="6" fill="var(--canvas-bg)" stroke="var(--accent-green)" stroke-width="2"/>
+        <text x="15" y="24" font-size="12" font-weight="900" fill="var(--accent-green)">CƠ CHẾ NHÂN TẦN SỐ TIMER TỰ ĐỘNG (×2):</text>
+        <text x="15" y="45" font-size="11" font-weight="700" fill="var(--title-color)">Khi APB1 Prescaler &gt; 1 (chia 2 để PCLK1 = 36MHz)</text>
+        <text x="15" y="65" font-size="9.5" font-weight="800" fill="var(--accent-blue)">→ Xung Timer tự động nhân đôi: TIMx_CLK = 36MHz × 2 = 72MHz</text>
+
+        <!-- USB Prescaler -->
+        <rect x="410" width="195" height="75" rx="6" fill="var(--canvas-bg)" stroke="var(--accent-blue)" stroke-width="1.5"/>
+        <text x="507" y="24" text-anchor="middle" font-size="11" font-weight="800" fill="var(--accent-blue)">USB PRESCALER (/1.5)</text>
+        <text x="507" y="45" text-anchor="middle" font-size="12" font-weight="800" fill="var(--title-color)">USBCLK = 48.0MHz</text>
+        <text x="507" y="65" text-anchor="middle" font-size="9" fill="var(--text-muted)">Chuẩn USB 2.0 Full Speed 12Mbps</text>
+      </g>
+
+      <!-- Peripherals list on APB1 -->
+      <g transform="translate(20, 145)">
+        <rect width="605" height="50" rx="6" fill="var(--canvas-bg)" stroke="var(--card-border)"/>
+        <text x="15" y="22" font-size="11" font-weight="700" fill="var(--title-color)">Ngoại Vi APB1 (Bật qua RCC_APB1ENR):</text>
+        <text x="15" y="40" font-size="10" fill="var(--text-muted)">TIM2EN, TIM3EN, TIM4EN, USART2EN, USART3EN, SPI2EN, I2C1EN, I2C2EN, CAN1EN, WWDGEN, PWREN, BKPEN</text>
+      </g>
+    </g>
+  </g>
+
+  <!-- Connecting Arrows -->
+  <path d="M 230 140 L 260 140" fill="none" stroke="var(--bus-line)" stroke-width="2.5" marker-end="url(#arrow-blue)"/>
+  <path d="M 230 190 L 260 190" fill="none" stroke="var(--bus-line)" stroke-width="2.5" marker-end="url(#arrow-blue)"/>
+  <path d="M 480 420 L 510 420" fill="none" stroke="var(--bus-line)" stroke-width="3" marker-end="url(#arrow-blue)"/>
+  <path d="M 480 420 L 495 420 L 495 180 L 510 180" fill="none" stroke="var(--bus-line)" stroke-width="2.5" marker-end="url(#arrow-blue)"/>
+  <path d="M 480 420 L 495 420 L 495 600 L 510 600" fill="none" stroke="var(--bus-line)" stroke-width="2.5" marker-end="url(#arrow-blue)"/>
+</svg>

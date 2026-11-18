@@ -8,4 +8,6 @@ batch*.json
 dump_batches.py
 lesson_comments.json
 remaining_to_translate.txt
+*.rar
+*.zip
 

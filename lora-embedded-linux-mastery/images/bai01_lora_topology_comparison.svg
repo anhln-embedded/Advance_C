@@ -1,0 +1,146 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 360" width="100%" height="100%">
+  <defs>
+    <style>
+      .bg { fill: #0f172a; }
+      .card { fill: #1e293b; stroke: #334155; stroke-width: 1.5; rx: 10px; }
+      .title { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 16px; font-weight: bold; fill: #38bdf8; text-anchor: middle; }
+      .subtitle { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 11px; fill: #94a3b8; text-anchor: middle; }
+      .node-box { fill: #334155; stroke: #64748b; stroke-width: 1.5; rx: 6px; }
+      .node-text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 11px; font-weight: 600; fill: #f8fafc; text-anchor: middle; }
+      .node-sub { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 9px; fill: #cbd5e1; text-anchor: middle; }
+      .gw-box { fill: #0369a1; stroke: #38bdf8; stroke-width: 1.5; rx: 6px; }
+      .server-box { fill: #4338ca; stroke: #818cf8; stroke-width: 1.5; rx: 6px; }
+      .line { stroke: #94a3b8; stroke-width: 1.5; stroke-dasharray: 4,4; }
+      .line-solid { stroke: #38bdf8; stroke-width: 2; }
+      .line-ip { stroke: #818cf8; stroke-width: 2; }
+      .badge { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 10px; font-weight: bold; fill: #22c55e; }
+      .badge-warn { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 10px; font-weight: bold; fill: #f59e0b; }
+      .arrow { fill: #38bdf8; }
+    </style>
+    <marker id="arrow-rf" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#38bdf8" />
+    </marker>
+    <marker id="arrow-ip" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#818cf8" />
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="900" height="360" class="bg" rx="12" />
+
+  <!-- SECTION 1: POINT-TO-POINT -->
+  <g transform="translate(20, 20)">
+    <rect width="260" height="320" class="card" />
+    <text x="130" y="35" class="title">1. Point-to-Point (P2P)</text>
+    <text x="130" y="55" class="subtitle">Truyền nhận trực tiếp 1-1 (Raw PHY)</text>
+    
+    <!-- Node A -->
+    <rect x="75" y="85" width="110" height="45" class="node-box" />
+    <text x="130" y="105" class="node-text">Transceiver A</text>
+    <text x="130" y="120" class="node-sub">ESP32 + SX1276</text>
+
+    <!-- RF Wave Line -->
+    <line x1="130" y1="135" x2="130" y2="185" class="line-solid" marker-end="url(#arrow-rf)" />
+    <text x="145" y="165" class="node-sub" fill="#38bdf8">LoRa RF</text>
+
+    <!-- Node B -->
+    <rect x="75" y="195" width="110" height="45" class="node-box" />
+    <text x="130" y="215" class="node-text">Transceiver B</text>
+    <text x="130" y="230" class="node-sub">ESP32 + SX1276</text>
+
+    <!-- Characteristics -->
+    <text x="25" y="270" class="badge">Ưu: Đơn giản, độ trễ tức thì</text>
+    <text x="25" y="295" class="badge-warn">Nhược: Không thể mở rộng (1-1)</text>
+  </g>
+
+  <!-- SECTION 2: LORA MESH -->
+  <g transform="translate(300, 20)">
+    <rect width="260" height="320" class="card" />
+    <text x="130" y="35" class="title">2. LoRa Mesh (RHMesh)</text>
+    <text x="130" y="55" class="subtitle">Định tuyến đa chặng (Multi-hop)</text>
+
+    <!-- Source Node -->
+    <rect x="15" y="85" width="95" height="40" class="node-box" />
+    <text x="62" y="102" class="node-text">Sensor Node</text>
+    <text x="62" y="115" class="node-sub">Source (Node 1)</text>
+
+    <!-- Hop Lines -->
+    <line x1="110" y1="105" x2="145" y2="105" class="line-solid" marker-end="url(#arrow-rf)" />
+
+    <!-- Relay Node 1 -->
+    <rect x="150" y="85" width="95" height="40" class="node-box" fill="#1e3a5f" stroke="#0ea5e9" />
+    <text x="197" y="102" class="node-text">Router Node</text>
+    <text x="197" y="115" class="node-sub">Relay 1 (Hao pin)</text>
+
+    <!-- Relay Line Down -->
+    <line x1="197" y1="130" x2="197" y2="165" class="line-solid" marker-end="url(#arrow-rf)" />
+
+    <!-- Relay Node 2 -->
+    <rect x="150" y="170" width="95" height="40" class="node-box" fill="#1e3a5f" stroke="#0ea5e9" />
+    <text x="197" y="187" class="node-text">Router Node</text>
+    <text x="197" y="200" class="node-sub">Relay 2</text>
+
+    <!-- Sink Line -->
+    <line x1="145" y1="190" x2="115" y2="190" class="line-solid" marker-end="url(#arrow-rf)" />
+
+    <!-- Sink/Coordinator Node -->
+    <rect x="15" y="170" width="95" height="40" class="gw-box" />
+    <text x="62" y="187" class="node-text">Sink / Master</text>
+    <text x="62" y="200" class="node-sub">Central Hub</text>
+
+    <!-- Characteristics -->
+    <text x="25" y="270" class="badge">Ưu: Vòng qua vật cản che khuất</text>
+    <text x="25" y="295" class="badge-warn">Nhược: Router tốn điện, trễ tích lũy</text>
+  </g>
+
+  <!-- SECTION 3: LORAWAN STAR-OF-STARS -->
+  <g transform="translate(580, 20)">
+    <rect width="300" height="320" class="card" />
+    <text x="150" y="35" class="title">3. LoRaWAN (Star-of-Stars)</text>
+    <text x="150" y="55" class="subtitle">Tiêu chuẩn công nghiệp diện rộng (LPWAN)</text>
+
+    <!-- End Nodes -->
+    <rect x="15" y="80" width="75" height="32" class="node-box" />
+    <text x="52" y="96" class="node-text">Node 1</text>
+    <text x="52" y="107" class="node-sub">Class A</text>
+
+    <rect x="15" y="125" width="75" height="32" class="node-box" />
+    <text x="52" y="141" class="node-text">Node 2</text>
+    <text x="52" y="152" class="node-sub">Class A</text>
+
+    <rect x="15" y="170" width="75" height="32" class="node-box" />
+    <text x="52" y="186" class="node-text">Node 3</text>
+    <text x="52" y="197" class="node-sub">Class C</text>
+
+    <!-- Gateways -->
+    <rect x="120" y="90" width="75" height="42" class="gw-box" />
+    <text x="157" y="108" class="node-text">Gateway 1</text>
+    <text x="157" y="122" class="node-sub">8 Channels</text>
+
+    <rect x="120" y="150" width="75" height="42" class="gw-box" />
+    <text x="157" y="168" class="node-text">Gateway 2</text>
+    <text x="157" y="182" class="node-sub">Packet Fwd</text>
+
+    <!-- RF Broadcast connections -->
+    <line x1="90" y1="96" x2="115" y2="105" class="line-solid" />
+    <line x1="90" y1="141" x2="115" y2="115" class="line-solid" />
+    <line x1="90" y1="141" x2="115" y2="165" class="line-solid" />
+    <line x1="90" y1="186" x2="115" y2="175" class="line-solid" />
+
+    <!-- LNS Cloud Server -->
+    <rect x="220" y="105" width="70" height="70" class="server-box" />
+    <text x="255" y="130" class="node-text">Network</text>
+    <text x="255" y="145" class="node-text">Server</text>
+    <text x="255" y="162" class="node-sub">(LNS/App)</text>
+
+    <!-- IP lines -->
+    <line x1="195" y1="115" x2="215" y2="130" class="line-ip" marker-end="url(#arrow-ip)" />
+    <line x1="195" y1="170" x2="215" y2="150" class="line-ip" marker-end="url(#arrow-ip)" />
+    <text x="195" y="142" font-family="sans-serif" font-size="8" fill="#818cf8">IP Net</text>
+
+    <!-- Characteristics -->
+    <text x="20" y="270" class="badge">Ưu: Pin 10 năm, quản lý tập trung</text>
+    <text x="20" y="295" class="badge">Ưu: Macro-diversity lọc trùng gói</text>
+  </g>
+</svg>
+

@@ -95,5 +95,5 @@ Mọi tài liệu trong kho lưu trữ này phải tuân thủ nghiêm ngặt **
 1. **Khung tóm tắt**: Mỗi bài học có thể mở đầu bằng `> Tóm tắt: ...` (hoặc `> Summary: ...`) viết thuần túy 1–2 câu, không in đậm lồng ghép.
 2. **Ký hiệu kỹ thuật**: Luôn sử dụng ký tự Unicode nguyên bản (`→`, `⇒`, `≤`, `≥`, `µA`, `dBm`, `kHz`, `MHz`). Tuyệt đối không dùng LaTeX inline dạng mũi tên gây lỗi hiển thị trên CMS.
 3. **GFM Callouts**: Sử dụng chuẩn 5 thẻ: `> [!NOTE]`, `> [!TIP]`, `> [!IMPORTANT]`, `> [!WARNING]`, `> [!CAUTION]`. Tên thẻ đặt riêng tại dòng 1.
-4. **Hình ảnh**: Lưu tập trung tại thư mục `images/`, sử dụng thẻ HTML canh giữa `<p align="center"><img src="images/..." width="900" alt="..."></p>`.
+4. **Hình ảnh**: Lưu tập trung tại thư mục `images/`, sử dụng thẻ HTML canh giữa `&lt;p align="center"&gt;&lt;img src="images/ten_anh.svg" width="900" alt="Mô tả hình ảnh"&gt;&lt;/p&gt;`.
 5. **Khối mã nguồn & Đồ họa**: Luôn khai báo định danh ngôn ngữ rõ ràng (`c`, `cpp`, `bash`, `dts`, `aidl`, `java`, `xml`). Tuyệt đối không dùng Mermaid flowchart trực tiếp trong tài liệu (gây vỡ bố cục và thẩm mỹ kém trên web); toàn bộ sơ đồ phân tầng, quy trình nhị phân và mạch phần cứng được thiết kế thành đồ họa vector SVG chuyên nghiệp lưu trong `images/`.
